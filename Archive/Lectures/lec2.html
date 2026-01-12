@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Lectures</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS Reset & Variables ===== */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --border-radius: 12px;
+            --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            --box-shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* ===== Base Styles ===== */
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        /* ===== Header Styles ===== */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--accent-color);
+            position: relative;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+        
+        h1 {
+            font-weight: 700;
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .session-count {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        
+        /* ===== Video Grid Layout ===== */
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        /* ===== Video Card Styles ===== */
+        .video-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow-hover);
+        }
+        
+        .video-link {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            text-decoration: none;
+            color: inherit;
+            flex: 1;
+            transition: background-color 0.2s ease;
+        }
+        
+        .video-link:hover {
+            background-color: rgba(0, 0, 0, 0.01);
+        }
+        
+        /* Video Type Styling */
+        .youtube-card {
+            border-top: 4px solid #e53e3e;
+        }
+        
+        .media-card {
+            border-top: 4px solid #805ad5;
+        }
+        
+        .video-icon {
+            margin-right: 16px;
+            font-size: 1.4rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        
+        .youtube-icon {
+            background-color: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+        }
+        
+        .media-icon {
+            background-color: rgba(128, 90, 213, 0.1);
+            color: #805ad5;
+        }
+        
+        .video-content {
+            flex: 1;
+            min-width: 0; /* For text truncation */
+        }
+        
+        .video-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 6px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .video-meta {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .video-type {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            margin-right: 10px;
+        }
+        
+        .youtube-type {
+            background-color: rgba(229, 62, 62, 0.1);
+            color: #e53e3e;
+        }
+        
+        .media-type {
+            background-color: rgba(128, 90, 213, 0.1);
+            color: #805ad5;
+        }
+        
+        /* ===== Footer Styles ===== */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .footer-note {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: #a0aec0;
+        }
+        
+        /* ===== Responsive Design ===== */
+        
+        /* Tablet: 2 columns */
+        @media (min-width: 768px) {
+            .video-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .video-title {
+                font-size: 1.15rem;
+            }
+        }
+        
+        /* Desktop: 3 columns */
+        @media (min-width: 1024px) {
+            .video-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 28px;
+            }
+            
+            h1 {
+                font-size: 2.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            body {
+                padding: 30px;
+            }
+        }
+        
+        /* Large Desktop: 4 columns */
+        @media (min-width: 1400px) {
+            .video-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        /* Mobile optimization */
+        @media (max-width: 767px) {
+            body {
+                padding: 16px;
+                overflow-x: hidden; /* Prevent horizontal scroll */
+            }
+            
+            .container {
+                width: 100%;
+                min-width: auto; /* Remove fixed min-width */
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .video-link {
+                padding: 16px;
+            }
+            
+            .video-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1.2rem;
+                margin-right: 14px;
+            }
+            
+            .video-title {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Small mobile devices */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .subtitle {
+                font-size: 0.95rem;
+            }
+            
+            .video-link {
+                padding: 14px;
+            }
+            
+            .video-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 1.1rem;
+                margin-right: 12px;
+            }
+            
+            .video-title {
+                font-size: 0.95rem;
+            }
+            
+            .video-meta {
+                font-size: 0.8rem;
+            }
+            
+            .session-count {
+                font-size: 0.8rem;
+                padding: 3px 10px;
+            }
+        }
+        
+        /* Extra small devices */
+        @media (max-width: 380px) {
+            body {
+                padding: 10px;
+            }
+            
+            .video-card {
+                border-radius: 10px;
+            }
+            
+            .video-link {
+                padding: 12px;
+            }
+            
+            .video-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
+                margin-right: 10px;
+            }
+            
+            .video-title {
+                font-size: 0.9rem;
+                -webkit-line-clamp: 3; /* Show more lines on very small screens */
+            }
+            
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <br>
+            <h1>Lectures (Archived)</h1>
+            <p class="subtitle"></p>
+            <div class="session-count" id="sessionCount">Loading classes...</div>
+        </header>
+        
+        <div class="video-grid" id="videoGrid">
+            <!-- Video cards will be generated by JavaScript -->
+        </div>
+        
+        <footer>
+            <p><span id="currentYear"></span></p>
+            <p class="footer-note"></p>
+        </footer>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Function to determine if a video is from YouTube or MediaDelivery
+        function getVideoType(videoId) {
+            return videoId.includes('/') ? 'media' : 'youtube';
+        }
+        
+        // Function to generate video URL based on type
+        function generateVideoUrl(videoId, type) {
+            if (type === 'youtube') {
+                return `https://www.youtube.com/watch?v=${videoId}`;
+            } else {
+                const parts = videoId.split('/');
+                return `https://player.mediadelivery.net/embed/${parts[0]}/${parts[1]}`;
+            }
+        }
+        
+        // Function to create video card HTML
+        function createVideoCard(video, index) {
+            const type = getVideoType(video.videoId);
+            const videoUrl = generateVideoUrl(video.videoId, type);
+            
+            let cardClass, iconClass, icon, typeClass, typeText;
+            
+            if (type === 'youtube') {
+                cardClass = 'video-card youtube-card';
+                iconClass = 'video-icon youtube-icon';
+                icon = '<i class="fab fa-youtube"></i>';
+                typeClass = 'video-type youtube-type';
+                typeText = 'YouTube';
+            } else {
+                cardClass = 'video-card media-card';
+                iconClass = 'video-icon media-icon';
+                icon = '<i class="fas fa-play-circle"></i>';
+                typeClass = 'video-type media-type';
+                typeText = 'Media';
+            }
+            
+            return `
+                <div class="${cardClass}">
+                    <a href="${videoUrl}" target="_blank" class="video-link">
+                        <span class="${iconClass}">${icon}</span>
+                        <div class="video-content">
+                            <h3 class="video-title">${index + 1}. ${video.title}</h3>
+                            <div class="video-meta">
+                                <span class="${typeClass}">${typeText}</span>
+                                <span>Session ${index + 1}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            `;
+        }
+        
+        // Function to render all video cards
+        function renderVideoGrid() {
+            const videoGrid = document.getElementById('videoGrid');
+            const sessionCount = document.getElementById('sessionCount');
+            
+            // Clear existing content
+            videoGrid.innerHTML = '';
+            
+            // Check if videoData exists
+            if (!videoData || !Array.isArray(videoData) || videoData.length === 0) {
+                videoGrid.innerHTML = `
+                    <div class="no-sessions" style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                        <i class="fas fa-video-slash" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <h3 style="margin-bottom: 10px;">No classes available</h3>
+                    </div>
+                `;
+                sessionCount.textContent = '0 classes';
+                return;
+            }
+            
+            // Update session count
+            sessionCount.textContent = `${videoData.length} ${videoData.length === 1 ? 'session' : 'classes'}`;
+            
+            // Create and append video cards
+            videoData.forEach((video, index) => {
+                videoGrid.innerHTML += createVideoCard(video, index);
+            });
+        }
+        
+        // Initialize the grid when page loads
+        document.addEventListener('DOMContentLoaded', renderVideoGrid);
+        
+        // If you want to load from external data.js file instead, use this:
+        /*
+        // Load external data.js file
+        function loadVideoData() {
+            // Create a script element to load data.js
+            const script = document.createElement('script');
+            script.src = 'data.js';
+            script.onload = function() {
+                // Check if videoData was loaded from external file
+                if (window.videoData && Array.isArray(window.videoData)) {
+                    renderVideoGrid();
+                } else {
+                    console.error('videoData not found in data.js');
+                    document.getElementById('sessionCount').textContent = 'Error loading sessions';
+                }
+            };
+            script.onerror = function() {
+                console.error('Failed to load data.js');
+                document.getElementById('sessionCount').textContent = 'Failed to load sessions';
+            };
+            document.head.appendChild(script);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadVideoData);
+        */
+    </script>
+</body>
+</html>

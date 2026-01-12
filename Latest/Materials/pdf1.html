@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>PDFs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS Reset & Variables ===== */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --border-radius: 12px;
+            --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            --box-shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* ===== Base Styles ===== */
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        /* ===== Header Styles ===== */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--accent-color);
+            position: relative;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+        
+        h1 {
+            font-weight: 700;
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .session-count {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        
+        /* ===== PDF Grid Layout ===== */
+        .pdf-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        /* ===== PDF Card Styles ===== */
+        .pdf-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            border-top: 4px solid #e74c3c;
+        }
+        
+        .pdf-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow-hover);
+        }
+        
+        .pdf-link {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            text-decoration: none;
+            color: inherit;
+            flex: 1;
+            transition: background-color 0.2s ease;
+        }
+        
+        .pdf-link:hover {
+            background-color: rgba(231, 76, 60, 0.05);
+        }
+        
+        .pdf-icon {
+            margin-right: 16px;
+            font-size: 1.4rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            flex-shrink: 0;
+            background-color: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+        
+        .pdf-content {
+            flex: 1;
+            min-width: 0; /* For text truncation */
+        }
+        
+        .pdf-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 6px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .pdf-meta {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .pdf-type {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            margin-right: 10px;
+            background-color: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+        
+        /* ===== Footer Styles ===== */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .footer-note {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: #a0aec0;
+        }
+        
+        /* ===== Responsive Design ===== */
+        
+        /* Tablet: 2 columns */
+        @media (min-width: 768px) {
+            .pdf-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .pdf-title {
+                font-size: 1.15rem;
+            }
+        }
+        
+        /* Desktop: 3 columns */
+        @media (min-width: 1024px) {
+            .pdf-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 28px;
+            }
+            
+            h1 {
+                font-size: 2.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            body {
+                padding: 30px;
+            }
+        }
+        
+        /* Large Desktop: 4 columns */
+        @media (min-width: 1400px) {
+            .pdf-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        /* Mobile optimization */
+        @media (max-width: 767px) {
+            body {
+                padding: 16px;
+                overflow-x: hidden; /* Prevent horizontal scroll */
+            }
+            
+            .container {
+                width: 100%;
+                min-width: auto; /* Remove fixed min-width */
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .pdf-link {
+                padding: 16px;
+            }
+            
+            .pdf-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1.2rem;
+                margin-right: 14px;
+            }
+            
+            .pdf-title {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Small mobile devices */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .subtitle {
+                font-size: 0.95rem;
+            }
+            
+            .pdf-link {
+                padding: 14px;
+            }
+            
+            .pdf-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 1.1rem;
+                margin-right: 12px;
+            }
+            
+            .pdf-title {
+                font-size: 0.95rem;
+            }
+            
+            .pdf-meta {
+                font-size: 0.8rem;
+            }
+            
+            .session-count {
+                font-size: 0.8rem;
+                padding: 3px 10px;
+            }
+        }
+        
+        /* Extra small devices */
+        @media (max-width: 380px) {
+            body {
+                padding: 10px;
+            }
+            
+            .pdf-card {
+                border-radius: 10px;
+            }
+            
+            .pdf-link {
+                padding: 12px;
+            }
+            
+            .pdf-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
+                margin-right: 10px;
+            }
+            
+            .pdf-title {
+                font-size: 0.9rem;
+                -webkit-line-clamp: 3; /* Show more lines on very small screens */
+            }
+            
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <br>
+            <h1>PDFS</h1>
+            <p class="subtitle"></p>
+            <div class="session-count" id="sessionCount">Loading PDFs...</div>
+        </header>
+        
+        <div class="pdf-grid" id="pdfGrid">
+            <!-- PDF cards will be generated by JavaScript -->
+        </div>
+        
+        <footer>
+            <p><span id="currentYear"></span></p>
+            <p class="footer-note"></p>
+        </footer>
+    </div>
+    <script src="data.js"></script>
+    <script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Function to create PDF card HTML
+        function createPdfCard(pdf, index) {
+            const pdfUrl = pdf.url;
+            
+            return `
+                <div class="pdf-card">
+                    <a href="${pdfUrl}" target="_blank" class="pdf-link">
+                        <span class="pdf-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </span>
+                        <div class="pdf-content">
+                            <h3 class="pdf-title">${index + 1}. ${pdf.title}</h3>
+                            <div class="pdf-meta">
+                                <span class="pdf-type">PDF Document</span>
+                                <span>File ${index + 1}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            `;
+        }
+        
+        // Function to render all PDF cards
+        function renderPdfGrid() {
+            const pdfGrid = document.getElementById('pdfGrid');
+            const sessionCount = document.getElementById('sessionCount');
+            
+            // Clear existing content
+            pdfGrid.innerHTML = '';
+            
+            // Check if pdfData exists
+            if (!window.pdfData || !Array.isArray(pdfData) || pdfData.length === 0) {
+                pdfGrid.innerHTML = `
+                    <div class="no-pdfs" style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                        <i class="fas fa-file-alt" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <h3 style="margin-bottom: 10px;">No PDFs available</h3>
+                        <p>Check back soon for new lecture materials.</p>
+                    </div>
+                `;
+                sessionCount.textContent = '0 PDFs';
+                return;
+            }
+            
+            // Update PDF count
+            sessionCount.textContent = `${pdfData.length} ${pdfData.length === 1 ? 'PDF' : 'PDFs'}`;
+            
+            // Create and append PDF cards
+            pdfData.forEach((pdf, index) => {
+                pdfGrid.innerHTML += createPdfCard(pdf, index);
+            });
+        }
+        
+        // Wait for both DOM and data.js to load
+        window.addEventListener('load', function() {
+            // Small delay to ensure data.js is loaded
+            setTimeout(renderPdfGrid, 100);
+        });
+        
+        // Also try to render when DOM is ready (fallback)
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(renderPdfGrid, 200);
+        });
+    </script>
+</body>
+</html>
