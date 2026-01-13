@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,20 +53,7 @@
             text-align: center;
             margin-bottom: 40px;
             padding-bottom: 24px;
-            border-bottom: 2px solid var(--accent-color);
             position: relative;
-        }
-        
-        header::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
-            border-radius: 2px;
         }
         
         h1 {
@@ -373,7 +361,7 @@
             }
             
             h1 {
-                font-size: 1.4rem;
+                font-size: 3rem;
             }
             
             .subtitle {
@@ -421,42 +409,42 @@
             }
         }
         
-        // Function to create video card HTML
-        function createVideoCard(video, index) {
-            const type = getVideoType(video.videoId);
-            const videoUrl = generateVideoUrl(video.videoId, type);
-            
-            let cardClass, iconClass, icon, typeClass, typeText;
-            
-            if (type === 'youtube') {
-                cardClass = 'video-card youtube-card';
-                iconClass = 'video-icon youtube-icon';
-                icon = '<i class="fab fa-youtube"></i>';
-                typeClass = 'video-type youtube-type';
-                typeText = 'YouTube';
-            } else {
-                cardClass = 'video-card media-card';
-                iconClass = 'video-icon media-icon';
-                icon = '<i class="fas fa-play-circle"></i>';
-                typeClass = 'video-type media-type';
-                typeText = 'Media';
-            }
-            
-            return `
-                <div class="${cardClass}">
-                    <a href="${videoUrl}" target="_blank" class="video-link">
-                        <span class="${iconClass}">${icon}</span>
-                        <div class="video-content">
-                            <h3 class="video-title">${index + 1}. ${video.title}</h3>
-                            <div class="video-meta">
-                                <span class="${typeClass}">${typeText}</span>
-                                <span>Session ${index + 1}</span>
-                            </div>
-                        </div>
-                    </a>
+// Function to create video card HTML
+function createVideoCard(video, index) {
+    const type = getVideoType(video.videoId);
+    const videoUrl = generateVideoUrl(video.videoId, type);
+    
+    let cardClass, iconClass, icon, typeClass, typeText;
+    
+    if (type === 'youtube') {
+        cardClass = 'video-card youtube-card';
+        iconClass = 'video-icon youtube-icon';
+        icon = '<i class="fab fa-youtube"></i>';
+        typeClass = 'video-type youtube-type';
+        typeText = 'YouTube';
+    } else {
+        cardClass = 'video-card media-card';
+        iconClass = 'video-icon media-icon';
+        icon = '<i class="fas fa-play-circle"></i>';
+        typeClass = 'video-type media-type';
+        typeText = 'Media';
+    }
+    
+    return `
+        <div class="${cardClass}">
+            <a href="${videoUrl}" target="_blank" class="video-link">
+                <span class="${iconClass}">${icon}</span>
+                <div class="video-content">
+                    <h3 class="video-title">${index + 1}. ${video.title}</h3>
+                    <div class="video-meta">
+                        <span class="${typeClass}">${typeText}</span>
+                        <!-- Removed the session number from here -->
+                    </div>
                 </div>
-            `;
-        }
+            </a>
+        </div>
+    `;
+}
         
         // Function to render all video cards
         function renderVideoGrid() {
