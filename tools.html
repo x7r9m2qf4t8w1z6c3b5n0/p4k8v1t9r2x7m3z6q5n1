@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Data Parser</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+        
+        .input-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .input-box {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-box label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 350px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+            background-color: white;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            padding: 12px 30px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        #checkAllBtn {
+            background-color: #2ecc71;
+        }
+        
+        #checkAllBtn:hover {
+            background-color: #27ae60;
+        }
+        
+        .results-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .result-box {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .result-box h2 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .result-content {
+            height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #eee;
+        }
+        
+        .copy-btn {
+            margin-top: 15px;
+            padding: 8px 15px;
+            font-size: 14px;
+            background-color: #95a5a6;
+        }
+        
+        .copy-btn:hover {
+            background-color: #7f8c8d;
+        }
+        
+        @media (max-width: 1024px) {
+            .input-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HTML Data Parser</h1>
+        
+        <div class="input-section">
+            <div class="input-box">
+                <label for="htmlInput">Box 1: Full HTML Code</label>
+                <textarea id="htmlInput" placeholder="Paste full HTML code here..."></textarea>
+            </div>
+            
+            <div class="input-box">
+                <label for="videoInput">Box 2: Video Data (will extract videoId)</label>
+                <textarea id="videoInput" placeholder='Paste video data like:
+{ title: "Video 1", videoId: "abc123" },
+{ title: "Video 2", videoId: "def456" }, ...'></textarea>
+            </div>
+            
+            <div class="input-box">
+                <label for="pdfInput">Box 3: PDF Data (will extract url)</label>
+                <textarea id="pdfInput" placeholder='Paste PDF data like:
+{ title: "PDF 1", url: "http://example.com/1.pdf" },
+{ title: "PDF 2", url: "http://example.com/2.pdf" }, ...'></textarea>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button id="checkMissingBtn">Check Missing</button>
+            <button id="checkAllBtn">Check All</button>
+        </div>
+        
+        <div class="results-section">
+            <div class="result-box">
+                <h2 id="missingVideoTitle">Missing Videos</h2>
+                <div id="missingVideoResult" class="result-content"></div>
+                <button class="copy-btn" onclick="copyResult('missingVideoResult')">Copy</button>
+            </div>
+            
+            <div class="result-box">
+                <h2 id="missingPdfTitle">Missing PDFs</h2>
+                <div id="missingPdfResult" class="result-content"></div>
+                <button class="copy-btn" onclick="copyResult('missingPdfResult')">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function parseHTML(htmlString) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlString, 'text/html');
+            
+            // STEP 1: Extract videos in order with their data-tid and data-vid
+            const videoElements = doc.querySelectorAll('[data-name][data-type="yt"], [data-tid][data-vid]');
+            const videoData = [];
+            const videoOrderKeys = []; // Store keys in video appearance order
+            const topicOrder = []; // Store unique topics in order they appear in videos
+            
+            videoElements.forEach(element => {
+                const titleElement = element.querySelector('.font-light');
+                const title = titleElement ? titleElement.textContent.trim() : '';
+                
+                // Get videoId from data-name
+                const videoId = element.getAttribute('data-name');
+                
+                // Get topicId and videoId for ordering
+                const topicId = element.getAttribute('data-tid');
+                const dataVid = element.getAttribute('data-vid');
+                
+                if (title && videoId) {
+                    videoData.push({ title, videoId });
+                    
+                    // Store the order key: Topic{number}-video{number}
+                    if (topicId && dataVid) {
+                        // Extract just the numbers
+                        const topicNum = topicId.replace('Topic', '');
+                        const videoNum = dataVid.replace('video', '');
+                        const orderKey = `Topic${topicNum}-video${videoNum}`;
+                        videoOrderKeys.push(orderKey);
+                        
+                        // Track topic order from videos
+                        if (!topicOrder.includes(topicNum)) {
+                            topicOrder.push(topicNum);
+                        }
+                    }
+                }
+            });
+            
+            // STEP 2: Extract all PDFs and categorize them by topic
+            const pdfElements = doc.querySelectorAll('a[href*=".pdf"]');
+            const pdfsWithVideo = new Map(); // Map: key (TopicX-videoY) -> PDF
+            const pdfsByTopic = new Map(); // Map: topicNum -> {withVideo: [...], topicOnly: [...]}
+            const unmatchedPdfs = []; // PDFs without any Topic pattern
+            
+            pdfElements.forEach(element => {
+                const title = element.textContent.trim();
+                const url = element.getAttribute('href');
+                const className = element.getAttribute('class') || '';
+                
+                if (title && url) {
+                    // Look for Topic{number}-video{number} pattern in class
+                    const fullMatch = className.match(/Topic(\d+)-video(\d+)/);
+                    const topicOnlyMatch = className.match(/Topic(\d+)/);
+                    
+                    if (fullMatch) {
+                        // PDF with both Topic and video
+                        const topicNum = fullMatch[1];
+                        const videoNum = fullMatch[2];
+                        const key = `Topic${topicNum}-video${videoNum}`;
+                        
+                        // Store in video map
+                        pdfsWithVideo.set(key, { title, url, topicNum, videoNum, key });
+                        
+                        // Initialize topic group if needed
+                        if (!pdfsByTopic.has(topicNum)) {
+                            pdfsByTopic.set(topicNum, { withVideo: [], topicOnly: [] });
+                        }
+                        // Add to topic's withVideo array
+                        pdfsByTopic.get(topicNum).withVideo.push({ title, url, topicNum, videoNum, key });
+                        
+                    } else if (topicOnlyMatch) {
+                        // PDF with only Topic (no video)
+                        const topicNum = topicOnlyMatch[1];
+                        
+                        // Initialize topic group if needed
+                        if (!pdfsByTopic.has(topicNum)) {
+                            pdfsByTopic.set(topicNum, { withVideo: [], topicOnly: [] });
+                        }
+                        // Add to topic's topicOnly array
+                        pdfsByTopic.get(topicNum).topicOnly.push({ title, url, topicNum });
+                    } else {
+                        // PDF without any Topic pattern
+                        unmatchedPdfs.push({ title, url });
+                    }
+                }
+            });
+            
+            // STEP 3: Arrange PDFs by topic in video order
+            const arrangedPdfData = [];
+            const processedTopics = new Set();
+            
+            // First, process topics that appear in videos (in video order)
+            topicOrder.forEach(topicNum => {
+                const topicPdfs = pdfsByTopic.get(topicNum);
+                if (topicPdfs) {
+                    // First, add PDFs with video in exact video order for this topic
+                    videoOrderKeys.forEach(key => {
+                        if (key.startsWith(`Topic${topicNum}-`)) {
+                            const pdf = pdfsWithVideo.get(key);
+                            if (pdf) {
+                                arrangedPdfData.push(pdf);
+                                // Remove from withVideo array so we don't add duplicates
+                                const index = topicPdfs.withVideo.findIndex(p => p.key === key);
+                                if (index > -1) {
+                                    topicPdfs.withVideo.splice(index, 1);
+                                }
+                            }
+                        }
+                    });
+                    
+                    // Then add remaining PDFs with video for this topic
+                    if (topicPdfs.withVideo.length > 0) {
+                        arrangedPdfData.push(...topicPdfs.withVideo);
+                    }
+                    
+                    // Finally add PDFs with only topic (no video) for this topic
+                    if (topicPdfs.topicOnly.length > 0) {
+                        arrangedPdfData.push(...topicPdfs.topicOnly);
+                    }
+                    
+                    processedTopics.add(topicNum);
+                }
+            });
+            
+            // Then process remaining topics that weren't in videos
+            pdfsByTopic.forEach((topicPdfs, topicNum) => {
+                if (!processedTopics.has(topicNum)) {
+                    // Add all PDFs for this topic
+                    if (topicPdfs.withVideo.length > 0) {
+                        arrangedPdfData.push(...topicPdfs.withVideo);
+                    }
+                    if (topicPdfs.topicOnly.length > 0) {
+                        arrangedPdfData.push(...topicPdfs.topicOnly);
+                    }
+                }
+            });
+            
+            // Finally, add PDFs without any Topic pattern
+            arrangedPdfData.push(...unmatchedPdfs);
+            
+            return { pdfData: arrangedPdfData, videoData };
+        }
+        
+        function extractVideoIds(videoInput) {
+            const videoIds = [];
+            // Match videoId patterns in the input
+            const regex = /videoId:\s*["']([^"']+)["']/g;
+            let match;
+            
+            while ((match = regex.exec(videoInput)) !== null) {
+                videoIds.push(match[1]);
+            }
+            
+            return videoIds;
+        }
+        
+        function extractPdfUrls(pdfInput) {
+            const urls = [];
+            // Match url patterns in the input
+            const regex = /url:\s*["']([^"']+)["']/g;
+            let match;
+            
+            while ((match = regex.exec(pdfInput)) !== null) {
+                urls.push(match[1]);
+            }
+            
+            return urls;
+        }
+        
+        function checkMissing() {
+            const htmlCode = document.getElementById('htmlInput').value.trim();
+            const videoInput = document.getElementById('videoInput').value;
+            const pdfInput = document.getElementById('pdfInput').value;
+            
+            if (!htmlCode) {
+                alert('Please paste HTML code in Box 1');
+                return;
+            }
+            
+            try {
+                const { pdfData, videoData } = parseHTML(htmlCode);
+                const existingVideoIds = extractVideoIds(videoInput);
+                const existingPdfUrls = extractPdfUrls(pdfInput);
+                
+                // Find missing videos
+                const missingVideos = videoData.filter(video => 
+                    !existingVideoIds.includes(video.videoId)
+                );
+                
+                // Find missing PDFs
+                const missingPdfs = pdfData.filter(pdf => 
+                    !existingPdfUrls.includes(pdf.url)
+                );
+                
+                // Display results
+                displayResult('missingVideoResult', missingVideos, 'video');
+                displayResult('missingPdfResult', missingPdfs, 'pdf');
+                
+                // Update titles
+                document.getElementById('missingVideoTitle').textContent = 
+                    `Missing Videos (${missingVideos.length} found)`;
+                document.getElementById('missingPdfTitle').textContent = 
+                    `Missing PDFs (${missingPdfs.length} found)`;
+                    
+            } catch (error) {
+                alert('Error parsing HTML: ' + error.message);
+            }
+        }
+        
+        function checkAll() {
+            const htmlCode = document.getElementById('htmlInput').value.trim();
+            
+            if (!htmlCode) {
+                alert('Please paste HTML code in Box 1');
+                return;
+            }
+            
+            try {
+                const { pdfData, videoData } = parseHTML(htmlCode);
+                
+                // Display all videos
+                displayResult('missingVideoResult', videoData, 'video');
+                // Display all PDFs (arranged by video order)
+                displayResult('missingPdfResult', pdfData, 'pdf');
+                
+                // Update titles
+                document.getElementById('missingVideoTitle').textContent = 
+                    `All Videos (${videoData.length} found)`;
+                document.getElementById('missingPdfTitle').textContent = 
+                    `All PDFs (${pdfData.length} found - Arranged by Video Sequence)`;
+                    
+            } catch (error) {
+                alert('Error parsing HTML: ' + error.message);
+            }
+        }
+        
+        function displayResult(elementId, data, type) {
+            const element = document.getElementById(elementId);
+            
+            if (data.length === 0) {
+                element.textContent = type === 'video' ? 'No videos found' : 'No PDFs found';
+                return;
+            }
+            
+            let resultText = '';
+            data.forEach(item => {
+                if (type === 'video') {
+                    resultText += `{ title: "${item.title}", videoId: "${item.videoId}" },\n`;
+                } else {
+                    resultText += `{ title: "${item.title}", url: "${item.url}" },\n`;
+                }
+            });
+            
+            element.textContent = resultText;
+        }
+        
+        function copyResult(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            if (!text || text.includes('No ') || text.includes('found')) {
+                alert('Nothing to copy');
+                return;
+            }
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+        
+        // Event listeners
+        document.getElementById('checkMissingBtn').addEventListener('click', checkMissing);
+        document.getElementById('checkAllBtn').addEventListener('click', checkAll);
+        
+        // Allow Ctrl+Enter in textareas to trigger actions
+        document.querySelectorAll('textarea').forEach(textarea => {
+            textarea.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    if (this.id === 'htmlInput') {
+                        checkAll();
+                    } else {
+                        checkMissing();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
