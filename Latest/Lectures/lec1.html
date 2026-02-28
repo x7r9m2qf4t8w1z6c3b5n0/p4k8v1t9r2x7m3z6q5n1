@@ -3,416 +3,587 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Home · bold hub</title>
+  <title>Lectures</title>
+  <!-- Hind Siliguri (weight 700 for all text) + fallback -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@700&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* ----- RESET & GLOBAL (ALL TEXT BOLD / HELVETICA) ----- */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      /* Helvetica with fallbacks — all text bold as requested */
-      font-family: "WF Visual Sans Variable", Arial, sans-serif;
-      font-weight: 400;          /* everything bold */
+      font-family: 'Hind Siliguri', sans-serif;
+      font-weight: 700 !important;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
       min-height: 100vh;
       background: radial-gradient(circle at 30% 20%, #dee8f2, #c9d6e6);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 20px 16px;
-      /* fade-in animation for everything on page load */
-      animation: bodyFade 0.9s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
-      opacity: 0; /* start invisible */
+      padding: 16px 14px;
+      animation: fadeIn 0.8s ease forwards;
+      opacity: 0;
     }
+    @keyframes fadeIn { to { opacity: 1; } }
 
-    @keyframes bodyFade {
-      0% { opacity: 0; transform: scale(0.99); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    /* main card – deeper glass + strong shadows */
-    .home-card {
-      max-width: 440px;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+    .app-shelf {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       border-radius: 52px;
-      padding: 38px 28px;
+      padding: 28px 24px;
       border: 1px solid rgba(255,255,255,0.7);
-      box-shadow: 0 30px 45px -16px rgba(0,25,50,0.45),
-                  inset 0 2px 3px rgba(255,255,255,0.8);
+      box-shadow: 0 30px 45px -20px rgba(0,25,50,0.5), inset 0 1px 4px white;
     }
 
-    /* header – bold & elegant */
-    .app-header {
-      text-align: center;
-      margin-bottom: 30px;
+    /* --- global header (home + Lectures) --- */
+    .global-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+    .home-icon-btn {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(4px);
+      border: 1px solid white;
+      width: 50px;
+      height: 50px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: #1f3a4e;
+      box-shadow: 0 10px 15px -8px #0b2a3b;
+      cursor: pointer;
+      transition: 0.15s;
+      text-decoration: none;
     }
-
-    .app-header h1 {
-      font-size: 2.8rem;
-      font-weight: 700;
-      background: linear-gradient(150deg, #152A3A, #1C3C55);
+    .home-icon-btn:active { transform: translateY(5px); box-shadow: 0 5px 8px -5px #0b2a3b; }
+    .global-header span {
+      font-size: 2.4rem;
+      background: linear-gradient(145deg, #153448, #1f5a7a);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      letter-spacing: -0.02em;
+    }
+    /* hide global header inside subject view */
+    .global-header.hidden { display: none; }
+
+    /* ----- subject navigation header (back + title) ----- */
+    .nav-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .back-btn {
+      background: rgba(255,255,255,0.7);
+      border: none;
+      backdrop-filter: blur(4px);
+      width: 48px;
+      height: 48px;
+      border-radius: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      text-shadow: 0 3px 8px rgba(0,25,40,0.2);
+      color: #1f3a4e;
+      box-shadow: 0 10px 18px -8px rgba(0,20,30,0.3), inset 0 -2px 0 rgba(0,0,0,0.05);
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.8);
+      transition: 0.15s;
+    }
+    .back-btn:active { transform: translateY(5px); box-shadow: 0 5px 10px -5px #0b2a3b; }
+    .back-btn i { font-size: 1.8rem; }
+    .screen-title {
+      font-size: 2.2rem;
+      background: linear-gradient(145deg, #153448, #1f4868);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
-    .app-header h1 span {
-      font-size: 2.6rem;
-      filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.15));
-    }
-
-    .app-header p {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #1f3f57;
-      background: rgba(255,255,255,0.6);
-      display: inline-block;
-      padding: 8px 28px;
-      border-radius: 60px;
-      backdrop-filter: blur(4px);
-      margin-top: 12px;
-      border: 1px solid white;
-      box-shadow: 0 4px 8px -4px rgba(0,20,40,0.2);
-    }
-
-    /* 2x2 grid */
-    .button-grid {
+    /* ----- subject grid (2 per row) ----- */
+    .subject-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, 1fr);
       gap: 22px;
-      margin: 20px 0 30px 0;
+      margin: 10px 0 20px;
     }
-
-    /* ----- ICON BUTTONS – elevated, all bold text inside ----- */
-    .icon-btn {
+    .subject-card {
+      background: white;
+      border-radius: 38px;
+      padding: 22px 12px 18px;
+      border: 1px solid rgba(255,255,255,0.9);
+      box-shadow: 0 20px 28px -14px rgba(6,30,50,0.4), 0 5px 0 0 #e0ecf5;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      padding: 24px 8px 18px 8px;
-      border-radius: 36px;
-      background: #ffffff;
-      color: #142f42;
-      font-weight: 700;          /* explicit bold */
-      font-size: 1rem;
-      transition: all 0.22s cubic-bezier(0.2, 0, 0, 1);
-      border: 1px solid rgba(255,255,255,0.7);
-      box-shadow: 0 16px 22px -12px rgba(0,30,50,0.3),
-                  0 5px 0 0 #e0e8f0,
-                  inset 0 -1px 4px rgba(255,255,255,0.8);
-      line-height: 1.3;
-      gap: 16px;
-      backdrop-filter: blur(2px);
-      /* fade in staggered (each button fades slightly later) – optional but classy */
-      animation: btnFade 0.7s ease forwards;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2,0,0,1);
+      animation: cardFade 0.5s ease forwards;
       opacity: 0;
     }
-
-    .icon-btn:nth-child(1) { animation-delay: 0.1s; }
-    .icon-btn:nth-child(2) { animation-delay: 0.2s; }
-    .icon-btn:nth-child(3) { animation-delay: 0.3s; }
-    .icon-btn:nth-child(4) { animation-delay: 0.4s; }
-
-    @keyframes btnFade {
-      0% { opacity: 0; transform: translateY(10px); }
-      100% { opacity: 1; transform: translateY(0); }
+    .subject-card:nth-child(n) { animation-delay: 0.05s; }
+    @keyframes cardFade {
+      0% { opacity: 0; transform: translateY(12px); }
+      100% { opacity: 1; transform: transform: 0; }
     }
-
-    .icon-btn:active {
-      transform: translateY(7px);
-      box-shadow: 0 8px 14px -8px rgba(0,25,45,0.4),
-                  0 2px 0 0 #ccd6e2,
-                  inset 0 1px 5px white;
+    .subject-card:active {
+      transform: translateY(6px);
+      box-shadow: 0 10px 18px -8px #0a293d, 0 2px 0 0 #c2d4e2;
     }
-
-    /* icon wrapper – white background, deep shadow */
-    .btn-icon {
-      width: 84px;
-      height: 84px;
+    .subject-icon {
+      width: 96px;
+      height: 96px;
+      border-radius: 32px;
+      background: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 28px;
-      background: white;
-      box-shadow: 0 18px 22px -10px rgba(0,30,50,0.4),
-                  0 0 0 1px rgba(0,0,0,0.04),
-                  inset 0 -4px 0 rgba(0,0,0,0.02);
-      transition: all 0.2s;
+      filter: drop-shadow(0 12px 14px rgba(0,30,50,0.25));
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.02), 0 8px 12px -6px #14304050;
       padding: 8px;
     }
-
-    .btn-icon img {
+    .subject-icon img {
       width: 100%;
       height: 100%;
       object-fit: contain;
+      border-radius: 28px;
       display: block;
-      border-radius: 22px;
-      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.15));
-      transition: filter 0.2s;
+    }
+    .subject-label {
+      font-size: 1.3rem;
+      background: rgba(210, 230, 245, 0.7);
+      backdrop-filter: blur(3px);
+      padding: 8px 26px;
+      border-radius: 60px;
+      border: 1px solid white;
+      color: #0d2d41;
     }
 
-    .icon-btn:hover .btn-icon {
-      transform: scale(1.02);
-      box-shadow: 0 22px 28px -10px rgba(0,40,65,0.5);
+    /* ----- VIDEO GRID (mobile single, desktop two columns) ----- */
+    .video-grid {
+      display: grid;
+      grid-template-columns: 1fr;  /* mobile default */
+      gap: 18px;
+      margin-top: 18px;
     }
 
-    /* label – bold + frosted */
-    .btn-label {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #113245;
-      background: rgba(240, 247, 252, 0.8);
-      padding: 7px 16px;
-      border-radius: 40px;
-      backdrop-filter: blur(4px);
-      box-shadow: inset 0 1px 5px white, 0 6px 12px -8px #00203340;
-      border: 1px solid rgba(255,255,255,0.9);
-      letter-spacing: 0.3px;
+    /* Desktop: two columns, cards smaller */
+    @media (min-width: 900px) {
+      .video-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    /* info note – bold, clean */
-    .info-note {
-      margin-top: 16px;
-      background: rgba(20, 45, 65, 0.1);
-      border-radius: 100px;
-      padding: 14px 18px;
+    .video-card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 16px 24px -12px #0f2b3d;
+      overflow: hidden;
+      transition: 0.2s;
+      animation: cardPop 0.4s ease;
+      width: 100%;
+    }
+
+    @keyframes cardPop {
+      0% { opacity: 0; transform: scale(0.98); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Replace your existing video-preview and add animation */
+.video-preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: url('https://i.pinimg.com/originals/bf/36/76/bf3676d6107b8953decfb33ad16ebf9b.gif') center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.video-card.playing .video-preview {
+  animation: fadeOut 0.4s forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+    .video-preview:hover { background: url('https://i.pinimg.com/originals/bf/36/76/bf3676d6107b8953decfb33ad16ebf9b.gif') center/cover; }
+
+    .play-button-large {
+      position: relative;
+      z-index: 2;
+      width: 64px;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      color: #183f56;
-      font-size: 1rem;
-      font-weight: 700;
-      border: 1px solid rgba(255,255,255,0.7);
-      backdrop-filter: blur(5px);
-      box-shadow: 0 5px 12px -6px rgba(0,0,0,0.25), inset 0 1px 4px white;
-      animation: noteFade 0.8s ease 0.5s forwards;
-      opacity: 0;
-    }
-
-    @keyframes noteFade {
-      0% { opacity: 0; transform: translateY(6px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    .info-note span {
-      font-size: 1.7rem;
-      filter: drop-shadow(0 3px 4px rgba(0,0,0,0.1));
-    }
-
-    /* --- LOADING BAR (facebook style) --- */
-    #facebook-loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 0%;
-      height: 4px;
-      background: #1877f2;  /* facebook blue */
-      box-shadow: 0 0 12px #1877f2;
-      z-index: 9999;
-      transition: width 0.3s ease-out;
+      font-size: 2rem;
+      color: #1d3f5c;
+      border: 1px solid white;
+      box-shadow: 0 20px 30px -10px #030f1a;
+      transition: 0.15s;
       pointer-events: none;
-      border-radius: 0 4px 4px 0;
     }
 
-    /* small screens */
-    @media (max-width: 420px) {
-      .home-card { padding: 28px 18px; }
-      .btn-icon { width: 74px; height: 74px; }
-      .btn-label { font-size: 0.95rem; }
+    .video-preview:active .play-button-large {
+      transform: scale(0.92);
+      background: white;
+    }
+
+    .video-iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 0;
+      display: none;
+      background: #000;
+    }
+
+    .video-card.playing .video-preview { display: none; }
+    .video-card.playing .video-iframe { display: block; }
+
+    .video-info {
+      padding: 18px 20px 20px;
+      background: rgba(255, 255, 255, 0.5);
+      border-top: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .video-title {
+      font-size: 1.2rem;
+      color: #0a2535;
+      margin-bottom: 12px;
+      line-height: 1.4;
+      word-break: break-word;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+    }
+
+    .video-source {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(230, 245, 255, 0.8);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      padding: 6px 18px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      color: #135b8a;
+      border: 1px solid white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .video-source i {
+      font-size: 1rem;
+      color: #1d4e7c;
+    }
+
+    /* scroll loader (optional) */
+    .scroll-loader {
+      display: flex;
+      justify-content: center;
+      padding: 20px 0 0;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .scroll-loader.show { opacity: 1; }
+    .loader-dots {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(8px);
+      padding: 10px 30px;
+      border-radius: 60px;
+      display: flex;
+      gap: 8px;
+      border: 1px solid white;
+    }
+    .loader-dots span {
+      width: 10px;
+      height: 10px;
+      background: #1e4b6e;
+      border-radius: 50%;
+      animation: pulse 1.2s infinite;
+    }
+    .loader-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loader-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse {
+      0%,100% { opacity: 0.3; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .empty-state {
+      padding: 50px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 70px;
+      text-align: center;
+      font-size: 1.5rem;
+      color: #1d3a52;
+    }
+
+    /* mobile fine-tuning */
+    @media (max-width: 500px) {
+      .app-shelf { padding: 20px 16px; }
+      .subject-icon { width: 80px; height: 80px; }
+      .subject-label { font-size: 0.84 rem; padding: 6px 18px; }
+      .video-info { padding: 14px 16px 16px; }
+      .video-title { font-size: 1rem; margin-bottom: 8px; }
+      .play-button-large { width: 52px; height: 52px; font-size: 1.6rem; }
+      .video-source { padding: 4px 14px; font-size: 0.75rem; }
+      .global-header span { font-size: 1.9rem; }
+      .global-header { gap: 8px; }
     }
   </style>
 </head>
 <body>
-  <!-- Facebook style loader bar (hidden by default) -->
-  <div id="facebook-loader" style="width: 0%; opacity: 0; transition: width 0.3s, opacity 0.2s;"></div>
+  <div class="app-shelf" id="appShelf">
+    <!-- Global header: Home button + "Lectures" (no icon) - hidden inside subject -->
+    <div class="global-header" id="globalHeader">
+  <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/" class="home-icon-btn" target="_blank" rel="noopener"><i class="fas fa-home"></i></a>
+  <span>Lectures</span>
+  <div style="width: 50px;"></div> <!-- empty spacer for balance -->
+</div>
 
-  <div class="home-card">
-    <div class="app-header">
-      <h1>Home</h1>
+    <!-- Subject navigation header (hidden on main screen) -->
+    <div class="nav-header" id="navHeader" style="display: none;">
+      <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button>
+      <span class="screen-title" id="screenTitle">Subject</span>
     </div>
 
-    <!-- 4 BUTTON grid – all with your 3D white‑bg icons -->
-    <div class="button-grid">
-      <!-- NEW LECTURES -->
-      <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/Latest/Lectures/lec1.html" class="icon-btn" data-loader="true">
-        <div class="btn-icon">
-          <img src="https://i.pinimg.com/736x/ef/3a/3a/ef3a3a71eeb06df330ef894f485ceea7.jpg" alt="new lectures" loading="lazy">
-        </div>
-        <span class="btn-label">New Lectures</span>
-      </a>
+    <div id="dynamicContent"></div>
 
-      <!-- NEW PDFS -->
-      <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/Latest/Materials/pdf1.html" class="icon-btn" data-loader="true">
-        <div class="btn-icon">
-          <img src="https://i.pinimg.com/1200x/71/79/a1/7179a16b54602880776978ed506a8e9b.jpg" alt="new pdfs" loading="lazy">
-        </div>
-        <span class="btn-label">New PDFs</span>
-      </a>
-
-      <!-- ARCHIVED LECTURES -->
-      <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/Archive/Lectures/lec2.html" class="icon-btn" data-loader="true">
-        <div class="btn-icon">
-          <img src="https://i.pinimg.com/1200x/a7/52/8f/a7528ff3cb3ea9ccf2574ee03b891f57.jpg" alt="archived lectures" loading="lazy">
-        </div>
-        <span class="btn-label">Archived Lectures</span>
-      </a>
-
-      <!-- ARCHIVED PDFS -->
-      <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/Archive/Materials/pdf2.html" class="icon-btn" data-loader="true">
-        <div class="btn-icon">
-          <img src="https://i.pinimg.com/736x/4d/2c/86/4d2c869b09a8d20d08250c49bb574e7a.jpg" alt="archived pdfs" loading="lazy">
-        </div>
-        <span class="btn-label">Archived PDFs</span>
-      </a>
-    </div>
-
-    <div class="info-note">
-      <span>⚡︎</span> Tap a button to continue.
+    <!-- subtle scroll loader (only visible during scroll) -->
+    <div class="scroll-loader" id="scrollLoader">
+      <div class="loader-dots"><span></span><span></span><span></span></div>
     </div>
   </div>
 
+  <!-- data.js (external) – we keep untouched; fallback not used if data.js present -->
+  <script src="data.js"></script>
   <script>
-    (function() {
-      // ---------- LOADER LOGIC (Facebook style + return handling) ----------
-      const loader = document.getElementById('facebook-loader');
-      let loaderInterval = null;
-      let currentWidth = 0;
-      let isActive = false;
+(function() {
+  // ----- DATA.JS IS LOADED EXTERNALLY, WE USE WINDOW.VIDEODATA -----
+  // If data.js fails to load or is empty, show error
+  if (!window.videoData || !Array.isArray(window.videoData) || window.videoData.length === 0) {
+    console.error("data.js not loaded or empty");
+    document.getElementById('dynamicContent').innerHTML = 
+      '<div class="empty-state"><i class="fa-regular fa-circle-exclamation"></i> Failed to load video data</div>';
+    return;
+  }
 
-      // clean start: ensure loader is hidden & width reset on page load
-      function resetLoader() {
-        if (loaderInterval) {
-          clearInterval(loaderInterval);
-          loaderInterval = null;
-        }
-        isActive = false;
-        currentWidth = 0;
-        loader.style.transition = 'none'; // kill transition for instant hide
-        loader.style.width = '0%';
-        loader.style.opacity = '0';
-        // force reflow to apply transition reset
-        loader.getBoundingClientRect();
-        // restore transition for future animations
-        loader.style.transition = 'width 0.3s ease-out, opacity 0.2s';
-      }
+  // ----- SUBJECT DEFINITIONS WITH THEIR FIRST VIDEO TITLE (MARKERS) -----
+  const subjectMarkers = [
+    { name: "Mentoring", marker: "BIOLOGY MENTORSHIP SESSION", iconUrl: "https://i.pinimg.com/736x/b6/07/c0/b607c09f72d88664e984687fdb444cd2.jpg" },
+    { name: "ICT", marker: "সংখ্যাপদ্ধতি-০১", iconUrl: "https://i.pinimg.com/736x/ca/18/7e/ca187e27a5555d3d5a635a4f19e7aa7a.jpg" },
+    { name: "English", marker: "Topic: Modifier", iconUrl: "https://i.pinimg.com/736x/48/c8/bc/48c8bce2fb6ba4115405a68508802507.jpg" },
+    { name: "Higher Math", marker: "জটিল সংখ্যা", iconUrl: "https://i.pinimg.com/736x/ee/a1/1b/eea11b5e3880d614819724a2f1676e0e.jpg" },
+    { name: "Chemistry", marker: "পরিমাণগত রসায়ন (পর্ব ১)", iconUrl: "https://i.pinimg.com/736x/45/9e/a5/459ea5d1b4072b89df2518df244bd28c.jpg" },
+    { name: "Physics", marker: "তাপগতিবিদ্যা (পর্ব ১)", iconUrl: "https://i.pinimg.com/736x/e6/78/34/e678348e532d1b85440c84354b669d92.jpg" },
+    { name: "Biology", marker: "রক্ত ও সংবহন (পর্ব-০১)", iconUrl: "https://i.pinimg.com/736x/a1/1b/d7/a11bd7b87d665b4e780da4bf18bd95f1.jpg" },
+    { name: "Bengali", marker: "ব্যাকরণিক শব্দশ্রেণি-0১ + তাহারেই পড়ে মনে", iconUrl: "https://i.pinimg.com/736x/65/63/1e/65631e0ff64d9e3aa64ec91280658b1b.jpg" }
+  ];
 
-      // start the loading bar (facebook style: fast to 80%, then slow)
-      function startLoader() {
-        resetLoader(); // ensure any previous interval is cleared and bar hidden
-        // small delay to avoid visual glitch
-        setTimeout(() => {
-          if (!isActive) {
-            isActive = true;
-            currentWidth = 0;
-            loader.style.opacity = '1';
-            loader.style.width = '0%';
-
-            // Simulate facebook flow: quickly to 70%, then trickle to 90%
-            let step = 0;
-            loaderInterval = setInterval(() => {
-              if (!isActive) return; // stopped by navigation or reset
-              
-              if (currentWidth < 70) {
-                // jump to 70% in first few increments
-                currentWidth = Math.min(70, currentWidth + (Math.random() * 15 + 10));
-              } else if (currentWidth < 90) {
-                // slower from 70% to 90%
-                currentWidth = Math.min(90, currentWidth + (Math.random() * 4 + 1));
-              } else {
-                // very slow after 90% (never reaches 100% until page unloads)
-                currentWidth = Math.min(97, currentWidth + (Math.random() * 0.8 + 0.2));
-              }
-              loader.style.width = currentWidth + '%';
-            }, 280); // facebook-like interval
-          }
-        }, 20);
-      }
-
-      // stop loader (used when returning to page, also called on reset)
-      function stopLoader() {
-        if (loaderInterval) {
-          clearInterval(loaderInterval);
-          loaderInterval = null;
-        }
-        if (isActive) {
-          // quickly complete the bar to 100% and fade out (professional touch)
-          isActive = false;
-          loader.style.transition = 'width 0.2s ease, opacity 0.2s';
-          loader.style.width = '100%';
-          setTimeout(() => {
-            loader.style.opacity = '0';
-            // after fade, set width to 0 (hidden) and restore transition
-            setTimeout(() => {
-              loader.style.transition = 'none';
-              loader.style.width = '0%';
-              loader.getBoundingClientRect();
-              loader.style.transition = 'width 0.3s ease-out, opacity 0.2s';
-            }, 200);
-          }, 200);
-        } else {
-          // ensure fully hidden
-          loader.style.transition = 'none';
-          loader.style.width = '0%';
-          loader.style.opacity = '0';
-          loader.getBoundingClientRect();
-          loader.style.transition = 'width 0.3s ease-out, opacity 0.2s';
-        }
-      }
-
-      // Attach click listeners to all buttons with data-loader="true"
-      const buttons = document.querySelectorAll('a[data-loader="true"]');
-      buttons.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          // Prevent multiple triggers, but let navigation happen
-          // Start the facebook style loader
-          startLoader();
-
-          // The browser will navigate away, but if user returns via back button
-          // we rely on the pageshow / load events to stop any stale loader.
-          // No need to prevent default – we want navigation.
-        });
+  // ----- FIND ALL MARKER POSITIONS IN THE VIDEO ARRAY -----
+  const markerPositions = [];
+  
+  subjectMarkers.forEach(subject => {
+    const index = window.videoData.findIndex(v => 
+      v.title === subject.marker || v.title.includes(subject.marker)
+    );
+    
+    if (index !== -1) {
+      markerPositions.push({
+        name: subject.name,
+        iconUrl: subject.iconUrl,
+        startIndex: index,
+        marker: subject.marker
       });
+    } else {
+      console.warn(`Marker not found for subject: ${subject.name}`);
+    }
+  });
 
-      // ---------- HANDLE PAGE RETURN (back / forward cache) ----------
-      // When user comes back to the page, stop loader immediately and reset.
-      window.addEventListener('pageshow', function(event) {
-        // If page is loaded from bfcache (back/forward), event.persisted is true
-        // Also runs on normal load, which is perfect.
-        stopLoader();  // This will reset width, stop intervals, hide bar.
+  // Sort markers by their position in the array
+  markerPositions.sort((a, b) => a.startIndex - b.startIndex);
+
+  // ----- BUILD SUBJECT BOUNDARIES (start to next marker's start) -----
+  const subjectMap = new Map();
+  
+  for (let i = 0; i < markerPositions.length; i++) {
+    const current = markerPositions[i];
+    const next = markerPositions[i + 1];
+    
+    const startIdx = current.startIndex;
+    const endIdx = next ? next.startIndex : window.videoData.length;
+    
+    // Get videos for this subject (from start to before next subject's start)
+    const videos = window.videoData.slice(startIdx, endIdx);
+    
+    subjectMap.set(current.name, {
+      iconUrl: current.iconUrl,
+      videos: videos,
+      startIndex: startIdx,
+      endIndex: endIdx
+    });
+  }
+
+  // Get ordered subject list (only subjects that have videos)
+  const orderedSubjects = markerPositions.map(m => m.name);
+
+  // DOM elements
+  const dynamicEl = document.getElementById('dynamicContent');
+  const navHeader = document.getElementById('navHeader');
+  const screenTitle = document.getElementById('screenTitle');
+  const backBtn = document.getElementById('backBtn');
+  const scrollLoader = document.getElementById('scrollLoader');
+  const globalHeader = document.getElementById('globalHeader');
+
+  // Helper to show/hide global header
+  function setGlobalHeaderVisible(visible) {
+    if (visible) {
+      globalHeader.classList.remove('hidden');
+    } else {
+      globalHeader.classList.add('hidden');
+    }
+  }
+
+  // Render main subject grid
+  function renderSubjectGrid() {
+    setGlobalHeaderVisible(true);
+    navHeader.style.display = 'none';
+
+    let gridHtml = `<div class="subject-grid">`;
+    orderedSubjects.forEach(subj => {
+      const item = subjectMap.get(subj);
+      if (item && item.videos.length > 0) {
+        gridHtml += `
+          <div class="subject-card" data-subject="${subj}">
+            <div class="subject-icon"><img src="${item.iconUrl}" alt="${subj}" loading="lazy"></div>
+            <span class="subject-label">${subj} (${item.videos.length})</span>
+          </div>
+        `;
+      }
+    });
+    gridHtml += `</div>`;
+    dynamicEl.innerHTML = gridHtml;
+
+    document.querySelectorAll('.subject-card').forEach(card => {
+      card.addEventListener('click', () => {
+        showSubjectVideos(card.dataset.subject);
       });
+    });
+  }
 
-      // Also on page load (redundant but safe)
-      window.addEventListener('load', function() {
-        stopLoader();
-      });
+  // Show videos for a subject
+  function showSubjectVideos(subject) {
+    setGlobalHeaderVisible(false);
+    navHeader.style.display = 'flex';
+    screenTitle.innerText = subject;
 
-      // Additionally, if any navigation is cancelled for some reason, 
-      // we can watch for visibility change to reset? not necessary, pageshow covers it.
+    const subjectData = subjectMap.get(subject);
+    const videos = subjectData ? subjectData.videos : [];
 
-      // Edge: in case script runs after dom load, ensure loader is reset
-      if (document.readyState === 'complete') {
-        stopLoader();
+    let cardsHtml = '';
+    videos.forEach(v => {
+      const isYoutube = !v.videoId.includes('/');
+      let embedUrl = '';
+      if (isYoutube) {
+        embedUrl = `https://www.youtube.com/embed/${v.videoId}?autoplay=1&controls=1&rel=0`;
       } else {
-        window.addEventListener('load', stopLoader);
+        const parts = v.videoId.split('/');
+        if (parts.length === 2) {
+          embedUrl = `https://player.mediadelivery.net/embed/${parts[0]}/${parts[1]}?autoplay=true&controls=true`;
+        } else {
+          embedUrl = ''; // fallback
+        }
       }
+      const sourceIcon = isYoutube ? '<i class="fab fa-youtube"></i> YouTube' : '<i class="fas fa-database"></i> Media';
+      cardsHtml += `
+        <div class="video-card" data-embed="${embedUrl.replace(/&/g, '&amp;')}">
+          <div class="video-preview">
+            <div class="play-button-large"><i class="fas fa-play"></i></div>
+          </div>
+          <iframe class="video-iframe" src="" allow="accelerometer; gyroscope; picture-in-picture; fullscreen; autoplay"></iframe>
+          <div class="video-info">
+            <div class="video-title">${v.title}</div>
+            <span class="video-source">${sourceIcon}</span>
+          </div>
+        </div>
+      `;
+    });
 
-      // also if user clicks fast and returns, the above covers it.
-    })();
-  </script>
+    if (videos.length === 0) {
+      cardsHtml = `<div class="empty-state"><i class="fa-regular fa-folder-open"></i> No videos found</div>`;
+    }
+
+    dynamicEl.innerHTML = `<div class="video-grid" id="activeVideoGrid">${cardsHtml}</div>`;
+
+    // Video play functionality
+    document.querySelectorAll('.video-card').forEach(card => {
+      const preview = card.querySelector('.video-preview');
+      const iframe = card.querySelector('.video-iframe');
+      const embedUrl = card.dataset.embed;
+      if (preview && iframe && embedUrl) {
+        preview.addEventListener('click', function() {
+          // Pause all other videos first
+          document.querySelectorAll('.video-card.playing').forEach(playingCard => {
+            if (playingCard !== card) {
+              const otherIframe = playingCard.querySelector('.video-iframe');
+              if (otherIframe) {
+                otherIframe.src = '';
+              }
+              playingCard.classList.remove('playing');
+            }
+          });
+          
+          // Play current video
+          iframe.src = embedUrl;
+          card.classList.add('playing');
+        });
+      }
+    });
+
+    document.querySelector('.app-shelf').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Back button functionality
+  backBtn.addEventListener('click', () => {
+    renderSubjectGrid();
+  });
+
+  // Initial render
+  renderSubjectGrid();
+
+  // Scroll loader hide on load
+  window.addEventListener('load', () => {
+    if (window.loaderTimer) clearTimeout(window.loaderTimer);
+    scrollLoader.classList.remove('show');
+  });
+
+  // Optional: Show which videos belong to which subject (for debugging)
+  console.log('Subject boundaries:');
+  orderedSubjects.forEach(subj => {
+    const data = subjectMap.get(subj);
+    console.log(`${subj}: ${data.videos.length} videos (indices ${data.startIndex}-${data.endIndex-1})`);
+  });
+})();
+</script>
 </body>
 </html>
