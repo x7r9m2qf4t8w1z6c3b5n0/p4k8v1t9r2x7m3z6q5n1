@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Lectures</title>
+  <title>Classes</title>
   <!-- Hind Siliguri (weight 700 for all text) + fallback -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -342,7 +342,7 @@
     @media (max-width: 500px) {
       .app-shelf { padding: 20px 16px; }
       .subject-icon { width: 80px; height: 80px; }
-      .subject-label { font-size: 0.7rem; padding: 6px 18px; }
+      .subject-label { font-size: 0.84rem; padding: 6px 18px; }
       .video-info { padding: 14px 16px 16px; }
       .video-title { font-size: 1rem; margin-bottom: 8px; }
       .play-button-large { width: 52px; height: 52px; font-size: 1.6rem; }
@@ -357,7 +357,7 @@
     <!-- Global header: Home button + "Lectures" (no icon) - hidden inside subject -->
     <div class="global-header" id="globalHeader">
   <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/" class="home-icon-btn" target="_blank" rel="noopener"><i class="fas fa-home"></i></a>
-  <span>Lectures</span>
+  <span>Classes</span>
   <div style="width: 50px;"></div> <!-- empty spacer for balance -->
 </div>
 
@@ -379,14 +379,6 @@
   <script src="data.js"></script>
   <script>
 (function() {
-  // ----- DATA.JS IS LOADED EXTERNALLY, WE USE WINDOW.VIDEODATA -----
-  // If data.js fails to load or is empty, show error
-  if (!window.videoData || !Array.isArray(window.videoData) || window.videoData.length === 0) {
-    console.error("data.js not loaded or empty");
-    document.getElementById('dynamicContent').innerHTML = 
-      '<div class="empty-state"><i class="fa-regular fa-circle-exclamation"></i> Failed to load video data</div>';
-    return;
-  }
 
   // ----- SUBJECT DEFINITIONS WITH THEIR FIRST VIDEO TITLE (MARKERS) -----
   const subjectMarkers = [
@@ -587,4 +579,3 @@
 </script>
 </body>
 </html>
-
