@@ -3,222 +3,416 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Home</title>
+  <title>Home · bold hub</title>
   <style>
-    /* RESET & GLOBAL */
+    /* ----- RESET & GLOBAL (ALL TEXT BOLD / HELVETICA) ----- */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      /* Helvetica with fallbacks — all text bold as requested */
+      font-family: "WF Visual Sans Variable", Arial, sans-serif;
+      font-weight: 400;          /* everything bold */
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
       min-height: 100vh;
-      background: linear-gradient(145deg, #f6f9fc 0%, #eef2f7 100%);
+      background: radial-gradient(circle at 30% 20%, #dee8f2, #c9d6e6);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 20px 16px;
+      /* fade-in animation for everything on page load */
+      animation: bodyFade 0.9s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
+      opacity: 0; /* start invisible */
     }
 
-    /* main card – softer, slightly elevated */
+    @keyframes bodyFade {
+      0% { opacity: 0; transform: scale(0.99); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* main card – deeper glass + strong shadows */
     .home-card {
-      max-width: 420px;
+      max-width: 440px;
       width: 100%;
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      border-radius: 40px;
-      padding: 32px 24px;
-      border: 1px solid rgba(255,255,255,0.5);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 52px;
+      padding: 38px 28px;
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow: 0 30px 45px -16px rgba(0,25,50,0.45),
+                  inset 0 2px 3px rgba(255,255,255,0.8);
     }
 
-    /* decorative header – simple but friendly */
+    /* header – bold & elegant */
     .app-header {
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 30px;
     }
 
     .app-header h1 {
-      font-size: 2.1rem;
-      font-weight: 600;
-      background: linear-gradient(135deg, #1f2a3a, #2c3e50);
+      font-size: 2.8rem;
+      font-weight: 700;
+      background: linear-gradient(150deg, #152A3A, #1C3C55);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      letter-spacing: -0.5px;
-      text-shadow: 2px 4px 10px rgba(0,30,50,0.1);
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      text-shadow: 0 3px 8px rgba(0,25,40,0.2);
+    }
+
+    .app-header h1 span {
+      font-size: 2.6rem;
+      filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.15));
     }
 
     .app-header p {
       font-size: 1rem;
-      color: #4a5b6e;
-      margin-top: 6px;
-      font-weight: 400;
-      opacity: 0.8;
+      font-weight: 700;
+      color: #1f3f57;
+      background: rgba(255,255,255,0.6);
+      display: inline-block;
+      padding: 8px 28px;
+      border-radius: 60px;
+      backdrop-filter: blur(4px);
+      margin-top: 12px;
+      border: 1px solid white;
+      box-shadow: 0 4px 8px -4px rgba(0,20,40,0.2);
     }
 
-    /* 2x2 grid – perfect for four buttons */
+    /* 2x2 grid */
     .button-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 18px;
+      gap: 22px;
       margin: 20px 0 30px 0;
     }
 
-    /* ----- 3D ICON BUTTONS (colored, with depth) ----- */
+    /* ----- ICON BUTTONS – elevated, all bold text inside ----- */
     .icon-btn {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-decoration: none;
-      padding: 22px 8px 18px 8px;
-      border-radius: 28px;
+      padding: 24px 8px 18px 8px;
+      border-radius: 36px;
       background: #ffffff;
-      color: #1e2b37;
-      font-weight: 550;
+      color: #142f42;
+      font-weight: 700;          /* explicit bold */
       font-size: 1rem;
-      letter-spacing: 0.3px;
-      transition: all 0.2s ease;
-      border: 1px solid rgba(255,255,255,0.6);
+      transition: all 0.22s cubic-bezier(0.2, 0, 0, 1);
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow: 0 16px 22px -12px rgba(0,30,50,0.3),
+                  0 5px 0 0 #e0e8f0,
+                  inset 0 -1px 4px rgba(255,255,255,0.8);
       line-height: 1.3;
-      gap: 12px;
+      gap: 16px;
+      backdrop-filter: blur(2px);
+      /* fade in staggered (each button fades slightly later) – optional but classy */
+      animation: btnFade 0.7s ease forwards;
+      opacity: 0;
     }
 
-    /* each button gets a subtle 3d lift on press */
+    .icon-btn:nth-child(1) { animation-delay: 0.1s; }
+    .icon-btn:nth-child(2) { animation-delay: 0.2s; }
+    .icon-btn:nth-child(3) { animation-delay: 0.3s; }
+    .icon-btn:nth-child(4) { animation-delay: 0.4s; }
+
+    @keyframes btnFade {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
     .icon-btn:active {
-      transform: translateY(4px);
+      transform: translateY(7px);
+      box-shadow: 0 8px 14px -8px rgba(0,25,45,0.4),
+                  0 2px 0 0 #ccd6e2,
+                  inset 0 1px 5px white;
     }
 
-    /* icon wrappers – the 3d / glossy icons */
+    /* icon wrapper – white background, deep shadow */
     .btn-icon {
-      width: 64px;
-      height: 64px;
+      width: 84px;
+      height: 84px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 24px;
-      font-size: 36px;
-      filter: drop-shadow(0 8px 6px rgba(0,0,0,0.2));
-      transform: rotate(0deg) scale(1);
-      transition: transform 0.2s;
-      background: rgba(255,255,255,0.3);
-      backdrop-filter: blur(2px);
+      border-radius: 28px;
+      background: white;
+      box-shadow: 0 18px 22px -10px rgba(0,30,50,0.4),
+                  0 0 0 1px rgba(0,0,0,0.04),
+                  inset 0 -4px 0 rgba(0,0,0,0.02);
+      transition: all 0.2s;
+      padding: 8px;
+    }
+
+    .btn-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 22px;
+      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.15));
+      transition: filter 0.2s;
     }
 
     .icon-btn:hover .btn-icon {
-      transform: scale(1.02) rotate(-1deg);
+      transform: scale(1.02);
+      box-shadow: 0 22px 28px -10px rgba(0,40,65,0.5);
     }
 
-    /* individual vibrant colors for each 3D icon */
-    .btn-1 .btn-icon {  /* new lectures */
-      background: linear-gradient(145deg, #4a9eff, #2b7be4);
-      color: white;
-      text-shadow: 0 2px 0 #0d2f5a;
-    }
-    .btn-2 .btn-icon {  /* new pdfs */
-      background: linear-gradient(145deg, #ff7b5c, #e7593a);
-      color: white;
-      text-shadow: 0 2px 0 #792b1b;
-    }
-    .btn-3 .btn-icon {  /* archived lectures */
-      background: linear-gradient(145deg, #8f7ae6, #6d56c7);
-      color: white;
-      text-shadow: 0 2px 0 #2f2164;
-    }
-    .btn-4 .btn-icon {  /* archived pdfs */
-      background: linear-gradient(145deg, #2fc5a6, #1e9e82);
-      color: white;
-      text-shadow: 0 2px 0 #0b4f40;
-    }
-
-    /* button label text */
+    /* label – bold + frosted */
     .btn-label {
-      font-size: -0.95rem;
-      font-weight: 590;
-      color: #1e2d3c;
-      background: rgba(255,255,255,0.5);
-      padding: 5px 10px;
-      border-radius: 30px;
-      backdrop-filter: blur(2px);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #113245;
+      background: rgba(240, 247, 252, 0.8);
+      padding: 7px 16px;
+      border-radius: 40px;
+      backdrop-filter: blur(4px);
+      box-shadow: inset 0 1px 5px white, 0 6px 12px -8px #00203340;
+      border: 1px solid rgba(255,255,255,0.9);
+      letter-spacing: 0.3px;
     }
 
-    /* note / help text */
+    /* info note – bold, clean */
     .info-note {
-      margin-top: 24px;
-      background: rgba(255,255,255,0.7);
-      border-radius: 60px;
-      padding: 12px 14px;
+      margin-top: 16px;
+      background: rgba(20, 45, 65, 0.1);
+      border-radius: 100px;
+      padding: 14px 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      color: #2e405b;
-      font-size: 0.95rem;
-      border: 1px solid rgba(255,255,255,0.8);
-      backdrop-filter: blur(2px);
+      gap: 12px;
+      color: #183f56;
+      font-size: 1rem;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.7);
+      backdrop-filter: blur(5px);
+      box-shadow: 0 5px 12px -6px rgba(0,0,0,0.25), inset 0 1px 4px white;
+      animation: noteFade 0.8s ease 0.5s forwards;
+      opacity: 0;
+    }
+
+    @keyframes noteFade {
+      0% { opacity: 0; transform: translateY(6px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     .info-note span {
-      font-size: 1.3rem;
+      font-size: 1.7rem;
+      filter: drop-shadow(0 3px 4px rgba(0,0,0,0.1));
     }
 
-    /* disable any default link underline */
-    a {
-      text-decoration: none;
+    /* --- LOADING BAR (facebook style) --- */
+    #facebook-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 4px;
+      background: #1877f2;  /* facebook blue */
+      box-shadow: 0 0 12px #1877f2;
+      z-index: 9999;
+      transition: width 0.3s ease-out;
+      pointer-events: none;
+      border-radius: 0 4px 4px 0;
     }
 
-    /* fine tuning for very small screens (<= 380px) */
-    @media (max-width: 380px) {
-      .home-card { padding: 24px 16px; }
-      .btn-icon { width: 56px; height: 56px; font-size: 32px; }
-      .btn-label { font-size: 0.9rem; }
-      .button-grid { gap: 12px; }
+    /* small screens */
+    @media (max-width: 420px) {
+      .home-card { padding: 28px 18px; }
+      .btn-icon { width: 74px; height: 74px; }
+      .btn-label { font-size: 0.95rem; }
     }
   </style>
 </head>
 <body>
+  <!-- Facebook style loader bar (hidden by default) -->
+  <div id="facebook-loader" style="width: 0%; opacity: 0; transition: width 0.3s, opacity 0.2s;"></div>
+
   <div class="home-card">
     <div class="app-header">
-      <h1>🏠 Home</h1>
+      <h1>Home</h1>
     </div>
 
-    <!-- 4 BUTTON grid: 2 columns, each with icon + label (exactly as requested) -->
+    <!-- 4 BUTTON grid – all with your 3D white‑bg icons -->
     <div class="button-grid">
-      <!-- 1. NEW LECTURES -->
-      <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/Latest/Lectures/lec1.html" class="icon-btn btn-1">
-        <div class="btn-icon">🎥</div>
+      <!-- NEW LECTURES -->
+      <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/Latest/Lectures/lec1.html" class="icon-btn" data-loader="true">
+        <div class="btn-icon">
+          <img src="https://i.pinimg.com/736x/ef/3a/3a/ef3a3a71eeb06df330ef894f485ceea7.jpg" alt="new lectures" loading="lazy">
+        </div>
         <span class="btn-label">New Lectures</span>
       </a>
 
-      <!-- 2. NEW PDFS -->
-      <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/Latest/Materials/pdf1.html" class="icon-btn btn-2">
-        <div class="btn-icon">📄</div>
+      <!-- NEW PDFS -->
+      <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/Latest/Materials/pdf1.html" class="icon-btn" data-loader="true">
+        <div class="btn-icon">
+          <img src="https://i.pinimg.com/1200x/71/79/a1/7179a16b54602880776978ed506a8e9b.jpg" alt="new pdfs" loading="lazy">
+        </div>
         <span class="btn-label">New PDFs</span>
       </a>
 
-      <!-- 3. ARCHIVED LECTURES -->
-      <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/Archive/Lectures/lec2.html" class="icon-btn btn-3">
-        <div class="btn-icon">🗂️</div>
+      <!-- ARCHIVED LECTURES -->
+      <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/Archive/Lectures/lec2.html" class="icon-btn" data-loader="true">
+        <div class="btn-icon">
+          <img src="https://i.pinimg.com/1200x/a7/52/8f/a7528ff3cb3ea9ccf2574ee03b891f57.jpg" alt="archived lectures" loading="lazy">
+        </div>
         <span class="btn-label">Archived Lectures</span>
       </a>
 
-      <!-- 4. ARCHIVED PDFS -->
-      <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/Archive/Materials/pdf2.html" class="icon-btn btn-4">
-        <div class="btn-icon">📚</div>
+      <!-- ARCHIVED PDFS -->
+      <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/Archive/Materials/pdf2.html" class="icon-btn" data-loader="true">
+        <div class="btn-icon">
+          <img src="https://i.pinimg.com/736x/4d/2c/86/4d2c869b09a8d20d08250c49bb574e7a.jpg" alt="archived pdfs" loading="lazy">
+        </div>
         <span class="btn-label">Archived PDFs</span>
       </a>
     </div>
 
-    <!-- subtle indicator (pure design, no functionality) matches the "three divs" flavor and icons -->
     <div class="info-note">
-      <span>⚡</span> Tap any button to proceed!
+      <span>⚡︎</span> Tap a button to continue.
     </div>
   </div>
-  </div>
+
+  <script>
+    (function() {
+      // ---------- LOADER LOGIC (Facebook style + return handling) ----------
+      const loader = document.getElementById('facebook-loader');
+      let loaderInterval = null;
+      let currentWidth = 0;
+      let isActive = false;
+
+      // clean start: ensure loader is hidden & width reset on page load
+      function resetLoader() {
+        if (loaderInterval) {
+          clearInterval(loaderInterval);
+          loaderInterval = null;
+        }
+        isActive = false;
+        currentWidth = 0;
+        loader.style.transition = 'none'; // kill transition for instant hide
+        loader.style.width = '0%';
+        loader.style.opacity = '0';
+        // force reflow to apply transition reset
+        loader.getBoundingClientRect();
+        // restore transition for future animations
+        loader.style.transition = 'width 0.3s ease-out, opacity 0.2s';
+      }
+
+      // start the loading bar (facebook style: fast to 80%, then slow)
+      function startLoader() {
+        resetLoader(); // ensure any previous interval is cleared and bar hidden
+        // small delay to avoid visual glitch
+        setTimeout(() => {
+          if (!isActive) {
+            isActive = true;
+            currentWidth = 0;
+            loader.style.opacity = '1';
+            loader.style.width = '0%';
+
+            // Simulate facebook flow: quickly to 70%, then trickle to 90%
+            let step = 0;
+            loaderInterval = setInterval(() => {
+              if (!isActive) return; // stopped by navigation or reset
+              
+              if (currentWidth < 70) {
+                // jump to 70% in first few increments
+                currentWidth = Math.min(70, currentWidth + (Math.random() * 15 + 10));
+              } else if (currentWidth < 90) {
+                // slower from 70% to 90%
+                currentWidth = Math.min(90, currentWidth + (Math.random() * 4 + 1));
+              } else {
+                // very slow after 90% (never reaches 100% until page unloads)
+                currentWidth = Math.min(97, currentWidth + (Math.random() * 0.8 + 0.2));
+              }
+              loader.style.width = currentWidth + '%';
+            }, 280); // facebook-like interval
+          }
+        }, 20);
+      }
+
+      // stop loader (used when returning to page, also called on reset)
+      function stopLoader() {
+        if (loaderInterval) {
+          clearInterval(loaderInterval);
+          loaderInterval = null;
+        }
+        if (isActive) {
+          // quickly complete the bar to 100% and fade out (professional touch)
+          isActive = false;
+          loader.style.transition = 'width 0.2s ease, opacity 0.2s';
+          loader.style.width = '100%';
+          setTimeout(() => {
+            loader.style.opacity = '0';
+            // after fade, set width to 0 (hidden) and restore transition
+            setTimeout(() => {
+              loader.style.transition = 'none';
+              loader.style.width = '0%';
+              loader.getBoundingClientRect();
+              loader.style.transition = 'width 0.3s ease-out, opacity 0.2s';
+            }, 200);
+          }, 200);
+        } else {
+          // ensure fully hidden
+          loader.style.transition = 'none';
+          loader.style.width = '0%';
+          loader.style.opacity = '0';
+          loader.getBoundingClientRect();
+          loader.style.transition = 'width 0.3s ease-out, opacity 0.2s';
+        }
+      }
+
+      // Attach click listeners to all buttons with data-loader="true"
+      const buttons = document.querySelectorAll('a[data-loader="true"]');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          // Prevent multiple triggers, but let navigation happen
+          // Start the facebook style loader
+          startLoader();
+
+          // The browser will navigate away, but if user returns via back button
+          // we rely on the pageshow / load events to stop any stale loader.
+          // No need to prevent default – we want navigation.
+        });
+      });
+
+      // ---------- HANDLE PAGE RETURN (back / forward cache) ----------
+      // When user comes back to the page, stop loader immediately and reset.
+      window.addEventListener('pageshow', function(event) {
+        // If page is loaded from bfcache (back/forward), event.persisted is true
+        // Also runs on normal load, which is perfect.
+        stopLoader();  // This will reset width, stop intervals, hide bar.
+      });
+
+      // Also on page load (redundant but safe)
+      window.addEventListener('load', function() {
+        stopLoader();
+      });
+
+      // Additionally, if any navigation is cancelled for some reason, 
+      // we can watch for visibility change to reset? not necessary, pageshow covers it.
+
+      // Edge: in case script runs after dom load, ensure loader is reset
+      if (document.readyState === 'complete') {
+        stopLoader();
+      } else {
+        window.addEventListener('load', stopLoader);
+      }
+
+      // also if user clicks fast and returns, the above covers it.
+    })();
+  </script>
 </body>
 </html>
