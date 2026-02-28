@@ -1,435 +1,514 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>PDFs</title>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* ===== CSS Reset & Variables ===== */
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --success-color: #27ae60;
-            --light-bg: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-primary: #2d3748;
-            --text-secondary: #4a5568;
-            --text-muted: #718096;
-            --border-color: #e2e8f0;
-            --border-radius: 12px;
-            --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            --box-shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.12);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        /* ===== Base Styles ===== */
-        body {
-            font-family: 'Hind Siliguri', sans-serif;
-            background-color: var(--light-bg);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-        }
-        
-        /* ===== Header Styles ===== */
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 24px;
-            position: relative;
-        }
-        
-        h1 {
-            font-weight: 700;
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-        
-        .subtitle {
-            font-weight: 600;
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-        }
-        
-        .session-count {
-            display: inline-block;
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-        
-        /* ===== PDF Grid Layout ===== */
-        .pdf-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        /* ===== PDF Card Styles ===== */
-        .pdf-card {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid var(--border-color);
-            border-top: 4px solid #e74c3c;
-        }
-        
-        .pdf-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--box-shadow-hover);
-        }
-        
-        .pdf-link {
-            display: flex;
-            align-items: center;
-            padding: 20px;
-            text-decoration: none;
-            color: inherit;
-            flex: 1;
-            transition: background-color 0.2s ease;
-        }
-        
-        .pdf-link:hover {
-            background-color: rgba(231, 76, 60, 0.05);
-        }
-        
-        .pdf-icon {
-            margin-right: 16px;
-            font-size: 1.4rem;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            flex-shrink: 0;
-            background-color: rgba(231, 76, 60, 0.1);
-            color: #e74c3c;
-        }
-        
-        .pdf-content {
-            flex: 1;
-            min-width: 0; /* For text truncation */
-        }
-        
-        .pdf-title {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--primary-color);
-            margin-bottom: 6px;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .pdf-meta {
-            display: flex;
-            align-items: center;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-        
-        .pdf-type {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 0.75rem;
-            margin-right: 10px;
-            background-color: rgba(231, 76, 60, 0.1);
-            color: #e74c3c;
-        }
-        
-        /* ===== Footer Styles ===== */
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        
-        .footer-note {
-            margin-top: 8px;
-            font-size: 0.85rem;
-            font-weight: 400;
-            color: #a0aec0;
-        }
-        
-        /* ===== Responsive Design ===== */
-        
-        /* Tablet: 2 columns */
-        @media (min-width: 768px) {
-            .pdf-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 24px;
-            }
-            
-            h1 {
-                font-size: 2.5rem;
-            }
-            
-            .pdf-title {
-                font-size: 1.15rem;
-            }
-        }
-        
-        /* Desktop: 3 columns */
-        @media (min-width: 1024px) {
-            .pdf-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 28px;
-            }
-            
-            h1 {
-                font-size: 2.8rem;
-            }
-            
-            .subtitle {
-                font-size: 1.2rem;
-            }
-            
-            body {
-                padding: 30px;
-            }
-        }
-        
-        /* Large Desktop: 4 columns */
-        @media (min-width: 1400px) {
-            .pdf-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        
-        /* Mobile optimization */
-        @media (max-width: 767px) {
-            body {
-                padding: 16px;
-                overflow-x: hidden; /* Prevent horizontal scroll */
-            }
-            
-            .container {
-                width: 100%;
-                min-width: auto; /* Remove fixed min-width */
-            }
-            
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            .subtitle {
-                font-size: 1rem;
-            }
-            
-            .pdf-link {
-                padding: 16px;
-            }
-            
-            .pdf-icon {
-                width: 36px;
-                height: 36px;
-                font-size: 1.2rem;
-                margin-right: 14px;
-            }
-            
-            .pdf-title {
-                font-size: 1rem;
-            }
-        }
-        
-        /* Small mobile devices */
-        @media (max-width: 480px) {
-            body {
-                padding: 12px;
-            }
-            
-            h1 {
-                font-size: 1.6rem;
-            }
-            
-            .subtitle {
-                font-size: 0.95rem;
-            }
-            
-            .pdf-link {
-                padding: 14px;
-            }
-            
-            .pdf-icon {
-                width: 32px;
-                height: 32px;
-                font-size: 1.1rem;
-                margin-right: 12px;
-            }
-            
-            .pdf-title {
-                font-size: 0.95rem;
-            }
-            
-            .pdf-meta {
-                font-size: 0.8rem;
-            }
-            
-            .session-count {
-                font-size: 0.8rem;
-                padding: 3px 10px;
-            }
-        }
-        
-        /* Extra small devices */
-        @media (max-width: 380px) {
-            body {
-                padding: 10px;
-            }
-            
-            .pdf-card {
-                border-radius: 10px;
-            }
-            
-            .pdf-link {
-                padding: 12px;
-            }
-            
-            .pdf-icon {
-                width: 30px;
-                height: 30px;
-                font-size: 1rem;
-                margin-right: 10px;
-            }
-            
-            .pdf-title {
-                font-size: 0.9rem;
-                -webkit-line-clamp: 3; /* Show more lines on very small screens */
-            }
-            
-            h1 {
-                font-size: 1.4rem;
-            }
-            
-            .subtitle {
-                font-size: 0.9rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Notes</title>
+  <!-- Hind Siliguri (weight 700 for all text) + fallback -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@700&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Hind Siliguri', sans-serif;
+      font-weight: 700 !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 30% 20%, #dee8f2, #c9d6e6);
+      padding: 16px 14px;
+      animation: fadeIn 0.8s ease forwards;
+      opacity: 0;
+    }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    .app-shelf {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 52px;
+      padding: 28px 24px;
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow: 0 30px 45px -20px rgba(0,25,50,0.5), inset 0 1px 4px white;
+    }
+
+    /* --- global header (home + Notes) --- */
+    .global-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .home-icon-btn {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(4px);
+      border: 1px solid white;
+      width: 50px;
+      height: 50px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: #1f3a4e;
+      box-shadow: 0 10px 15px -8px #0b2a3b;
+      cursor: pointer;
+      transition: 0.15s;
+      text-decoration: none;
+    }
+    .home-icon-btn:active { transform: translateY(5px); box-shadow: 0 5px 8px -5px #0b2a3b; }
+    .global-header span {
+      font-size: 2.4rem;
+      background: linear-gradient(145deg, #153448, #1f5a7a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    /* hide global header inside subject view */
+    .global-header.hidden { display: none; }
+
+    /* ----- subject navigation header (back + title) ----- */
+    .nav-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .back-btn {
+      background: rgba(255,255,255,0.7);
+      border: none;
+      backdrop-filter: blur(4px);
+      width: 48px;
+      height: 48px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1f3a4e;
+      box-shadow: 0 10px 18px -8px rgba(0,20,30,0.3), inset 0 -2px 0 rgba(0,0,0,0.05);
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.8);
+      transition: 0.15s;
+    }
+    .back-btn:active { transform: translateY(5px); box-shadow: 0 5px 10px -5px #0b2a3b; }
+    .back-btn i { font-size: 1.8rem; }
+    .screen-title {
+      font-size: 2.2rem;
+      background: linear-gradient(145deg, #153448, #1f4868);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* ----- subject grid (2 per row) same as lectures ----- */
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px;
+      margin: 10px 0 20px;
+    }
+    .subject-card {
+      background: white;
+      border-radius: 38px;
+      padding: 22px 12px 18px;
+      border: 1px solid rgba(255,255,255,0.9);
+      box-shadow: 0 20px 28px -14px rgba(6,30,50,0.4), 0 5px 0 0 #e0ecf5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2,0,0,1);
+      animation: cardFade 0.5s ease forwards;
+      opacity: 0;
+    }
+    .subject-card:nth-child(n) { animation-delay: 0.05s; }
+    @keyframes cardFade {
+      0% { opacity: 0; transform: translateY(12px); }
+      100% { opacity: 1; transform: transform: 0; }
+    }
+    .subject-card:active {
+      transform: translateY(6px);
+      box-shadow: 0 10px 18px -8px #0a293d, 0 2px 0 0 #c2d4e2;
+    }
+    .subject-icon {
+      width: 96px;
+      height: 96px;
+      border-radius: 32px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 12px 14px rgba(0,30,50,0.25));
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.02), 0 8px 12px -6px #14304050;
+      padding: 8px;
+    }
+    .subject-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 28px;
+      display: block;
+    }
+    .subject-label {
+      font-size: 1.5rem;
+      background: rgba(210, 230, 245, 0.7);
+      backdrop-filter: blur(3px);
+      padding: 8px 26px;
+      border-radius: 60px;
+      border: 1px solid white;
+      color: #0d2d41;
+    }
+
+    /* ----- PDF GRID (mobile single, desktop two columns) ----- */
+    .pdf-grid {
+      display: grid;
+      grid-template-columns: 1fr;  /* mobile default */
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    /* Desktop: two columns */
+    @media (min-width: 900px) {
+      .pdf-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* PDF card — no preview, just sleek glass card with title + external link */
+    .pdf-card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 16px 24px -12px #0f2b3d;
+      transition: 0.15s;
+      animation: cardPop 0.4s ease;
+      cursor: pointer;  /* whole card clickable */
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .pdf-card:active {
+      transform: translateY(4px);
+      box-shadow: 0 10px 18px -10px #0f2b3d;
+    }
+    @keyframes cardPop {
+      0% { opacity: 0; transform: scale(0.98); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .pdf-info {
+      padding: 24px 22px 22px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 32px;          /* keep card rounded */
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .pdf-title {
+      font-size: 1.25rem;
+      color: #0a2535;
+      line-height: 1.4;
+      word-break: break-word;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .pdf-title i {
+      font-size: 2rem;
+      color: #c73a3a;
+      filter: drop-shadow(0 4px 5px rgba(120,40,40,0.2));
+    }
+
+    .open-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(230, 245, 255, 0.8);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      padding: 10px 22px;
+      border-radius: 60px;
+      font-size: 1rem;
+      color: #135b8a;
+      border: 1px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      width: fit-content;
+      transition: 0.1s;
+    }
+    .open-link i {
+      font-size: 1.2rem;
+    }
+    /* whole card click: no extra hover on link needed */
+    .pdf-card:active .open-link {
+      background: rgba(210, 235, 255, 0.9);
+    }
+
+    .scroll-loader {
+      display: flex;
+      justify-content: center;
+      padding: 20px 0 0;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .scroll-loader.show { opacity: 1; }
+    .loader-dots {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(8px);
+      padding: 10px 30px;
+      border-radius: 60px;
+      display: flex;
+      gap: 8px;
+      border: 1px solid white;
+    }
+    .loader-dots span {
+      width: 10px;
+      height: 10px;
+      background: #1e4b6e;
+      border-radius: 50%;
+      animation: pulse 1.2s infinite;
+    }
+    .loader-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loader-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse {
+      0%,100% { opacity: 0.3; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .empty-state {
+      padding: 50px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 70px;
+      text-align: center;
+      font-size: 1.5rem;
+      color: #1d3a52;
+    }
+
+    /* mobile fine-tuning */
+    @media (max-width: 500px) {
+      .app-shelf { padding: 20px 16px; }
+      .subject-icon { width: 80px; height: 80px; }
+      .subject-label { font-size: 0.9rem; padding: 6px 16px; }
+      .pdf-info { padding: 18px 16px 16px; }
+      .pdf-title { font-size: 1rem; gap: 8px; }
+      .pdf-title i { font-size: 1.6rem; }
+      .open-link { padding: 6px 18px; font-size: 0.85rem; }
+      .global-header span { font-size: 1.9rem; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <br>
-            <h1>PDFS</h1>
-            <p class="subtitle"></p>
-            <div class="session-count" id="sessionCount">Loading PDFs...</div>
-        </header>
-        
-        <div class="pdf-grid" id="pdfGrid">
-            <!-- PDF cards will be generated by JavaScript -->
-        </div>
-        
-        <footer>
-            <p><span id="currentYear"></span></p>
-            <p class="footer-note"></p>
-        </footer>
+  <div class="app-shelf" id="appShelf">
+    <!-- Global header: Home button + "Notes" (mirror Lectures) -->
+    <div class="global-header" id="globalHeader">
+      <a href="https://x7r9m2qf4t8w1z6c3b5n0.github.io/p4k8v1t9r2x7m3z6q5n1/" class="home-icon-btn" target="_blank" rel="noopener"><i class="fas fa-home"></i></a>
+      <span>Notes</span>
+      <div style="width: 50px;"></div> <!-- spacer -->
     </div>
-    <script src="data.js"></script>
-    <script>
-        // Set current year in footer
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-        
-        // Function to create PDF card HTML
-        function createPdfCard(pdf, index) {
-            const pdfUrl = pdf.url;
-            
-            return `
-                <div class="pdf-card">
-                    <a href="${pdfUrl}" target="_blank" class="pdf-link">
-                        <span class="pdf-icon">
-                            <i class="fas fa-file-pdf"></i>
-                        </span>
-                        <div class="pdf-content">
-                            <h3 class="pdf-title">${pdf.title}</h3>
-                            <div class="pdf-meta">
-                                <span class="pdf-type">PDF Document</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            `;
-        }
-        
-        // Function to render all PDF cards
-        function renderPdfGrid() {
-            const pdfGrid = document.getElementById('pdfGrid');
-            const sessionCount = document.getElementById('sessionCount');
-            
-            // Clear existing content
-            pdfGrid.innerHTML = '';
-            
-            // Check if pdfData exists
-            if (!window.pdfData || !Array.isArray(pdfData) || pdfData.length === 0) {
-                pdfGrid.innerHTML = `
-                    <div class="no-pdfs" style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
-                        <i class="fas fa-file-alt" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
-                        <h3 style="margin-bottom: 10px;">No PDFs available</h3>
-                        <p>Check back soon for new lecture materials.</p>
-                    </div>
-                `;
-                sessionCount.textContent = '0 PDFs';
-                return;
-            }
-            
-            // Update PDF count
-            sessionCount.textContent = `${pdfData.length} ${pdfData.length === 1 ? 'PDF' : 'PDFs'}`;
-            
-            // Create and append PDF cards
-            pdfData.forEach((pdf, index) => {
-                pdfGrid.innerHTML += createPdfCard(pdf, index);
-            });
-        }
-        
-        // Wait for both DOM and data.js to load
-        window.addEventListener('load', function() {
-            // Small delay to ensure data.js is loaded
-            setTimeout(renderPdfGrid, 100);
-        });
-        
-        // Also try to render when DOM is ready (fallback)
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(renderPdfGrid, 200);
-        });
-    </script>
-</body>
 
+    <!-- Subject navigation header (hidden on main screen) -->
+    <div class="nav-header" id="navHeader" style="display: none;">
+      <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button>
+      <span class="screen-title" id="screenTitle">Subject</span>
+    </div>
+
+    <div id="dynamicContent"></div>
+
+    <!-- subtle scroll loader (same as lecture) -->
+    <div class="scroll-loader" id="scrollLoader">
+      <div class="loader-dots"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+
+  <!-- EXTERNAL PDF DATA (window.pdfData) - loaded from data.js, fallback inline example if not loaded -->
+  <script src="data.js"></script>
+  <script>
+  (function() {
+    // ----- DATA.JS SHOULD PROVIDE window.pdfData -----
+    // If missing, define minimal fallback to make page functional (as described in prompt)
+    if (!window.pdfData || !Array.isArray(window.pdfData)) {
+      console.warn("pdfData not found — using inline fallback data for demonstration.");
+      window.pdfData = [
+        { title: "BIOLOGY MENTORSHIP SESSION", url: "https://pdf.bondipathshala.education/1762187871688.pdf" },
+        { title: "সঠিক পিডিএফ", url: "https://pdf.bondipathshala.education/1762367202708.pdf" },
+        { title: "MATH MENTORSHIP SESSION", url: "https://pdf.bondipathshala.education/1762358963901.pdf" },
+        { title: "EBI Mentorship Class", url: "https://pdf.bondipathshala.education/1762496803180.pdf" },
+        { title: "PHYSICS MENTORSHIP SESSION", url: "https://pdf.bondipathshala.education/1762583681705.pdf" },
+        { title: "সংখ্যাপদ্ধতি-০১", url: "https://pdf.bondipathshala.education/1762884933460.pdf" },
+        { title: "সংখ্যাপদ্ধতি পর্ব-০২", url: "https://pdf.bondipathshala.education/1763211271973.pdf" },
+        { title: "সংখ্যাপদ্ধতি (পর্ব-০৩)", url: "https://pdf.bondipathshala.education/1763382953989.pdf" },
+        { title: "সংখ্যাপদ্ধতি", url: "https://pdf.bondipathshala.education/1763464776253.pdf" },
+        { title: "ডিজিটাল ডিভাইস (পর্ব-০১)", url: "https://pdf.bondipathshala.education/1763898420620.pdf" },
+        { title: "Topic: Modifier", url: "https://pdf.bondipathshala.education/1762843091091.pdf" },
+        { title: "জটিল সংখ্যা", url: "https://pdf.bondipathshala.education/1763407233652.pdf" },
+        { title: "পরিমাণগত রসায়ন (পর্ব ১)", url: "https://pdf.bondipathshala.education/1763227445862.pdf" },
+        { title: "তাপগতিবিদ্যা (পর্ব ১)", url: "https://pdf.bondipathshala.education/1763056876449.pdf" },
+        { title: "রক্ত ও সংবহন (পর্ব-০১)", url: "https://pdf.bondipathshala.education/1763534808594.pdf" },
+        { title: "তাহারেই পরে মনে", url: "https://pdf.bondipathshala.education/1762619703676.pdf" }
+      ];
+    }
+
+    // ----- SUBJECT MARKERS (exactly as given, with exact title matches) -----
+    const subjectMarkers = [
+      { name: "Mentoring", marker: "BIOLOGY MENTORSHIP SESSION", iconUrl: "https://i.pinimg.com/736x/b6/07/c0/b607c09f72d88664e984687fdb444cd2.jpg" },
+      { name: "ICT", marker: "সংখ্যাপদ্ধতি-০১", iconUrl: "https://i.pinimg.com/736x/ca/18/7e/ca187e27a5555d3d5a635a4f19e7aa7a.jpg" },
+      { name: "English", marker: "Topic: Modifier", iconUrl: "https://i.pinimg.com/736x/48/c8/bc/48c8bce2fb6ba4115405a68508802507.jpg" },
+      { name: "Higher Math", marker: "জটিল সংখ্যা", iconUrl: "https://i.pinimg.com/736x/ee/a1/1b/eea11b5e3880d614819724a2f1676e0e.jpg" },
+      { name: "Chemistry", marker: "পরিমাণগত রসায়ন (পর্ব ১)", iconUrl: "https://i.pinimg.com/736x/45/9e/a5/459ea5d1b4072b89df2518df244bd28c.jpg" },
+      { name: "Physics", marker: "তাপগতিবিদ্যা (পর্ব ১)", iconUrl: "https://i.pinimg.com/736x/e6/78/34/e678348e532d1b85440c84354b669d92.jpg" },
+      { name: "Biology", marker: "রক্ত ও সংবহন (পর্ব-০১)", iconUrl: "https://i.pinimg.com/736x/a1/1b/d7/a11bd7b87d665b4e780da4bf18bd95f1.jpg" },
+      { name: "Bengali", marker: "তাহারেই পরে মনে", iconUrl: "https://i.pinimg.com/736x/65/63/1e/65631e0ff64d9e3aa64ec91280658b1b.jpg" }
+    ];
+
+    // Find marker positions within pdfData (by title, exact or includes)
+    const markerPositions = [];
+    subjectMarkers.forEach(subject => {
+      const index = window.pdfData.findIndex(pdf => pdf.title === subject.marker || pdf.title.includes(subject.marker));
+      if (index !== -1) {
+        markerPositions.push({
+          name: subject.name,
+          iconUrl: subject.iconUrl,
+          startIndex: index,
+          marker: subject.marker
+        });
+      } else {
+        console.warn(`Marker not found for subject: ${subject.name}`);
+      }
+    });
+
+    // Sort by order of appearance
+    markerPositions.sort((a,b) => a.startIndex - b.startIndex);
+
+    // Build subjectMap with slices
+    const subjectMap = new Map();
+    for (let i = 0; i < markerPositions.length; i++) {
+      const curr = markerPositions[i];
+      const next = markerPositions[i+1];
+      const start = curr.startIndex;
+      const end = next ? next.startIndex : window.pdfData.length;
+      const pdfs = window.pdfData.slice(start, end);
+      subjectMap.set(curr.name, {
+        iconUrl: curr.iconUrl,
+        pdfs: pdfs,
+        startIndex: start,
+        endIndex: end
+      });
+    }
+
+    const orderedSubjects = markerPositions.map(m => m.name);
+
+    // DOM elements
+    const dynamicEl = document.getElementById('dynamicContent');
+    const navHeader = document.getElementById('navHeader');
+    const screenTitle = document.getElementById('screenTitle');
+    const backBtn = document.getElementById('backBtn');
+    const scrollLoader = document.getElementById('scrollLoader');
+    const globalHeader = document.getElementById('globalHeader');
+
+    function setGlobalHeaderVisible(visible) {
+      if (visible) {
+        globalHeader.classList.remove('hidden');
+      } else {
+        globalHeader.classList.add('hidden');
+      }
+    }
+
+    // Render main subject grid (same as Lectures)
+    function renderSubjectGrid() {
+      setGlobalHeaderVisible(true);
+      navHeader.style.display = 'none';
+
+      let gridHtml = `<div class="subject-grid">`;
+      orderedSubjects.forEach(subj => {
+        const item = subjectMap.get(subj);
+        if (item && item.pdfs.length > 0) {
+          gridHtml += `
+            <div class="subject-card" data-subject="${subj}">
+              <div class="subject-icon"><img src="${item.iconUrl}" alt="${subj}" loading="lazy"></div>
+              <span class="subject-label">${subj} (${item.pdfs.length})</span>
+            </div>
+          `;
+        }
+      });
+      gridHtml += `</div>`;
+      dynamicEl.innerHTML = gridHtml;
+
+      document.querySelectorAll('.subject-card').forEach(card => {
+        card.addEventListener('click', () => {
+          showSubjectPDFs(card.dataset.subject);
+        });
+      });
+    }
+
+    // Show pdfs for a subject (no video previews, just list)
+    function showSubjectPDFs(subject) {
+      setGlobalHeaderVisible(false);
+      navHeader.style.display = 'flex';
+      screenTitle.innerText = subject;
+
+      const subjectData = subjectMap.get(subject);
+      const pdfs = subjectData ? subjectData.pdfs : [];
+
+      let cardsHtml = '';
+      pdfs.forEach(p => {
+        // build pdf card — clickable whole card that opens the link
+        // escape url for safety
+        const escapedUrl = p.url.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+        cardsHtml += `
+          <a href="${escapedUrl}" target="_blank" rel="noopener" class="pdf-card">
+            <div class="pdf-info">
+              <div class="pdf-title">
+                <i class="fa-solid fa-file-pdf" style="color:#d14d4d;"></i>
+                <span>${p.title}</span>
+              </div>
+              <span class="open-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open PDF</span>
+            </div>
+          </a>
+        `;
+      });
+
+      if (pdfs.length === 0) {
+        cardsHtml = `<div class="empty-state"><i class="fa-regular fa-folder-open"></i> No PDFs found</div>`;
+      }
+
+      dynamicEl.innerHTML = `<div class="pdf-grid">${cardsHtml}</div>`;
+
+      // scroll to top smoothly
+      document.querySelector('.app-shelf').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Back button functionality
+    backBtn.addEventListener('click', () => {
+      renderSubjectGrid();
+    });
+
+    // Initial render
+    renderSubjectGrid();
+
+    // Hide scroll loader (no actual scroll loading, but keep for consistency)
+    window.addEventListener('load', () => {
+      scrollLoader.classList.remove('show');
+    });
+
+    console.log('PDF subject boundaries:');
+    orderedSubjects.forEach(subj => {
+      const data = subjectMap.get(subj);
+      if (data) console.log(`${subj}: ${data.pdfs.length} PDFs (indices ${data.startIndex}-${data.endIndex-1})`);
+    });
+  })();
+  </script>
+</body>
 </html>
