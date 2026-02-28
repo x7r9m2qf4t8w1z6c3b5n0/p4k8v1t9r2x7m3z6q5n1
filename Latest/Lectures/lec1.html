@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Lectures · 3D glass grid</title>
+    <title>Lectures</title>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -37,6 +37,8 @@
             justify-content: center;
             align-items: flex-start;
             color: var(--primary-dark);
+            /* smooth scrolling for the whole page */
+            scroll-behavior: smooth;
         }
 
         /* main frosted container (like home-card but full width) */
@@ -50,6 +52,8 @@
             padding: 32px 28px;
             border: var(--glass-border);
             box-shadow: 0 25px 40px -16px rgba(0, 30, 50, 0.3);
+            position: relative;
+            /* contain the loader */
         }
 
         /* ===== header with 3D depth ===== */
@@ -69,18 +73,7 @@
             text-shadow: 2px 6px 12px rgba(0,30,50,0.15);
         }
 
-        .subtitle-glass {
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: #2e405b;
-            background: rgba(255,255,255,0.5);
-            backdrop-filter: blur(4px);
-            display: inline-block;
-            padding: 6px 24px;
-            border-radius: 60px;
-            border: var(--glass-border);
-            margin: 12px 0 10px 0;
-        }
+        /* REMOVED: .subtitle-glass (3D glass archive) - completely removed */
 
         .session-badge {
             display: inline-flex;
@@ -95,6 +88,7 @@
             font-size: 1rem;
             color: #1d3a5c;
             box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+            margin-top: 16px; /* give some space since subtitle removed */
         }
 
         .session-badge i {
@@ -108,6 +102,7 @@
             grid-template-columns: 1fr;
             gap: 22px;
             margin: 30px 0 25px 0;
+            /* will contain cards */
         }
 
         /* 3D card – exactly as home .icon-btn but horizontal */
@@ -120,6 +115,9 @@
             transition: var(--transition-3d);
             box-shadow: var(--shadow-elevation);
             overflow: hidden;
+            /* ensure cards are above loader line */
+            position: relative;
+            z-index: 2;
         }
 
         .video-card-3d:active {
@@ -231,24 +229,73 @@
             border: 1px solid rgba(255,255,255,0.4);
         }
 
-        /* ===== footer with glass touch ===== */
+        /* ===== SMOOTH SCROLL LOADER (the "pull to refresh" style indicator) ===== */
+        .scroll-loader {
+            position: sticky;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none; /* so it doesn't block clicks */
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            height: 0;
+            margin-top: -10px; /* pull up a bit */
+        }
+
+        .scroll-loader.active {
+            opacity: 1;
+        }
+
+        .loader-spinner {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.8);
+            border-radius: 60px;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 10px 25px -8px rgba(0,0,0,0.2);
+            color: #1f2a3a;
+            font-weight: 600;
+        }
+
+        .loader-spinner i {
+            font-size: 1.5rem;
+            color: #3498db;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ===== footer with glass touch - but text removed, just decorative line ===== */
         .footer-glass {
             margin-top: 40px;
             padding-top: 20px;
             text-align: center;
             border-top: 1px solid rgba(255,255,255,0.6);
-            color: #2e405b;
-            font-weight: 600;
-            font-size: 1rem;
+            /* no text inside, just the line */
         }
 
-        .footer-glass span {
-            background: rgba(255,255,255,0.5);
-            backdrop-filter: blur(2px);
-            padding: 6px 24px;
+        /* fallback empty state – also glassy */
+        .no-sessions-glass {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 50px 20px;
+            background: rgba(255,255,255,0.4);
+            backdrop-filter: blur(4px);
             border-radius: 60px;
-            display: inline-block;
-            border: 1px solid rgba(255,255,255,0.5);
+            color: #2e405b;
+            font-size: 1.4rem;
+            border: 1px solid rgba(255,255,255,0.6);
         }
 
         /* ===== responsive grid ===== */
@@ -277,7 +324,6 @@
             .video-icon-3d { width: 60px; height: 60px; font-size: 32px; border-radius: 22px; }
             .video-title-3d { font-size: 1.05rem; }
             .header-3d h1 { font-size: 2.2rem; }
-            .subtitle-glass { font-size: 1rem; }
         }
 
         @media (max-width: 380px) {
@@ -285,26 +331,13 @@
             .video-title-3d { font-size: 0.95rem; }
             .type-pill { padding: 4px 10px; font-size: 0.75rem; }
         }
-
-        /* fallback empty state – also glassy */
-        .no-sessions-glass {
-            grid-column: 1/-1;
-            text-align: center;
-            padding: 50px 20px;
-            background: rgba(255,255,255,0.4);
-            backdrop-filter: blur(4px);
-            border-radius: 60px;
-            color: #2e405b;
-            font-size: 1.4rem;
-            border: 1px solid rgba(255,255,255,0.6);
-        }
     </style>
 </head>
 <body>
     <div class="glass-container">
         <div class="header-3d">
             <h1>📺 Lectures</h1>
-            <div class="subtitle-glass">3D glass archive</div>
+            <!-- subtitle "3D glass archive" removed as requested -->
             <div class="session-badge" id="sessionCount">
                 <i class="fa-solid fa-cubes"></i> <span>Loading classes...</span>
             </div>
@@ -313,23 +346,60 @@
         <!-- video grid will be injected by script using data.js -->
         <div class="video-grid" id="videoGrid"></div>
 
-        <div class="footer-glass">
-            <span>⚡ tap any card · 3D feel ⚡</span>
+        <!-- Smooth scroll loader (appears during scroll) -->
+        <div class="scroll-loader" id="scrollLoader">
+            <div class="loader-spinner">
+                <i class="fas fa-sync-alt"></i>
+                <span>Loading classes ...</span>
+            </div>
         </div>
+
+        <!-- footer with just a line (no text) -->
+        <div class="footer-glass"></div>
     </div>
 
     <!-- external data.js (your own file) -->
     <script src="data.js"></script>
 
     <script>
-        // Set current year in footer (optional enhancement)
-        document.addEventListener('DOMContentLoaded', function() {
-            const footerSpan = document.querySelector('.footer-glass span');
-            if (footerSpan) {
-                const year = new Date().getFullYear();
-                footerSpan.innerHTML = `⚡ tap any card · ${year} ⚡`;
+        // Set up smooth loader on scroll
+        (function() {
+            const loader = document.getElementById('scrollLoader');
+            let timer;
+            let activeCount = 0;
+
+            // Function to show loader
+            function showLoader() {
+                if (activeCount === 0) {
+                    loader.classList.add('active');
+                }
+                activeCount++;
+                
+                // Clear any existing hide timer
+                if (timer) clearTimeout(timer);
+                
+                // Set a new timer to hide loader after scrolling stops
+                timer = setTimeout(() => {
+                    activeCount = 0;
+                    loader.classList.remove('active');
+                }, 400); // 400ms after last scroll event, loader fades out
             }
-        });
+
+            // Throttled scroll handler for smooth performance
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        showLoader();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+
+            // Also trigger on touchmove for mobile (just to be safe, scroll event covers it)
+            // But we want it to also show during momentum scrolling: scroll event fires.
+        })();
 
         // ----- video helpers (same logic, but adapted for 3D cards) -----
         function getVideoType(videoId) {
@@ -410,13 +480,8 @@
 
         // Wait for DOM and also ensure data.js has loaded (it's synchronous in HTML)
         document.addEventListener('DOMContentLoaded', function() {
-            // Short delay to ensure videoData is available (though script src is before, it's synchronous)
-            // If data.js is loaded synchronously, videoData will be available immediately.
             renderVideoGrid();
         });
-
-        // Optional: if data.js is loaded asynchronously or with delay, you can listen to load event.
-        // But we keep it simple – script src is above, so it's parsed before this script.
     </script>
 </body>
 </html>
