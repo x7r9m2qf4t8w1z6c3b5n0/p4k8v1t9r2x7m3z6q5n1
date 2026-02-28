@@ -1,4 +1,4 @@
-        const videoData = [
+        window.videoData = [
 { title: "BIOLOGY MENTORSHIP SESSION", videoId: "uPM53Lax6Xg" },
 { title: "CHEMISTRY MENTORSHIP SESSION", videoId: "JaWMEEB_iGc" },
 { title: "MATH MENTORSHIP SESSION", videoId: "olV8M7xp_sI" },
@@ -168,4 +168,5 @@
 { title: "প্রকৃতি ও প্রত্যয়", videoId: "570152/b591a252-db75-4e0a-af56-53200a3fdf73" },
 { title: "ঋতু বর্ণ ও প্রত্যাবর্তনের লজ্জা", videoId: "570152/623e35ef-74e2-4999-9231-3198349dfa17" },
         ];
+
 
