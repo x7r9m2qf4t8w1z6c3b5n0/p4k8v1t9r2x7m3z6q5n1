@@ -337,30 +337,6 @@
   <script src="data.js"></script>
   <script>
   (function() {
-    // ----- DATA.JS SHOULD PROVIDE window.pdfData -----
-    // If missing, define minimal fallback to make page functional (as described in prompt)
-    if (!window.pdfData || !Array.isArray(window.pdfData)) {
-      console.warn("pdfData not found — using inline fallback data for demonstration.");
-      window.pdfData = [
-        { title: "BIOLOGY MENTORSHIP SESSION", url: "https://pdf.bondipathshala.education/1762187871688.pdf" },
-        { title: "সঠিক পিডিএফ", url: "https://pdf.bondipathshala.education/1762367202708.pdf" },
-        { title: "MATH MENTORSHIP SESSION", url: "https://pdf.bondipathshala.education/1762358963901.pdf" },
-        { title: "EBI Mentorship Class", url: "https://pdf.bondipathshala.education/1762496803180.pdf" },
-        { title: "PHYSICS MENTORSHIP SESSION", url: "https://pdf.bondipathshala.education/1762583681705.pdf" },
-        { title: "সংখ্যাপদ্ধতি-০১", url: "https://pdf.bondipathshala.education/1762884933460.pdf" },
-        { title: "সংখ্যাপদ্ধতি পর্ব-০২", url: "https://pdf.bondipathshala.education/1763211271973.pdf" },
-        { title: "সংখ্যাপদ্ধতি (পর্ব-০৩)", url: "https://pdf.bondipathshala.education/1763382953989.pdf" },
-        { title: "সংখ্যাপদ্ধতি", url: "https://pdf.bondipathshala.education/1763464776253.pdf" },
-        { title: "ডিজিটাল ডিভাইস (পর্ব-০১)", url: "https://pdf.bondipathshala.education/1763898420620.pdf" },
-        { title: "Topic: Modifier", url: "https://pdf.bondipathshala.education/1762843091091.pdf" },
-        { title: "জটিল সংখ্যা", url: "https://pdf.bondipathshala.education/1763407233652.pdf" },
-        { title: "পরিমাণগত রসায়ন (পর্ব ১)", url: "https://pdf.bondipathshala.education/1763227445862.pdf" },
-        { title: "তাপগতিবিদ্যা (পর্ব ১)", url: "https://pdf.bondipathshala.education/1763056876449.pdf" },
-        { title: "রক্ত ও সংবহন (পর্ব-০১)", url: "https://pdf.bondipathshala.education/1763534808594.pdf" },
-        { title: "তাহারেই পরে মনে", url: "https://pdf.bondipathshala.education/1762619703676.pdf" }
-      ];
-    }
-
     // ----- SUBJECT MARKERS (exactly as given, with exact title matches) -----
     const subjectMarkers = [
       { name: "Mentoring", marker: "BIOLOGY MENTORSHIP SESSION", iconUrl: "https://i.pinimg.com/736x/b6/07/c0/b607c09f72d88664e984687fdb444cd2.jpg" },
