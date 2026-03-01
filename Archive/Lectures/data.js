@@ -1,4 +1,4 @@
-        const videoData = [
+        window.videoData = [
 { title: "সংখ্যা পদ্ধতি - পর্ব  ০১", videoId: "VR3Zg7PkjxM" },
 { title: "সংখ্যা পদ্ধতি - পর্ব ০২", videoId: "N7AMgDSwd6c" },
 { title: "সংখ্যাপদ্ধতি - পর্ব ০৩", videoId: "0sL90cKK3pM" },
@@ -374,4 +374,5 @@
 { title: "লালসালু -পর্ব ০২", videoId: "D8EZM5QPN8c" },
 { title: "সিরাজ উদ দৌলা", videoId: "oukG0Qr0B8M" },
 { title: "বিদ্রোহী", videoId: "YwRE4xAXUBU" },
+
         ];
