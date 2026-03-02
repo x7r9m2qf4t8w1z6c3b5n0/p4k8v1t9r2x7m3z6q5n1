@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bablu · fluid AI · Puter</title>
+    <title>Bablu · image + text · Puter</title>
     <!-- Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 (solid + regular) -->
+    <!-- Font Awesome 6 (all) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- marked (for markdown) -->
+    <!-- marked -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- Puter.js v2 -->
     <script src="https://js.puter.com/v2/"></script>
@@ -19,186 +19,159 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #f5f9ff;
+            background: #f2f7fe;
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #1a2b3f;
-            transition: background 0.25s ease, color 0.2s ease;
+            color: #1c2d44;
+            transition: background 0.25s ease;
         }
 
         body.dark-mode {
-            background: #0b121f;
-            color: #eef2f8;
+            background: #0a1320;
+            color: #edf3fc;
         }
 
-        /* ===== LOGIN SCREEN (glass) ===== */
+        /* login screen */
         .login-screen {
             width: 100%;
             max-width: 440px;
             background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 40px;
-            padding: 44px 36px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 48px;
+            padding: 48px 36px;
             text-align: center;
-            box-shadow: 0 25px 50px -10px rgba(0,30,60,0.15);
-            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 30px 60px -15px #0b2b4470;
+            border: 1px solid #ffffff70;
             margin: 20px;
-            transition: background 0.3s, border-color 0.3s;
         }
 
         body.dark-mode .login-screen {
-            background: rgba(18, 30, 45, 0.85);
-            border-color: rgba(90, 130, 180, 0.2);
-            backdrop-filter: blur(15px);
+            background: rgba(20, 35, 55, 0.85);
+            border-color: #305d8a40;
         }
 
         .login-screen h2 {
-            font-size: 2.4rem;
-            font-weight: 550;
+            font-size: 2.6rem;
+            font-weight: 600;
             letter-spacing: -0.02em;
-            margin-bottom: 12px;
-            background: linear-gradient(145deg, #1e3b5a, #2b6c9e);
+            background: linear-gradient(150deg, #1c4e7c, #3579b5);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         body.dark-mode .login-screen h2 {
-            background: linear-gradient(145deg, #b0d0f0, #7ab0e0);
+            background: linear-gradient(150deg, #b2d6ff, #7fb0f0);
             -webkit-background-clip: text;
         }
 
-        .login-screen p {
-            color: #4f6e91;
-            margin-bottom: 32px;
-            font-size: 1rem;
-        }
-
         .login-btn {
-            background: #1d4e7a;
+            background: #1f5685;
             border: none;
             color: white;
             font-size: 1.2rem;
             font-weight: 500;
             padding: 16px 32px;
-            border-radius: 50px;
+            border-radius: 60px;
             display: inline-flex;
             align-items: center;
             gap: 14px;
             cursor: pointer;
             width: 100%;
             justify-content: center;
-            transition: all 0.2s;
-            box-shadow: 0 8px 18px -6px #1d4e7a80;
-            border: 1px solid #ffffff30;
+            transition: 0.18s;
+            box-shadow: 0 10px 22px -8px #1f5685;
         }
+        .login-btn:not(:disabled):hover { background: #2973b0; transform: scale(1.02); }
 
-        .login-btn:not(:disabled):hover {
-            background: #256ba3;
-            transform: scale(1.02);
-            box-shadow: 0 12px 24px -8px #1d4e7a;
-        }
-
-        .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-        /* ===== MAIN CHAT (elevated) ===== */
+        /* main chat app */
         .chat-app {
             width: 100%;
             max-width: 1200px;
             height: 92vh;
             max-height: 950px;
             background: white;
-            border-radius: 32px;
-            box-shadow: 0 30px 60px -10px rgba(0, 25, 50, 0.2);
+            border-radius: 36px;
+            box-shadow: 0 30px 70px -15px #0b2d4a40;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             margin: 16px;
-            transition: background 0.3s, box-shadow 0.3s;
         }
-
         body.dark-mode .chat-app {
-            background: #0f1d2d;
-            box-shadow: 0 30px 60px -10px #00000060;
+            background: #102433;
+            box-shadow: 0 30px 70px -15px #00000080;
         }
 
         .hidden { display: none !important; }
 
-        /* top bar — softer */
+        /* top bar */
         .top-bar {
-            padding: 18px 28px;
-            border-bottom: 1px solid #e5ecf3;
+            padding: 16px 28px;
+            border-bottom: 1px solid #e0ebf5;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: #ffffffd6;
+            background: #ffffffd9;
             backdrop-filter: blur(8px);
         }
         body.dark-mode .top-bar {
-            border-bottom: 1px solid #263b4f;
-            background: #102231e0;
+            border-bottom: 1px solid #254963;
+            background: #102537e0;
         }
 
-        .app-name i { font-size: 2rem; color: #2b6c9e; filter: drop-shadow(0 2px 4px #a3c6e9); }
+        .app-name i { font-size: 2rem; color: #2b6c9e; }
         .app-name span { font-size: 1.5rem; font-weight: 550; margin-left: 8px; }
 
         .top-actions { display: flex; gap: 6px; }
         .icon-btn {
             background: transparent; border: none; width: 44px; height: 44px;
             border-radius: 40px; display: flex; align-items: center; justify-content: center;
-            color: #3f6385; font-size: 1.3rem; cursor: pointer;
-            transition: background 0.18s, transform 0.1s;
+            color: #3f6891; font-size: 1.3rem; cursor: pointer; transition: 0.15s;
         }
-        .icon-btn:hover { background: #dae7f5; transform: scale(1.05); }
-        body.dark-mode .icon-btn:hover { background: #253e58; color: #d3e5ff; }
+        .icon-btn:hover { background: #d7e7fa; }
 
-        /* settings dropdown — clean */
+        /* settings dropdown */
         .settings-dropdown {
             position: absolute; top: 85px; right: 30px; width: 280px;
-            background: white; border-radius: 28px; box-shadow: 0 25px 45px -12px #00000040;
-            padding: 22px; border: 1px solid #dde9f5; display: none; z-index: 200;
-            backdrop-filter: blur(16px);
+            background: white; border-radius: 32px; box-shadow: 0 30px 55px -12px #00000050;
+            padding: 22px; border: 1px solid #d2e5f8; display: none; z-index: 200;
+            backdrop-filter: blur(18px);
         }
         body.dark-mode .settings-dropdown {
-            background: #142b3e; border-color: #305570; color: #e7f0fd;
+            background: #163249; border-color: #30668b;
         }
-        .settings-dropdown.show { display: block; animation: fadeSlide 0.2s ease; }
-        @keyframes fadeSlide {
-            0% { opacity: 0; transform: translateY(-10px); }
+        .settings-dropdown.show { display: block; animation: slideFade 0.2s; }
+        @keyframes slideFade {
+            0% { opacity: 0; transform: translateY(-12px); }
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        .settings-item {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
-        }
         .settings-item select {
-            padding: 8px 16px; border-radius: 40px; border: 1px solid #cbdae9;
-            background: #f2f9ff; font-family: 'Inter'; font-weight: 450;
+            padding: 8px 16px; border-radius: 40px; border: 1px solid #bcd2ec;
+            background: #f0f8ff; font-family: 'Inter';
         }
         .logout-btn {
             background: #f0f6fe; border: none; padding: 12px; border-radius: 40px;
-            color: #c74040; font-weight: 550; width: 100%; display: flex; gap: 12px;
+            color: #c04242; font-weight: 550; width: 100%; display: flex; gap: 12px;
             align-items: center; justify-content: center; cursor: pointer;
-            transition: background 0.2s; border: 1px solid #e0d0d0;
         }
-        .logout-btn:hover { background: #ffe8e8; }
 
-        /* chat container — smooth scroll */
+        /* chat container */
         .chat-container {
             flex: 1; overflow-y: auto; padding: 28px 30px; display: flex;
-            flex-direction: column; gap: 20px; background: #f9fcff;
+            flex-direction: column; gap: 22px; background: #f9fdff;
             scroll-behavior: smooth;
         }
-        body.dark-mode .chat-container { background: #0a1926; }
+        body.dark-mode .chat-container { background: #0c1b2b; }
 
-        /* message bubbles with micro-interactions */
         .message-wrapper {
             display: flex; flex-direction: column; max-width: 80%;
-            animation: messagePop 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            animation: popIn 0.25s ease;
         }
-        @keyframes messagePop {
-            0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+        @keyframes popIn {
+            0% { opacity: 0; transform: translateY(12px) scale(0.98); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
@@ -207,37 +180,42 @@
 
         .message-meta {
             display: flex; align-items: center; gap: 8px; font-size: 0.75rem;
-            color: #6b8bb0; margin-bottom: 6px;
+            color: #6e93b8; margin-bottom: 6px;
         }
         .user .message-meta { justify-content: flex-end; }
 
         .avatar {
-            width: 26px; height: 26px; border-radius: 26px;
+            width: 28px; height: 28px; border-radius: 28px;
             background: #1f5a8e; color: white; display: flex;
-            align-items: center; justify-content: center; font-size: 0.8rem;
+            align-items: center; justify-content: center;
         }
 
         .message-bubble {
             padding: 16px 22px; border-radius: 24px; font-size: 1rem; line-height: 1.6;
-            word-break: break-word; transition: box-shadow 0.2s;
+            word-break: break-word;
         }
         .user .message-bubble {
-            background: #e2effb; color: #0d293f; border-bottom-right-radius: 6px;
-            box-shadow: 0 4px 10px -4px #accef0;
+            background: #e1effb; color: #0b263b; border-bottom-right-radius: 6px;
+            box-shadow: 0 4px 12px -6px #9dc0e8;
         }
         .assistant .message-bubble {
-            background: white; border: 1px solid #dae5f2; border-bottom-left-radius: 6px;
-            box-shadow: 0 4px 12px -6px #b5cde0;
+            background: white; border: 1px solid #d4e5f7; border-bottom-left-radius: 6px;
         }
         body.dark-mode .user .message-bubble {
-            background: #1d3f60; color: #f2faff; border-color: #32648b;
+            background: #1e3d60; color: #f0f9ff;
         }
         body.dark-mode .assistant .message-bubble {
-            background: #122b40; border-color: #315d80; color: #e3f0ff;
+            background: #102f47; border-color: #295982; color: #eaf3ff;
         }
 
-        /* streaming cursor */
-        .cursor { display: inline-block; width: 2px; height: 1.2em; background: #2b6c9e; margin-left: 3px; animation: blink 0.9s infinite; }
+        /* image inside bubble */
+        .message-bubble img {
+            max-width: 220px; border-radius: 20px; margin-bottom: 8px;
+            border: 2px solid #bad2f0; transition: 0.2s;
+        }
+        .message-bubble img:hover { transform: scale(1.02); box-shadow: 0 8px 18px #00000020; }
+
+        .cursor { display: inline-block; width: 3px; height: 1.3em; background: #2b6c9e; margin-left: 4px; animation: blink 0.9s infinite; }
         @keyframes blink { 0%,100%{ opacity:1; } 50%{ opacity:0.2; } }
 
         .message-actions {
@@ -246,80 +224,117 @@
         }
         .message-wrapper:hover .message-actions { opacity: 1; }
         .message-actions button {
-            background: none; border: none; color: #5b7fa1; font-size: 0.9rem;
+            background: none; border: none; color: #5980a8; font-size: 0.9rem;
             cursor: pointer; padding: 6px; border-radius: 40px; display: inline-flex; gap: 6px;
-            transition: all 0.15s;
         }
-        .message-actions button:hover { background: #dae9fa; color: #1e5d93; }
+        .message-actions button:hover { background: #d8eafe; }
 
-        /* input area – glassy */
+        /* INPUT SECTION — with photo button */
         .input-section {
-            padding: 18px 24px 20px; background: #f5faffec; backdrop-filter: blur(8px);
-            border-top: 1px solid #dae5f0;
+            padding: 18px 24px 20px; background: #f5fafff0; backdrop-filter: blur(8px);
+            border-top: 1px solid #d4e3f2;
         }
         body.dark-mode .input-section {
-            background: #0e1e2ee0; border-top: 1px solid #2f4b64;
+            background: #102433f0; border-top: 1px solid #264f70;
         }
 
         .input-row {
-            display: flex; gap: 12px; align-items: flex-end; background: #eaf2fb;
-            border-radius: 40px; padding: 8px 8px 8px 24px; transition: background 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 8px #acc4dd40;
+            display: flex; gap: 10px; align-items: flex-end; background: #eaf2fb;
+            border-radius: 60px; padding: 6px 6px 6px 16px; transition: 0.2s;
+            box-shadow: 0 2px 10px #a6c5e6;
         }
-        .input-row:focus-within { box-shadow: 0 4px 16px #8ab3da60; background: #f0f8ff; }
+        body.dark-mode .input-row { background: #1b334d; box-shadow: 0 2px 10px #0d1b2c; }
 
-        body.dark-mode .input-row { background: #1d3248; box-shadow: 0 2px 8px #030b14; }
-        .input-row textarea {
-            flex: 1; border: none; background: transparent; padding: 14px 0;
-            font-family: 'Inter'; font-size: 1rem; resize: none; max-height: 140px;
-            outline: none; color: #172837; line-height: 1.5;
+        /* photo button — smaller, blends */
+        #imageBtn {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: #d3e6fd;
+            color: #1f5685;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: 0.15s;
+            flex-shrink: 0;
         }
-        body.dark-mode .input-row textarea { color: #f0f8ff; }
+        #imageBtn:hover { background: #c2ddfc; transform: scale(1.05); }
+        body.dark-mode #imageBtn { background: #254b6e; color: #c9e2ff; }
+
+        .input-row textarea {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 14px 0;
+            font-family: 'Inter';
+            font-size: 1rem;
+            resize: none;
+            max-height: 130px;
+            outline: none;
+            color: #1b334d;
+        }
+        body.dark-mode .input-row textarea { color: #eaf3ff; }
 
         .action-group { display: flex; gap: 6px; }
         .circle-btn {
-            width: 52px; height: 52px; border-radius: 60px; border: none;
+            width: 50px; height: 50px; border-radius: 50%; border: none;
             background: #1f6191; color: white; font-size: 1.3rem; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            transition: 0.15s; box-shadow: 0 6px 14px -6px #134370;
+            flex-shrink: 0;
         }
-        .circle-btn:not(:disabled):hover { background: #2979b5; transform: scale(1.04); }
-        .circle-btn.secondary { background: #e1edfb; color: #1f6191; box-shadow: none; }
-        .circle-btn.secondary:hover { background: #cde2fc; }
+        .circle-btn.secondary { background: #deecfc; color: #1f6191; }
         .circle-btn.stop-btn { background: #c14e4e; }
-        .circle-btn.stop-btn:hover { background: #b33f3f; }
 
-        /* image preview inside message */
-        .image-preview {
-            max-width: 260px; border-radius: 24px; margin: 8px 0 2px;
-            border: 2px solid #c3ddf5; transition: 0.2s;
+        /* image preview area */
+        #attachedPreview {
+            margin-top: 14px;
+            display: none;
+            position: relative;
+            width: fit-content;
+            animation: fadeIn 0.2s;
         }
-        .image-preview:hover { transform: scale(1.01); box-shadow: 0 8px 20px #0000001a; }
-
-        /* copy feedback */
-        .copy-feedback { font-size: 0.7rem; color: #389e6b; margin-left: 6px; }
-
-        /* loading shimmer */
-        .shimmer {
-            background: linear-gradient(90deg, #e0ecf9 25%, #f2f9ff 50%, #e0ecf9 75%);
-            background-size: 200% 100%; animation: shimmer 1.5s infinite;
-            border-radius: 40px; height: 24px; width: 180px;
+        #previewImg {
+            max-width: 130px;
+            max-height: 130px;
+            border-radius: 24px;
+            border: 3px solid #aac9f0;
+            background: #eef6ff;
         }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        #removeImageBtn {
+            position: absolute;
+            top: -10px; right: -10px;
+            background: #c64747;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px #00000030;
+            transition: 0.15s;
+        }
+        #removeImageBtn:hover { background: #b13232; transform: scale(1.05); }
     </style>
 </head>
 <body>
-    <!-- login panel -->
+    <!-- Login screen -->
     <div id="loginScreen" class="login-screen">
-        <h2>✨ Bablu</h2>
-        <p>Native Puter · No keys · Fluid AI</p>
+        <h2>📸 Bablu</h2>
+        <p>Native Puter · image + text · free</p>
         <button class="login-btn" id="loginBtn">
             <i class="fa-regular fa-lock-open fa-lg"></i> Start with Puter
         </button>
-        <p style="margin-top: 28px; font-size: 0.85rem;"><i class="fa-regular fa-sparkles" style="margin-right: 4px;"></i> vision · streaming · free</p>
+        <p style="margin-top: 28px; font-size: 0.85rem; color:#718aa8;"><i class="fa-regular fa-cloud-upload-alt"></i> upload local images · streaming</p>
     </div>
 
-    <!-- main app -->
+    <!-- Main chat app -->
     <div id="chatApp" class="chat-app hidden">
         <div class="top-bar">
             <div class="app-name">
@@ -337,49 +352,57 @@
             <div class="settings-item">
                 <span><i class="fa-regular fa-brain"></i> Model</span>
                 <select id="modelSelect">
-                    <option value="gpt-4.1-nano">⚡ GPT-4.1 Nano (fast)</option>
-                    <option value="gpt-5" selected>🌀 GPT-5 (balanced)</option>
-                    <option value="gpt-5.2">🚀 GPT-5.2 (powerful)</option>
+                    <option value="gpt-4.1-nano">⚡ GPT-4.1 Nano</option>
+                    <option value="gpt-5" selected>🌀 GPT-5</option>
+                    <option value="gpt-5.2">🚀 GPT-5.2</option>
                 </select>
             </div>
-            <div class="settings-item" style="border-top: 1px dashed #bdd2eb; padding-top: 16px;">
-                <span><i class="fa-regular fa-image"></i> Image URL</span>
-                <input type="text" id="imageUrlInput" placeholder="https://...jpg" style="width:140px; border-radius:40px; border:1px solid #b0cbe5; padding:6px 12px;">
-            </div>
-            <div class="logout-item" style="margin-top: 20px;">
+            <div style="margin: 20px 0 10px;">
                 <button class="logout-btn" id="logoutBtn"><i class="fa-regular fa-sign-out"></i> Sign Out</button>
             </div>
         </div>
 
-        <!-- chat messages -->
+        <!-- chat messages container -->
         <div class="chat-container" id="chatContainer">
             <div class="message-wrapper assistant">
                 <div class="message-meta">
                     <span class="avatar">🤖</span>
-                    <span class="timestamp">just now</span>
+                    <span class="timestamp">now</span>
                 </div>
-                <div class="message-bubble">✨ Bablu ready · ask me anything, including images.</div>
+                <div class="message-bubble">✨ Hi, I'm Bablu. You can **upload images** using the 📷 button.</div>
             </div>
         </div>
 
-        <!-- input area -->
+        <!-- INPUT SECTION (photo button, preview) -->
         <div class="input-section">
             <div class="input-row">
-                <textarea id="userInput" placeholder="Type message or paste image link ..." rows="1"></textarea>
+                <!-- Photo button -->
+                <button class="circle-btn secondary" id="imageBtn" title="Upload image">
+                    <i class="fa-regular fa-image"></i>
+                </button>
+
+                <!-- Hidden file input -->
+                <input type="file" id="imageFileInput" accept="image/*" hidden />
+
+                <textarea id="userInput" placeholder="Type a message or just send image..." rows="1"></textarea>
+
                 <div class="action-group">
                     <button class="circle-btn secondary hidden" id="stopBtn"><i class="fa-solid fa-stop"></i></button>
                     <button class="circle-btn" id="sendBtn"><i class="fa-regular fa-paper-plane"></i></button>
                 </div>
             </div>
-            <div style="display: flex; gap: 8px; margin-top: 10px; padding-left: 8px;">
-                <span style="font-size:0.8rem; color:#5f89b5;"><i class="fa-regular fa-eye"></i> image analysis: paste url & send</span>
+
+            <!-- Image preview area (appears after selection) -->
+            <div id="attachedPreview">
+                <img id="previewImg" src="#" alt="preview">
+                <button id="removeImageBtn" aria-label="Remove image">×</button>
             </div>
         </div>
     </div>
 
     <script>
         (function() {
-            // DOM
+            // ----- DOM elements -----
             const loginScreen = document.getElementById('loginScreen');
             const chatApp = document.getElementById('chatApp');
             const loginBtn = document.getElementById('loginBtn');
@@ -392,13 +415,20 @@
             const settingsToggle = document.getElementById('settingsToggle');
             const settingsPanel = document.getElementById('settingsPanel');
             const modelSelect = document.getElementById('modelSelect');
-            const imageUrlInput = document.getElementById('imageUrlInput'); // optional quick paste
 
-            // State
+            // ---- new image elements ----
+            const imageBtn = document.getElementById('imageBtn');
+            const imageFileInput = document.getElementById('imageFileInput');
+            const attachedPreview = document.getElementById('attachedPreview');
+            const previewImg = document.getElementById('previewImg');
+            const removeImageBtn = document.getElementById('removeImageBtn');
+
+            // ---- state ----
             let isAuthenticated = false;
             let isStreaming = false;
             let abortController = null;
             let messages = [];
+            let attachedImageBase64 = null;    // holds base64 string of selected image
 
             // helpers
             const uid = () => Date.now() + '-' + Math.random().toString(36).substring(2);
@@ -409,11 +439,10 @@
 
             const isPuterReady = () => typeof puter !== 'undefined' && puter.ai && puter.auth;
 
-            // ---- init / auth ----
+            // ----- AUTH / INIT -----
             async function initialize() {
-                if (!isPuterReady()) { setTimeout(initialize, 100); return; }
+                if (!isPuterReady()) { setTimeout(initialize, 80); return; }
                 try {
-                    // test call: if it fails silently → not logged in
                     const test = await puter.ai.chat('test', { model: 'gpt-4.1-nano', stream: false }).catch(() => null);
                     if (test) {
                         isAuthenticated = true;
@@ -421,7 +450,7 @@
                     } else {
                         showLoginScreen();
                     }
-                } catch (err) {
+                } catch {
                     showLoginScreen();
                 }
             }
@@ -431,10 +460,9 @@
                 chatApp.classList.remove('hidden');
                 userInput.disabled = false;
                 sendBtn.disabled = false;
-                // optionally clear welcome
                 if (messages.length === 0) {
                     chatContainer.innerHTML = '';
-                    addMessage('assistant', '👋 Hello! I\'m **Bablu** – try me with text or an image URL. I can see!');
+                    addMessage('assistant', '👋 Hello! Upload an image or ask me anything.');
                 } else {
                     refreshMessages();
                 }
@@ -444,19 +472,17 @@
                 loginScreen.classList.remove('hidden');
                 chatApp.classList.add('hidden');
                 isAuthenticated = false;
-                userInput.disabled = true;
-                sendBtn.disabled = true;
             }
 
-            // ---- messages rendering ----
-            function addMessage(role, content, status = 'complete', imageUrl = null) {
+            // ----- MESSAGE RENDERING -----
+            function addMessage(role, content, status = 'complete', imageBase64 = null) {
                 const msg = {
                     id: uid(),
                     role: role,
                     content: content,
                     timestamp: new Date().toISOString(),
                     status: status,
-                    image: imageUrl || null
+                    image: imageBase64 || null
                 };
                 messages.push(msg);
                 renderMessage(msg);
@@ -480,17 +506,16 @@
                 const bubble = document.createElement('div');
                 bubble.className = 'message-bubble';
 
-                let extraHtml = '';
+                let innerHtml = '';
                 if (msg.image) {
-                    extraHtml = `<img src="${msg.image}" class="image-preview" alt="user image" />`;
+                    innerHtml += `<img src="${msg.image}" class="image-preview" alt="user image" />`;
                 }
-
                 let parsed = marked.parse(msg.content || '');
                 if (msg.role === 'assistant' && msg.status === 'streaming') {
                     parsed += '<span class="cursor">▌</span>';
                 }
-
-                bubble.innerHTML = extraHtml + parsed;
+                innerHtml += parsed;
+                bubble.innerHTML = innerHtml;
                 wrapper.appendChild(bubble);
 
                 const actionsDiv = document.createElement('div');
@@ -504,12 +529,12 @@
                 chatContainer.appendChild(wrapper);
             }
 
-            function updateMessage(id, newContent, status = 'complete', imageUrl = null) {
+            function updateMessage(id, newContent, status = 'complete', imageBase64 = null) {
                 const msg = messages.find(m => m.id === id);
                 if (msg) {
                     msg.content = newContent;
                     msg.status = status;
-                    if (imageUrl) msg.image = imageUrl;
+                    if (imageBase64) msg.image = imageBase64;
                     refreshMessages();
                 }
             }
@@ -524,22 +549,40 @@
                 chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
             }
 
-            // ---- streaming + image analysis ----
-            async function sendMessage(text, attachedImageUrl = null) {
-                if (!text.trim() && !attachedImageUrl) return;
+            // ----- IMAGE HANDLING (local file -> base64) -----
+            imageBtn.addEventListener('click', () => {
+                imageFileInput.click();
+            });
+
+            imageFileInput.addEventListener('change', () => {
+                const file = imageFileInput.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    attachedImageBase64 = e.target.result;        // store base64
+                    previewImg.src = attachedImageBase64;
+                    attachedPreview.style.display = 'block';      // show preview
+                };
+                reader.readAsDataURL(file);
+            });
+
+            removeImageBtn.addEventListener('click', () => {
+                attachedImageBase64 = null;
+                imageFileInput.value = '';
+                attachedPreview.style.display = 'none';
+            });
+
+            // ----- SEND MESSAGE (with optional base64 image) -----
+            async function sendMessage(text, imageBase64 = null) {
+                if (!text.trim() && !imageBase64) return;
                 if (!isAuthenticated) { alert('Please login first'); return; }
                 if (isStreaming) return;
 
-                // add user message (with image if provided)
-                const userMsgId = addMessage('user', text || '📷 image analysis', 'complete', attachedImageUrl);
+                // Add user message (with image preview inside bubble)
+                addMessage('user', text || '📷 Image', 'complete', imageBase64);
 
-                // build conversation for AI
-                const conversationForAI = messages.map(m => ({
-                    role: m.role,
-                    content: m.content
-                }));
-
-                // create assistant placeholder
+                // Build assistant placeholder
                 const assistantId = addMessage('assistant', '...', 'streaming');
                 isStreaming = true;
                 sendBtn.disabled = true;
@@ -548,13 +591,13 @@
                 abortController = new AbortController();
 
                 try {
-                    // smart payload: if there's an image, pass it as second argument according to Puter docs
                     let response;
-                    if (attachedImageUrl) {
-                        // Image analysis mode: use url as second param
+                    if (imageBase64) {
+                        // Puter accepts image as second argument (can be base64 data URL)
+                        const promptText = text.trim() || 'Describe this image in detail. What’s in it?';
                         response = await puter.ai.chat(
-                            text || 'Describe this image in detail. What’s in it?',
-                            attachedImageUrl,
+                            promptText,
+                            imageBase64,                          // base64 works! (data:image/...)
                             {
                                 model: modelSelect.value,
                                 stream: true,
@@ -562,7 +605,11 @@
                             }
                         );
                     } else {
-                        // normal chat
+                        // text-only conversation
+                        const conversationForAI = messages.map(m => ({
+                            role: m.role,
+                            content: m.content
+                        }));
                         response = await puter.ai.chat(
                             conversationForAI,
                             {
@@ -585,7 +632,7 @@
                     if (!abortController.signal.aborted) {
                         updateMessage(assistantId, full, 'complete');
                     } else {
-                        updateMessage(assistantId, full + ' ⏸️ stopped', 'complete');
+                        updateMessage(assistantId, full + ' ⏸️ interrupted', 'complete');
                     }
 
                 } catch (err) {
@@ -604,12 +651,11 @@
                 }
             }
 
-            // ---- event listeners ----
+            // ----- EVENT LISTENERS -----
             loginBtn.addEventListener('click', async () => {
                 loginBtn.disabled = true;
                 loginBtn.innerHTML = '<i class="fa-regular fa-spinner fa-spin"></i> connecting...';
                 try {
-                    // this triggers Puter sign-in if needed
                     const resp = await puter.ai.chat('test', { model: 'gpt-4.1-nano', stream: false });
                     if (resp) {
                         isAuthenticated = true;
@@ -627,33 +673,24 @@
                 try { await puter.auth.signOut(); } catch (e) {}
                 isAuthenticated = false;
                 messages = [];
+                attachedImageBase64 = null;
+                attachedPreview.style.display = 'none';
+                imageFileInput.value = '';
                 showLoginScreen();
                 settingsPanel.classList.remove('show');
             });
 
             sendBtn.addEventListener('click', () => {
-                const rawText = userInput.value.trim();
-                let imageUrl = null;
-                let text = rawText;
+                const text = userInput.value.trim();
+                // send with attached image (if any)
+                sendMessage(text, attachedImageBase64);
 
-                // heuristic: if text starts with http and looks like image, treat as image analysis
-                if (rawText.match(/^https?:\/\/.*\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i)) {
-                    imageUrl = rawText;
-                    text = ''; // use default prompt
-                } else {
-                    // also check if image input field is filled
-                    const imgInput = imageUrlInput.value.trim();
-                    if (imgInput.match(/^https?:\/\/.*\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i)) {
-                        imageUrl = imgInput;
-                    }
-                }
-
-                if (text || imageUrl) {
-                    sendMessage(text, imageUrl);
-                    userInput.value = '';
-                    imageUrlInput.value = ''; // optional clear
-                    userInput.style.height = 'auto';
-                }
+                // clear input and image
+                userInput.value = '';
+                userInput.style.height = 'auto';
+                attachedImageBase64 = null;
+                imageFileInput.value = '';
+                attachedPreview.style.display = 'none';
             });
 
             userInput.addEventListener('keydown', (e) => {
@@ -692,7 +729,7 @@
                     settingsPanel.classList.remove('show');
             });
 
-            // message actions (copy, regenerate)
+            // message actions (copy / regenerate)
             chatContainer.addEventListener('click', async (e) => {
                 const btn = e.target.closest('button');
                 if (!btn) return;
@@ -704,9 +741,9 @@
 
                 if (btn.classList.contains('copy-msg')) {
                     await navigator.clipboard.writeText(msg.content);
-                    const original = btn.innerHTML;
+                    const orig = btn.innerHTML;
                     btn.innerHTML = '<i class="fa-regular fa-check"></i> Copied';
-                    setTimeout(() => btn.innerHTML = original, 1200);
+                    setTimeout(() => btn.innerHTML = orig, 1200);
                 }
 
                 if (btn.classList.contains('regenerate-msg') && msg.role === 'assistant') {
@@ -720,14 +757,14 @@
                         }
                     }
                     if (userMsg !== null) {
-                        messages = messages.slice(0, idx); // remove this assistant message
+                        messages = messages.slice(0, idx);
                         refreshMessages();
                         await sendMessage(userMsg, userImage);
                     }
                 }
             });
 
-            // initial
+            // start
             initialize();
         })();
     </script>
