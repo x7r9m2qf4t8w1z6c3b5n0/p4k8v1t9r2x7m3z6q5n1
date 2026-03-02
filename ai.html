@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bablu · silk stream · Puter</title>
+    <title>Bablu · 3D colorful · Puter</title>
     <!-- Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- marked (for final parse) -->
+    <!-- marked -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- Puter.js v2 -->
     <script src="https://js.puter.com/v2/"></script>
@@ -19,52 +17,55 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #f0f6fe;
+            background: #f5f0ff;
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #1d3145;
+            color: #1a2b4a;
             transition: background 0.25s;
         }
 
         body.dark-mode {
-            background: #0b1625;
-            color: #ecf3fd;
+            background: #0f1425;
+            color: #eef4ff;
         }
 
         /* login screen */
         .login-screen {
             width: 100%;
             max-width: 440px;
-            background: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.85);
             backdrop-filter: blur(16px);
             border-radius: 48px;
             padding: 48px 36px;
             text-align: center;
-            box-shadow: 0 30px 60px -15px #13324b70;
-            border: 1px solid #ffffff70;
+            box-shadow: 0 30px 60px -15px #3a4f8a60;
+            border: 1px solid #ffffff90;
             margin: 20px;
         }
 
         body.dark-mode .login-screen {
-            background: rgba(22, 42, 63, 0.9);
-            border-color: #305d8a60;
+            background: rgba(28, 40, 65, 0.9);
+            border-color: #5a7bb560;
         }
 
         .login-screen h2 {
-            font-size: 2.6rem;
-            font-weight: 600;
-            background: linear-gradient(150deg, #1e4f7c, #3479b5);
+            font-size: 2.8rem;
+            font-weight: 650;
+            background: linear-gradient(145deg, #3f5eb5, #8a4fc8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
         }
+
+        /* 3D login button */
         .login-btn {
-            background: #1f5685;
+            background: linear-gradient(145deg, #6c5ce7, #a463f5);
             border: none;
             color: white;
             font-size: 1.2rem;
-            font-weight: 500;
+            font-weight: 600;
             padding: 16px 32px;
             border-radius: 60px;
             display: inline-flex;
@@ -73,10 +74,20 @@
             cursor: pointer;
             width: 100%;
             justify-content: center;
-            transition: 0.18s;
-            box-shadow: 0 10px 22px -8px #1f5685;
+            transition: 0.2s;
+            box-shadow: 0 12px 25px -8px #6c5ce7b0, 0 4px 8px #ffffff70 inset, 0 -4px 8px #00000020 inset;
+            border: 1px solid #ffffff90;
         }
-        .login-btn:not(:disabled):hover { background: #2973b0; transform: scale(1.02); }
+        .login-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 18px 30px -8px #8a4fc8, 0 4px 12px #ffffffb0 inset;
+        }
+
+        .login-btn img {
+            width: 28px;
+            height: 28px;
+            filter: drop-shadow(0 4px 6px #00000040);
+        }
 
         /* main chat app */
         .chat-app {
@@ -86,54 +97,79 @@
             max-height: 950px;
             background: white;
             border-radius: 36px;
-            box-shadow: 0 30px 70px -15px #12375340;
+            box-shadow: 0 30px 70px -15px #3f4f9b60;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             margin: 16px;
         }
         body.dark-mode .chat-app {
-            background: #102433;
-            box-shadow: 0 30px 70px -15px #000000b0;
+            background: #141d34;
+            box-shadow: 0 30px 70px -15px #000000c0;
         }
 
         .hidden { display: none !important; }
 
-        /* top bar */
+        /* top bar with colorful icons */
         .top-bar {
             padding: 16px 28px;
-            border-bottom: 1px solid #e0ebf5;
+            border-bottom: 1px solid #e0e5ff;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: #ffffffd9;
+            background: #ffffffec;
             backdrop-filter: blur(8px);
         }
         body.dark-mode .top-bar {
-            border-bottom: 1px solid #254963;
-            background: #102537e0;
+            border-bottom: 1px solid #2e4070;
+            background: #1b2546ec;
         }
 
-        .app-name i { font-size: 2rem; color: #2b6c9e; }
-        .app-name span { font-size: 1.5rem; font-weight: 550; margin-left: 8px; }
+        .app-name {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .app-name img {
+            width: 38px;
+            height: 38px;
+            filter: drop-shadow(0 6px 10px #6c5ce780);
+        }
+        .app-name span {
+            font-size: 1.6rem;
+            font-weight: 600;
+            background: linear-gradient(145deg, #4a3fbc, #a55de8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-        .top-actions { display: flex; gap: 6px; }
+        .top-actions { display: flex; gap: 8px; }
         .icon-btn {
-            background: transparent; border: none; width: 44px; height: 44px;
-            border-radius: 40px; display: flex; align-items: center; justify-content: center;
-            color: #3f6891; font-size: 1.3rem; cursor: pointer; transition: 0.15s;
+            background: #f0eaff;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 6px 12px -6px #9a8ae0, 0 2px 4px #ffffff inset;
         }
-        .icon-btn:hover { background: #d7e7fa; }
+        .icon-btn:hover { transform: scale(1.08); background: #e6dbff; }
+        body.dark-mode .icon-btn { background: #2f3d75; box-shadow: 0 6px 12px -6px #161e3a; }
+        .icon-btn img { width: 28px; height: 28px; filter: drop-shadow(0 2px 4px #00000030); }
 
         /* settings dropdown */
         .settings-dropdown {
-            position: absolute; top: 85px; right: 30px; width: 280px;
-            background: white; border-radius: 32px; box-shadow: 0 30px 55px -12px #00000050;
-            padding: 22px; border: 1px solid #d2e5f8; display: none; z-index: 200;
-            backdrop-filter: blur(18px);
+            position: absolute; top: 85px; right: 30px; width: 300px;
+            background: #ffffffec; backdrop-filter: blur(16px);
+            border-radius: 40px; box-shadow: 0 30px 60px -10px #3f3f8b80;
+            padding: 26px; border: 1px solid #ffffff; display: none; z-index: 200;
         }
         body.dark-mode .settings-dropdown {
-            background: #163249; border-color: #30668b;
+            background: #1f2b55ec; border-color: #6b8ac0;
         }
         .settings-dropdown.show { display: block; animation: slideFade 0.2s; }
         @keyframes slideFade {
@@ -141,23 +177,30 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
+        .settings-item {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+        }
+        .settings-item span { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+        .settings-item span img { width: 28px; height: 28px; }
         .settings-item select {
-            padding: 8px 16px; border-radius: 40px; border: 1px solid #bcd2ec;
-            background: #f0f8ff; font-family: 'Inter';
+            padding: 8px 18px; border-radius: 40px; border: 2px solid #b1adff;
+            background: #f5f0ff; font-family: 'Inter'; font-weight: 500; color: #2e2e5e;
         }
         .logout-btn {
-            background: #f0f6fe; border: none; padding: 12px; border-radius: 40px;
-            color: #c04242; font-weight: 550; width: 100%; display: flex; gap: 12px;
+            background: #ffe6ea; border: none; padding: 14px; border-radius: 50px;
+            color: #c74040; font-weight: 600; width: 100%; display: flex; gap: 12px;
             align-items: center; justify-content: center; cursor: pointer;
+            box-shadow: 0 6px 12px -6px #d09c9c;
         }
+        .logout-btn img { width: 26px; height: 26px; }
 
         /* chat container */
         .chat-container {
             flex: 1; overflow-y: auto; padding: 28px 30px; display: flex;
-            flex-direction: column; gap: 22px; background: #f9fdff;
+            flex-direction: column; gap: 22px; background: #faf5ff;
             scroll-behavior: smooth;
         }
-        body.dark-mode .chat-container { background: #0c1b2b; }
+        body.dark-mode .chat-container { background: #121b30; }
 
         .message-wrapper {
             display: flex; flex-direction: column; max-width: 80%;
@@ -173,48 +216,40 @@
 
         .message-meta {
             display: flex; align-items: center; gap: 8px; font-size: 0.75rem;
-            color: #6e93b8; margin-bottom: 6px;
+            color: #6a5fac; margin-bottom: 6px;
         }
         .user .message-meta { justify-content: flex-end; }
 
         .avatar {
-            width: 28px; height: 28px; border-radius: 28px;
-            background: #1f5a8e; color: white; display: flex;
-            align-items: center; justify-content: center;
+            width: 32px; height: 32px; border-radius: 50%;
+            background: linear-gradient(145deg, #6f5ed7, #b576f0);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 6px 12px -6px #5b4ba0;
         }
+        .avatar img { width: 22px; height: 22px; filter: brightness(0) invert(1); }
 
-        /* message bubble — will-change for smoother streaming */
         .message-bubble {
-            padding: 16px 22px;
-            border-radius: 24px;
-            font-size: 1rem;
-            line-height: 1.6;
-            word-break: break-word;
-            will-change: contents;  /* hint for browser */
+            padding: 16px 22px; border-radius: 28px; font-size: 1rem; line-height: 1.6;
+            word-break: break-word; box-shadow: 0 8px 16px -8px #b09ef0;
         }
         .user .message-bubble {
-            background: #e1effb; color: #0b263b; border-bottom-right-radius: 6px;
-            box-shadow: 0 4px 12px -6px #9dc0e8;
+            background: linear-gradient(145deg, #e5d9ff, #d2c2ff);
+            color: #1f1a47; border-bottom-right-radius: 8px;
         }
         .assistant .message-bubble {
-            background: white; border: 1px solid #d4e5f7; border-bottom-left-radius: 6px;
-            transition: box-shadow 0.2s;
+            background: white; border: 1px solid #cfc3ff; border-bottom-left-radius: 8px;
         }
         body.dark-mode .user .message-bubble {
-            background: #1e3d60; color: #f0f9ff;
+            background: linear-gradient(145deg, #354779, #232f60); color: #f0f0ff;
         }
         body.dark-mode .assistant .message-bubble {
-            background: #102f47; border-color: #295982; color: #eaf3ff;
+            background: #1b254a; border-color: #5f75b5; color: #eae5ff;
         }
 
-        /* image inside bubble */
         .message-bubble img {
             max-width: 220px; border-radius: 20px; margin-bottom: 8px;
-            border: 2px solid #bad2f0;
+            border: 3px solid #c2b6ff;
         }
-
-        /* no cursor during streaming — we rely on textNode only */
-        .cursor { display: none; }  /* we won't use cursor; smooth text node */
 
         .message-actions {
             display: flex; gap: 16px; justify-content: flex-end; padding: 8px 8px 0;
@@ -222,49 +257,53 @@
         }
         .message-wrapper:hover .message-actions { opacity: 1; }
         .message-actions button {
-            background: none; border: none; color: #5980a8; font-size: 0.9rem;
-            cursor: pointer; padding: 6px; border-radius: 40px; display: inline-flex; gap: 6px;
+            background: #efe7ff; border: none; color: #3f3399; font-size: 0.9rem;
+            cursor: pointer; padding: 8px 14px; border-radius: 40px; display: inline-flex;
+            align-items: center; gap: 8px; box-shadow: 0 4px 8px -4px #af9fff;
         }
-        .message-actions button:hover { background: #d8eafe; }
+        .message-actions button img { width: 20px; height: 20px; }
+        .message-actions button:hover { background: #e1d4ff; transform: scale(1.02); }
 
-        /* INPUT SECTION */
+        /* INPUT SECTION — with 3D colorful icons */
         .input-section {
-            padding: 18px 24px 20px; background: #f5fafff0; backdrop-filter: blur(8px);
-            border-top: 1px solid #d4e3f2;
+            padding: 18px 24px 20px; background: #f5f0ffec; backdrop-filter: blur(8px);
+            border-top: 1px solid #d2c8ff;
         }
         body.dark-mode .input-section {
-            background: #102433f0; border-top: 1px solid #264f70;
+            background: #1a2548ec; border-top: 1px solid #4f6ab0;
         }
 
         .input-row {
-            display: flex; gap: 10px; align-items: flex-end; background: #eaf2fb;
-            border-radius: 60px; padding: 6px 6px 6px 16px; transition: 0.2s;
-            box-shadow: 0 2px 10px #a6c5e6;
+            display: flex; gap: 12px; align-items: flex-end; background: #ffffff;
+            border-radius: 60px; padding: 6px 6px 6px 18px; box-shadow: 0 8px 18px -8px #b4a4f0, 0 2px 4px #ffffff inset;
         }
-        body.dark-mode .input-row { background: #1b334d; box-shadow: 0 2px 10px #0d1b2c; }
+        body.dark-mode .input-row { background: #2b3a6a; box-shadow: 0 8px 18px -8px #0e1530; }
 
         #imageBtn {
-            width: 46px; height: 46px; border-radius: 50%; background: #d3e6fd;
-            color: #1f5685; border: none; display: flex; align-items: center;
-            justify-content: center; font-size: 1.4rem; cursor: pointer; flex-shrink: 0;
+            width: 52px; height: 52px; border-radius: 50%; border: none;
+            background: linear-gradient(145deg, #b19cff, #8f75f0); display: flex;
+            align-items: center; justify-content: center; cursor: pointer;
+            box-shadow: 0 8px 14px -6px #856ed0, 0 2px 6px #ffffff inset;
         }
-        #imageBtn:hover { background: #c2ddfc; }
+        #imageBtn img { width: 30px; height: 30px; filter: drop-shadow(0 2px 4px #00000050); }
 
         .input-row textarea {
-            flex: 1; border: none; background: transparent; padding: 14px 0;
+            flex: 1; border: none; background: transparent; padding: 16px 0;
             font-family: 'Inter'; font-size: 1rem; resize: none; max-height: 130px;
-            outline: none; color: #1b334d;
+            outline: none; color: #22224b;
         }
-        body.dark-mode .input-row textarea { color: #eaf3ff; }
+        body.dark-mode .input-row textarea { color: #f0eaff; }
 
-        .action-group { display: flex; gap: 6px; }
+        .action-group { display: flex; gap: 8px; }
         .circle-btn {
-            width: 50px; height: 50px; border-radius: 50%; border: none;
-            background: #1f6191; color: white; font-size: 1.3rem; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            width: 52px; height: 52px; border-radius: 50%; border: none;
+            background: linear-gradient(145deg, #6a5acd, #9b72e6); display: flex;
+            align-items: center; justify-content: center; cursor: pointer;
+            box-shadow: 0 8px 16px -6px #5b4da0, 0 2px 6px #ffffff inset;
         }
-        .circle-btn.secondary { background: #deecfc; color: #1f6191; }
-        .circle-btn.stop-btn { background: #c14e4e; }
+        .circle-btn.secondary { background: linear-gradient(145deg, #dbceff, #c1b0ff); }
+        .circle-btn.stop-btn { background: linear-gradient(145deg, #e67575, #c94646); }
+        .circle-btn img { width: 28px; height: 28px; filter: drop-shadow(0 2px 4px #00000050); }
 
         #attachedPreview {
             margin-top: 14px; display: none; position: relative; width: fit-content;
@@ -272,24 +311,24 @@
         }
         #previewImg {
             max-width: 130px; max-height: 130px; border-radius: 24px;
-            border: 3px solid #aac9f0; background: #eef6ff;
+            border: 4px solid #b6a2ff; background: #f5edff;
         }
         #removeImageBtn {
-            position: absolute; top: -10px; right: -10px; background: #c64747;
-            color: white; border: none; border-radius: 50%; width: 30px; height: 30px;
-            font-size: 1.2rem; cursor: pointer; display: flex; align-items: center;
-            justify-content: center; box-shadow: 0 4px 8px #00000030;
+            position: absolute; top: -12px; right: -12px; background: #ff6b6b;
+            color: white; border: none; border-radius: 50%; width: 32px; height: 32px;
+            font-size: 1.4rem; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; box-shadow: 0 6px 12px #c03c3c;
         }
-        #removeImageBtn:hover { background: #b13232; }
     </style>
 </head>
 <body>
     <!-- Login screen -->
     <div id="loginScreen" class="login-screen">
-        <h2>🪄 Bablu</h2>
-        <p>silk streaming · image + text</p>
+        <h2>🌈 Bablu</h2>
+        <p>3D icons · colorful · silk stream</p>
         <button class="login-btn" id="loginBtn">
-            <i class="fa-regular fa-lock-open fa-lg"></i> Start with Puter
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='lg1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffb347;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23ff8c42;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23lg1)' d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z'/%3E%3C/svg%3E" alt="lock open">
+            Start with Puter
         </button>
     </div>
 
@@ -297,27 +336,33 @@
     <div id="chatApp" class="chat-app hidden">
         <div class="top-bar">
             <div class="app-name">
-                <i class="fa-regular fa-message"></i>
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='lg2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%236a5acd;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23b886ff;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23lg2)' d='M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2z'/%3E%3C/svg%3E" alt="message">
                 <span>Bablu</span>
             </div>
             <div class="top-actions">
-                <button class="icon-btn" id="themeToggle" title="Theme"><i class="fa-regular fa-moon"></i></button>
-                <button class="icon-btn" id="settingsToggle" title="Settings"><i class="fa-regular fa-sliders"></i></button>
+                <button class="icon-btn" id="themeToggle">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='lg3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23fdd835;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23f9a825;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle fill='url(%23lg3)' cx='12' cy='12' r='5'/%3E%3Cpath fill='%23f9a825' d='M12 2v2M12 20v2M4 4l2 2M18 18l2 2M2 12h2M20 12h2M4 20l2-2M18 6l2-2' stroke='%23f9a825' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E" alt="theme toggle">
+                </button>
+                <button class="icon-btn" id="settingsToggle">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='lg4' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%237e57c2;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%235d3fa3;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23lg4)' d='M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94 0 .31.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z'/%3E%3C/svg%3E" alt="settings">
+                </button>
             </div>
         </div>
 
         <!-- settings panel -->
         <div class="settings-dropdown" id="settingsPanel">
             <div class="settings-item">
-                <span><i class="fa-regular fa-brain"></i> Model</span>
+                <span><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='lg5' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%236a1b9a;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%239c27b0;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23lg5)' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E"> Model</span>
                 <select id="modelSelect">
                     <option value="gpt-4.1-nano">⚡ GPT-4.1 Nano</option>
                     <option value="gpt-5" selected>🌀 GPT-5</option>
                     <option value="gpt-5.2">🚀 GPT-5.2</option>
                 </select>
             </div>
-            <div style="margin: 20px 0 10px;">
-                <button class="logout-btn" id="logoutBtn"><i class="fa-regular fa-sign-out"></i> Sign Out</button>
+            <div style="margin-top: 20px;">
+                <button class="logout-btn" id="logoutBtn">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='lg6' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ef5350;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23e53935;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23lg6)' d='M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z'/%3E%3C/svg%3E"> Sign Out
+                </button>
             </div>
         </div>
 
@@ -325,36 +370,40 @@
         <div class="chat-container" id="chatContainer">
             <div class="message-wrapper assistant">
                 <div class="message-meta">
-                    <span class="avatar">🤖</span>
+                    <span class="avatar"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M20 9V7c0-1.1-.9-2-2-2h-4c0-1.66-1.34-3-3-3S8 3.34 8 5H4c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h4c0 1.66 1.34 3 3 3s3-1.34 3-3h4c1.1 0 2-.9 2-2z'/%3E%3C/svg%3E"></span>
                     <span class="timestamp">now</span>
                 </div>
-                <div class="message-bubble">✨ Ask me anything — streaming is now **butter smooth**.</div>
+                <div class="message-bubble">✨ 3D icons · smooth streaming · image upload</div>
             </div>
         </div>
 
-        <!-- INPUT SECTION with photo button -->
+        <!-- INPUT SECTION -->
         <div class="input-section">
             <div class="input-row">
-                <button class="circle-btn secondary" id="imageBtn" title="Upload image">
-                    <i class="fa-regular fa-image"></i>
+                <button class="circle-btn secondary" id="imageBtn">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='lg7' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2342a5f5;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%232979c4;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23lg7)' d='M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z'/%3E%3C/svg%3E">
                 </button>
                 <input type="file" id="imageFileInput" accept="image/*" hidden />
-                <textarea id="userInput" placeholder="Message or image + text ..." rows="1"></textarea>
+                <textarea id="userInput" placeholder="Type or upload image ..." rows="1"></textarea>
                 <div class="action-group">
-                    <button class="circle-btn secondary hidden" id="stopBtn"><i class="fa-solid fa-stop"></i></button>
-                    <button class="circle-btn" id="sendBtn"><i class="fa-regular fa-paper-plane"></i></button>
+                    <button class="circle-btn secondary hidden" id="stopBtn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='lg8' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ef5350;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23c62828;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23lg8)' x='6' y='6' width='12' height='12' rx='2'/%3E%3C/svg%3E">
+                    </button>
+                    <button class="circle-btn" id="sendBtn">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='lg9' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234caf50;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23388e3c;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23lg9)' d='M2.01 21L23 12 2.01 3 2 10l15 2-15 2z'/%3E%3C/svg%3E">
+                    </button>
                 </div>
             </div>
             <div id="attachedPreview">
                 <img id="previewImg" src="#" alt="preview">
-                <button id="removeImageBtn" aria-label="Remove image">×</button>
+                <button id="removeImageBtn">×</button>
             </div>
         </div>
     </div>
 
     <script>
         (function() {
-            // DOM elements
+            // DOM elements (icons now via img, same logic)
             const loginScreen = document.getElementById('loginScreen');
             const chatApp = document.getElementById('chatApp');
             const loginBtn = document.getElementById('loginBtn');
@@ -388,13 +437,11 @@
             };
             const isPuterReady = () => typeof puter !== 'undefined' && puter.ai && puter.auth;
 
-            // auth
             async function initialize() {
                 if (!isPuterReady()) { setTimeout(initialize, 80); return; }
                 try {
                     const test = await puter.ai.chat('test', { model: 'gpt-4.1-nano', stream: false }).catch(() => null);
-                    if (test) { isAuthenticated = true; showChatApp(); } 
-                    else { showLoginScreen(); }
+                    if (test) { isAuthenticated = true; showChatApp(); } else { showLoginScreen(); }
                 } catch { showLoginScreen(); }
             }
 
@@ -405,7 +452,7 @@
                 sendBtn.disabled = false;
                 if (messages.length === 0) {
                     chatContainer.innerHTML = '';
-                    addMessage('assistant', '👋 Try uploading an image — the response will stream smoothly.');
+                    addMessage('assistant', '🌈 Colorful icons · upload an image');
                 } else refreshMessages();
             }
             function showLoginScreen() {
@@ -414,16 +461,8 @@
                 isAuthenticated = false;
             }
 
-            // message rendering (only used for final or non-stream messages)
             function addMessage(role, content, status = 'complete', imageBase64 = null) {
-                const msg = {
-                    id: uid(),
-                    role: role,
-                    content: content,
-                    timestamp: new Date().toISOString(),
-                    status: status,
-                    image: imageBase64 || null
-                };
+                const msg = { id: uid(), role, content, timestamp: new Date().toISOString(), status, image: imageBase64 };
                 messages.push(msg);
                 renderMessage(msg);
                 scrollToBottom();
@@ -438,19 +477,15 @@
                 const meta = document.createElement('div');
                 meta.className = 'message-meta';
                 meta.innerHTML = `
-                    <span class="avatar">${msg.role === 'user' ? '👤' : '🤖'}</span>
+                    <span class="avatar"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"></span>
                     <span class="timestamp">${formatTime()}</span>
                 `;
                 wrapper.appendChild(meta);
 
                 const bubble = document.createElement('div');
                 bubble.className = 'message-bubble';
-
                 let innerHtml = '';
-                if (msg.image) {
-                    innerHtml += `<img src="${msg.image}" class="image-preview" alt="user image" />`;
-                }
-                // final parse (markdown only when complete)
+                if (msg.image) innerHtml += `<img src="${msg.image}" class="image-preview">`;
                 innerHtml += marked.parse(msg.content || '');
                 bubble.innerHTML = innerHtml;
                 wrapper.appendChild(bubble);
@@ -458,11 +493,10 @@
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'message-actions';
                 actionsDiv.innerHTML = msg.role === 'assistant' 
-                    ? `<button class="copy-msg"><i class="fa-regular fa-copy"></i> Copy</button>
-                       <button class="regenerate-msg"><i class="fa-regular fa-rotate-right"></i> Regenerate</button>`
-                    : `<button class="copy-msg"><i class="fa-regular fa-copy"></i> Copy</button>`;
+                    ? `<button class="copy-msg"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='lg10' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%237e57c2;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%235d3fa3;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23lg10)' d='M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z'/%3E%3C/svg%3E"> Copy</button>
+                       <button class="regenerate-msg"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='lg11' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2342a5f5;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%231567b0;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23lg11)' d='M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z'/%3E%3C/svg%3E"> Regenerate</button>`
+                    : `<button class="copy-msg"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='lg10' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%237e57c2;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%235d3fa3;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23lg10)' d='M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z'/%3E%3C/svg%3E"> Copy</button>`;
                 wrapper.appendChild(actionsDiv);
-
                 chatContainer.appendChild(wrapper);
             }
 
@@ -471,58 +505,37 @@
                 messages.forEach(m => renderMessage(m));
                 scrollToBottom();
             }
-            function scrollToBottom() {
-                chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
-            }
+            function scrollToBottom() { chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); }
 
-            // ---- SMOOTH STREAMING ----
+            // smooth streaming (same as before, using textNode)
             async function sendMessage(text, imageBase64 = null) {
                 if (!text.trim() && !imageBase64) return;
-                if (!isAuthenticated) { alert('Please login first'); return; }
+                if (!isAuthenticated) { alert('Login first'); return; }
                 if (isStreaming) return;
 
-                // 1) Add user message (with image)
                 addMessage('user', text || '📷 Image', 'complete', imageBase64);
 
-                // 2) Create assistant message wrapper with a dedicated text node
                 const assistantId = uid();
                 const wrapper = document.createElement('div');
                 wrapper.className = 'message-wrapper assistant';
                 wrapper.dataset.messageId = assistantId;
-
                 const meta = document.createElement('div');
                 meta.className = 'message-meta';
-                meta.innerHTML = `<span class="avatar">🤖</span><span class="timestamp">${formatTime()}</span>`;
+                meta.innerHTML = `<span class="avatar"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M20 9V7c0-1.1-.9-2-2-2h-4c0-1.66-1.34-3-3-3S8 3.34 8 5H4c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h4c0 1.66 1.34 3 3 3s3-1.34 3-3h4c1.1 0 2-.9 2-2z'/%3E%3C/svg%3E"></span><span class="timestamp">${formatTime()}</span>`;
                 wrapper.appendChild(meta);
-
                 const bubble = document.createElement('div');
                 bubble.className = 'message-bubble';
-                // create a text node – we will update this smoothly
                 const textNode = document.createTextNode('');
                 bubble.appendChild(textNode);
                 wrapper.appendChild(bubble);
-
-                // placeholder for actions (will add after stream)
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'message-actions';
-                actionsDiv.innerHTML = `<button class="copy-msg"><i class="fa-regular fa-copy"></i> Copy</button>
-                                        <button class="regenerate-msg"><i class="fa-regular fa-rotate-right"></i> Regenerate</button>`;
+                actionsDiv.innerHTML = `<button class="copy-msg"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='lg10' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%237e57c2;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%235d3fa3;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23lg10)' d='M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z'/%3E%3C/svg%3E"> Copy</button><button class="regenerate-msg"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='lg11' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2342a5f5;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%231567b0;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23lg11)' d='M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z'/%3E%3C/svg%3E"> Regenerate</button>`;
                 wrapper.appendChild(actionsDiv);
-
                 chatContainer.appendChild(wrapper);
                 scrollToBottom();
 
-                // store minimal message object (content will be updated)
-                const assistantMsg = {
-                    id: assistantId,
-                    role: 'assistant',
-                    content: '',
-                    timestamp: new Date().toISOString(),
-                    status: 'streaming',
-                    image: null,
-                    textNode: textNode,     // keep reference for updates
-                    wrapper: wrapper
-                };
+                const assistantMsg = { id: assistantId, role: 'assistant', content: '', timestamp: new Date().toISOString(), status: 'streaming', image: null, textNode };
                 messages.push(assistantMsg);
 
                 isStreaming = true;
@@ -533,44 +546,28 @@
                 try {
                     let response;
                     if (imageBase64) {
-                        const promptText = text.trim() || 'Describe this image in detail.';
-                        response = await puter.ai.chat(promptText, imageBase64, {
-                            model: modelSelect.value,
-                            stream: true,
-                            signal: abortController.signal
+                        response = await puter.ai.chat(text.trim() || 'Describe this image', imageBase64, {
+                            model: modelSelect.value, stream: true, signal: abortController.signal
                         });
                     } else {
-                        const conversationForAI = messages
-                            .filter(m => m.id !== assistantId) // exclude current streaming msg
-                            .map(m => ({ role: m.role, content: m.content }));
+                        const conversationForAI = messages.filter(m => m.id !== assistantId).map(m => ({ role: m.role, content: m.content }));
                         response = await puter.ai.chat(conversationForAI, {
-                            model: modelSelect.value,
-                            stream: true,
-                            signal: abortController.signal
+                            model: modelSelect.value, stream: true, signal: abortController.signal
                         });
                     }
 
                     let fullText = '';
-
-                    // ---- SMOOTH STREAM: append to text node ----
                     for await (const part of response) {
                         if (abortController.signal.aborted) break;
                         if (part?.text) {
                             fullText += part.text;
-                            // Direct text node update – NO innerHTML, NO flicker
-                            textNode.textContent = fullText;
+                            textNode.textContent = fullText;  // SMOOTH UPDATE
                             scrollToBottom();
                         }
                     }
 
                     if (!abortController.signal.aborted) {
-                        // finalize: replace with markdown-rendered version (optional, keeps formatting)
-                        // but we must keep it stable: we can replace the bubble's innerHTML now,
-                        // it will cause one reflow, but that's acceptable after stream ends.
-                        // However, to be super smooth, we could keep plain text, but markdown is nicer.
-                        // Let's do final render with markdown:
-                        bubble.innerHTML = marked.parse(fullText);  // one single repaint
-                        // update message content
+                        bubble.innerHTML = marked.parse(fullText); // final markdown
                         assistantMsg.content = fullText;
                         assistantMsg.status = 'complete';
                     } else {
@@ -578,87 +575,52 @@
                         assistantMsg.content = fullText + ' ⏸️';
                         assistantMsg.status = 'complete';
                     }
-
                 } catch (err) {
-                    console.error(err);
-                    if (err.message?.includes('authenticate') || err.code === 'not_authenticated') {
-                        isAuthenticated = false;
-                        showLoginScreen();
-                    } else {
-                        textNode.textContent = '⚠️ Error: ' + (err.message || 'unknown');
-                        assistantMsg.content = '⚠️ Error: ' + (err.message || 'unknown');
-                    }
+                    if (err.message?.includes('authenticate')) { isAuthenticated = false; showLoginScreen(); } 
+                    else { textNode.textContent = '⚠️ Error: ' + (err.message || 'unknown'); }
                 } finally {
-                    isStreaming = false;
-                    sendBtn.disabled = false;
-                    stopBtn.classList.add('hidden');
-                    abortController = null;
+                    isStreaming = false; sendBtn.disabled = false; stopBtn.classList.add('hidden'); abortController = null;
                 }
             }
 
-            // ---- image handling ----
+            // event listeners (same logic, just icons replaced)
             imageBtn.addEventListener('click', () => imageFileInput.click());
             imageFileInput.addEventListener('change', () => {
                 const file = imageFileInput.files[0];
                 if (!file) return;
                 const reader = new FileReader();
-                reader.onload = (e) => {
-                    attachedImageBase64 = e.target.result;
-                    previewImg.src = attachedImageBase64;
-                    attachedPreview.style.display = 'block';
-                };
+                reader.onload = (e) => { attachedImageBase64 = e.target.result; previewImg.src = attachedImageBase64; attachedPreview.style.display = 'block'; };
                 reader.readAsDataURL(file);
             });
             removeImageBtn.addEventListener('click', () => {
-                attachedImageBase64 = null;
-                imageFileInput.value = '';
-                attachedPreview.style.display = 'none';
+                attachedImageBase64 = null; imageFileInput.value = ''; attachedPreview.style.display = 'none';
             });
 
-            // ---- send ----
             sendBtn.addEventListener('click', () => {
                 const text = userInput.value.trim();
                 sendMessage(text, attachedImageBase64);
-                userInput.value = '';
-                userInput.style.height = 'auto';
-                attachedImageBase64 = null;
-                imageFileInput.value = '';
-                attachedPreview.style.display = 'none';
+                userInput.value = ''; userInput.style.height = 'auto'; attachedImageBase64 = null; imageFileInput.value = ''; attachedPreview.style.display = 'none';
             });
 
-            userInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendBtn.click(); }
-            });
+            userInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendBtn.click(); } });
             userInput.addEventListener('input', function() { this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'; });
 
-            stopBtn.addEventListener('click', () => {
-                if (abortController) abortController.abort();
-                isStreaming = false;
-                sendBtn.disabled = false;
-                stopBtn.classList.add('hidden');
-            });
+            stopBtn.addEventListener('click', () => { if (abortController) abortController.abort(); isStreaming = false; sendBtn.disabled = false; stopBtn.classList.add('hidden'); });
 
-            // theme
             themeToggle.addEventListener('click', () => {
                 document.body.classList.toggle('dark-mode');
                 const dark = document.body.classList.contains('dark-mode');
-                themeToggle.innerHTML = dark ? '<i class="fa-regular fa-sun"></i>' : '<i class="fa-regular fa-moon"></i>';
+                themeToggle.innerHTML = dark ? '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\'%3E%3Cdefs%3E%3ClinearGradient id=\'lg3d\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' style=\'stop-color:%23fdd835;stop-opacity:1\' /%3E%3Cstop offset=\'100%25\' style=\'stop-color:%23f9a825;stop-opacity:1\' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle fill=\'url(%23lg3d)\' cx=\'12\' cy=\'12\' r=\'5\'/%3E%3C/svg%3E">' : '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\'%3E%3Cdefs%3E%3ClinearGradient id=\'lg3l\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' style=\'stop-color:%2334495e;stop-opacity:1\' /%3E%3Cstop offset=\'100%25\' style=\'stop-color:%23223344;stop-opacity:1\' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill=\'url(%23lg3l)\' d=\'M10 2c-1.82 0-3.53.5-5 1.35C7.99 5.08 10 8.3 10 12s-2.01 6.92-5 8.65C6.47 21.5 8.18 22 10 22c5.52 0 10-4.48 10-10S15.52 2 10 2z\'/%3E%3C/svg%3E">';
                 localStorage.setItem('bablu-theme', dark ? 'dark' : 'light');
             });
             if (localStorage.getItem('bablu-theme') === 'dark') {
                 document.body.classList.add('dark-mode');
-                themeToggle.innerHTML = '<i class="fa-regular fa-sun"></i>';
+                themeToggle.innerHTML = '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\'%3E%3Cdefs%3E%3ClinearGradient id=\'lg3d\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' style=\'stop-color:%23fdd835;stop-opacity:1\' /%3E%3Cstop offset=\'100%25\' style=\'stop-color:%23f9a825;stop-opacity:1\' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle fill=\'url(%23lg3d)\' cx=\'12\' cy=\'12\' r=\'5\'/%3E%3C/svg%3E">';
             }
 
-            settingsToggle.addEventListener('click', (e) => {
-                e.stopPropagation(); settingsPanel.classList.toggle('show');
-            });
-            document.addEventListener('click', (e) => {
-                if (!settingsPanel.contains(e.target) && !settingsToggle.contains(e.target))
-                    settingsPanel.classList.remove('show');
-            });
+            settingsToggle.addEventListener('click', (e) => { e.stopPropagation(); settingsPanel.classList.toggle('show'); });
+            document.addEventListener('click', (e) => { if (!settingsPanel.contains(e.target) && !settingsToggle.contains(e.target)) settingsPanel.classList.remove('show'); });
 
-            // message actions (copy, regenerate)
             chatContainer.addEventListener('click', async (e) => {
                 const btn = e.target.closest('button');
                 if (!btn) return;
@@ -671,7 +633,7 @@
                 if (btn.classList.contains('copy-msg')) {
                     await navigator.clipboard.writeText(msg.content);
                     const orig = btn.innerHTML;
-                    btn.innerHTML = '<i class="fa-regular fa-check"></i> Copied';
+                    btn.innerHTML = '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\'%3E%3Cdefs%3E%3ClinearGradient id=\'lgchk\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' style=\'stop-color:%234caf50;stop-opacity:1\' /%3E%3Cstop offset=\'100%25\' style=\'stop-color:%23388e3c;stop-opacity:1\' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill=\'url(%23lgchk)\' d=\'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\'/%3E%3C/svg%3E"> Copied';
                     setTimeout(() => btn.innerHTML = orig, 1200);
                 }
 
@@ -679,11 +641,7 @@
                     const idx = messages.findIndex(m => m.id === msgId);
                     let userMsg = null, userImage = null;
                     for (let i = idx - 1; i >= 0; i--) {
-                        if (messages[i].role === 'user') {
-                            userMsg = messages[i].content;
-                            userImage = messages[i].image || null;
-                            break;
-                        }
+                        if (messages[i].role === 'user') { userMsg = messages[i].content; userImage = messages[i].image || null; break; }
                     }
                     if (userMsg !== null) {
                         messages = messages.slice(0, idx);
@@ -693,16 +651,10 @@
                 }
             });
 
-            // logout
             logoutBtn.addEventListener('click', async () => {
                 try { await puter.auth.signOut(); } catch (e) {}
-                isAuthenticated = false;
-                messages = [];
-                attachedImageBase64 = null;
-                attachedPreview.style.display = 'none';
-                imageFileInput.value = '';
-                showLoginScreen();
-                settingsPanel.classList.remove('show');
+                isAuthenticated = false; messages = []; attachedImageBase64 = null; attachedPreview.style.display = 'none'; imageFileInput.value = '';
+                showLoginScreen(); settingsPanel.classList.remove('show');
             });
 
             initialize();
