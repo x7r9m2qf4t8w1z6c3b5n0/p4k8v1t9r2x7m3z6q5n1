@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Ask Bablu · AI Assistant</title>
+  <!-- Hind Siliguri (weight 700) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@500&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Markdown parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Puter.js v2 -->
+  <script src="https://js.puter.com/v2/"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Hind Siliguri', sans-serif;
+      font-weight: 700 !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 30% 20%, #dee8f2, #c9d6e6);
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    .app-shelf {
+      max-width: 1200px;
+      width: 100%;
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 52px;
+      padding: 24px 20px;
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow: 0 30px 45px -20px rgba(0,25,50,0.5), inset 0 1px 4px white;
+      display: flex;
+      flex-direction: column;
+      height: 90vh;
+    }
+
+    /* header */
+    .global-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .global-header span {
+      font-size: 2rem;
+      background: linear-gradient(145deg, #153448, #1f5a7a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .back-home {
+      background: white;
+      border-radius: 40px;
+      padding: 8px 18px;
+      text-decoration: none;
+      color: #153448;
+      font-size: 1.1rem;
+      border: 1px solid rgba(255,255,255,0.9);
+      box-shadow: 0 8px 12px -8px rgba(0,30,50,0.3);
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .back-home:hover {
+      transform: translateY(-2px);
+    }
+
+    /* controls row */
+    .control-panel {
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(5px);
+      border-radius: 60px;
+      padding: 12px 18px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 15px;
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow: 0 8px 16px -10px #0a1e2c;
+    }
+
+    .control-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      padding: 6px 14px;
+      border-radius: 40px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05), 0 4px 8px -6px #152f40;
+    }
+
+    .control-item label {
+      font-size: 0.9rem;
+      color: #1a4359;
+    }
+
+    .control-item select, .control-item input[type="range"], .control-item input[type="number"] {
+      border: none;
+      background: #eef4f9;
+      padding: 6px 10px;
+      border-radius: 30px;
+      font-weight: 700;
+      color: #0d2d41;
+      outline: none;
+      font-size: 0.9rem;
+    }
+
+    .control-item input[type="range"] {
+      width: 100px;
+      padding: 0;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-left: auto;
+      flex-wrap: wrap;
+    }
+
+    .icon-btn {
+      background: white;
+      border: none;
+      border-radius: 40px;
+      padding: 8px 16px;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 6px 10px -6px #0f2c3e, 0 2px 0 0 #e0ecf5;
+      transition: 0.1s ease;
+      color: #153448;
+      font-weight: 700;
+    }
+
+    .icon-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 5px -3px #0f2c3e, 0 1px 0 0 #c2d4e2;
+    }
+
+    .icon-btn i {
+      font-size: 1rem;
+    }
+
+    /* chat area */
+    .chat-container {
+      flex: 1;
+      overflow-y: auto;
+      background: rgba(255,255,255,0.3);
+      backdrop-filter: blur(4px);
+      border-radius: 40px;
+      padding: 20px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border: 1px solid rgba(255,255,255,0.6);
+    }
+
+    .message {
+      max-width: 85%;
+      padding: 14px 20px;
+      border-radius: 32px;
+      line-height: 1.5;
+      font-size: 1.1rem;
+      word-wrap: break-word;
+      box-shadow: 0 8px 14px -10px #102c3c;
+    }
+
+    .user-message {
+      align-self: flex-end;
+      background: #d9e6f2;
+      border-bottom-right-radius: 8px;
+      color: #0b283a;
+    }
+
+    .assistant-message {
+      align-self: flex-start;
+      background: white;
+      border-bottom-left-radius: 8px;
+      color: #153448;
+    }
+
+    .message pre {
+      background: #1e2f3a;
+      color: #f0f6fc;
+      padding: 12px;
+      border-radius: 20px;
+      overflow-x: auto;
+      font-family: monospace;
+      margin: 10px 0;
+    }
+
+    .message code {
+      background: #e0e9f0;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-family: monospace;
+    }
+
+    .message p {
+      margin: 8px 0;
+    }
+
+    /* input area */
+    .input-area {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      background: white;
+      border-radius: 80px;
+      padding: 8px 8px 8px 22px;
+      border: 1px solid rgba(255,255,255,0.9);
+      box-shadow: 0 8px 16px -12px #102c3c;
+    }
+
+    .input-area textarea {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 12px 0;
+      font-size: 1.1rem;
+      outline: none;
+      resize: none;
+      max-height: 120px;
+      color: #153448;
+      font-weight: 700;
+    }
+
+    .input-area button {
+      background: #1f5a7a;
+      border: none;
+      color: white;
+      width: 54px;
+      height: 54px;
+      border-radius: 40px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 12px -6px #0b2a3a;
+      transition: 0.1s;
+    }
+
+    .input-area button:active {
+      transform: scale(0.95);
+    }
+
+    /* formatting tools panel */
+    .format-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(4px);
+      border-radius: 50px;
+      padding: 8px 16px;
+    }
+
+    .badge {
+      background: #e5eff9;
+      border-radius: 30px;
+      padding: 4px 14px;
+      font-size: 0.85rem;
+      color: #153448;
+      cursor: pointer;
+      transition: 0.1s;
+      border: 1px solid white;
+    }
+
+    .badge:hover {
+      background: #d0e2f2;
+    }
+
+    .badge.active {
+      background: #1f5a7a;
+      color: white;
+    }
+
+    .loader-bar {
+      height: 4px;
+      background: #1877f2;
+      width: 0%;
+      border-radius: 4px;
+      transition: width 0.2s;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div id="facebook-loader" class="loader-bar" style="position: fixed; top:0; left:0; z-index:9999;"></div>
+
+  <div class="app-shelf">
+    <!-- Header with back button -->
+    <div class="global-header">
+      <div class="header-left">
+        <img src="https://i.pinimg.com/736x/bc/2f/ae/bc2fae0cf185bb3118e843032d1d7641.jpg" alt="logo" class="header-icon">
+        <span>Ask Bablu</span>
+      </div>
+      <a href="index.html" class="back-home"><i class="fas fa-arrow-left"></i> Home</a>
+    </div>
+
+    <!-- Control panel: model, temp, tokens, actions -->
+    <div class="control-panel">
+      <div class="control-item">
+        <label><i class="fas fa-microchip"></i></label>
+        <select id="modelSelect">
+          <option value="gpt-5.2">gpt-5.2</option>
+          <option value="gpt-5.2-chat">gpt-5.2-chat</option>
+          <option value="gpt-5.1">gpt-5.1</option>
+          <option value="gpt-5.1-codex">gpt-5.1-codex</option>
+          <option value="gpt-5">gpt-5</option>
+          <option value="gpt-5-nano" selected>gpt-5-nano</option>
+          <option value="gpt-4.1">gpt-4.1</option>
+          <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+          <option value="gpt-4.5">gpt-4.5</option>
+          <option value="o1">o1</option>
+          <option value="o3-mini">o3-mini</option>
+          <option value="openrouter:openai/gpt-oss-120b">GPT-OSS</option>
+        </select>
+      </div>
+      <div class="control-item">
+        <label><i class="fas fa-thermometer-half"></i></label>
+        <input type="range" id="tempSlider" min="0" max="2" step="0.1" value="0.7">
+        <span id="tempVal">0.7</span>
+      </div>
+      <div class="control-item">
+        <label><i class="fas fa-maximize"></i></label>
+        <input type="number" id="maxTokens" value="500" min="1" max="4000" step="1" style="width:80px;">
+      </div>
+      <div class="action-buttons">
+        <button class="icon-btn" id="regenerateBtn"><i class="fas fa-rotate"></i> Regenerate</button>
+        <button class="icon-btn" id="stopBtn"><i class="fas fa-stop"></i> Stop</button>
+      </div>
+    </div>
+
+    <!-- Formatting tools & copy row -->
+    <div class="format-panel">
+      <span class="badge" id="copyResponse"><i class="far fa-copy"></i> Copy</span>
+      <span class="badge" id="copyPlain"><i class="fas fa-text-width"></i> Plain text</span>
+      <span class="badge" id="downloadTxt"><i class="fas fa-file-lines"></i> .txt</span>
+      <span class="badge" id="downloadMd"><i class="fas fa-markdown"></i> .md</span>
+      <span class="badge" id="bulletBtn"><i class="fas fa-list"></i> Bullet</span>
+      <span class="badge" id="summaryBtn"><i class="fas fa-compress"></i> Summarize</span>
+      <span class="badge" id="academicToggle"><i class="fas fa-graduation-cap"></i> Academic</span>
+      <span class="badge" id="webSearchToggle"><i class="fas fa-globe"></i> Web search</span>
+      <span class="badge" id="codexToggle"><i class="fas fa-code"></i> Codex mode</span>
+    </div>
+
+    <!-- Chat messages container -->
+    <div class="chat-container" id="chatContainer">
+      <div class="message assistant-message" id="welcomeMsg">
+        👋 Hi! I'm Bablu, your AI assistant. Ask me anything.
+      </div>
+    </div>
+
+    <!-- Input area -->
+    <div class="input-area">
+      <textarea id="userInput" placeholder="Type your message..." rows="1"></textarea>
+      <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // DOM elements
+      const chatContainer = document.getElementById('chatContainer');
+      const userInput = document.getElementById('userInput');
+      const sendBtn = document.getElementById('sendBtn');
+      const modelSelect = document.getElementById('modelSelect');
+      const tempSlider = document.getElementById('tempSlider');
+      const tempVal = document.getElementById('tempVal');
+      const maxTokens = document.getElementById('maxTokens');
+      const regenerateBtn = document.getElementById('regenerateBtn');
+      const stopBtn = document.getElementById('stopBtn');
+      const copyResponse = document.getElementById('copyResponse');
+      const copyPlain = document.getElementById('copyPlain');
+      const downloadTxt = document.getElementById('downloadTxt');
+      const downloadMd = document.getElementById('downloadMd');
+      const bulletBtn = document.getElementById('bulletBtn');
+      const summaryBtn = document.getElementById('summaryBtn');
+      const academicToggle = document.getElementById('academicToggle');
+      const webSearchToggle = document.getElementById('webSearchToggle');
+      const codexToggle = document.getElementById('codexToggle');
+      const loader = document.getElementById('facebook-loader');
+
+      // State
+      let conversation = [
+        { role: 'assistant', content: '👋 Hi! I\'m Bablu, your AI assistant. Ask me anything.' }
+      ];
+      let isStreaming = false;
+      let abortController = null;
+      let lastUserMessage = '';
+      let academicMode = false;
+      let webSearch = false;
+      let codexMode = false;
+
+      // Display welcome message
+      renderConversation();
+
+      // Temperature slider display
+      tempSlider.addEventListener('input', () => {
+        tempVal.textContent = tempSlider.value;
+      });
+
+      // Toggle academic mode
+      academicToggle.addEventListener('click', () => {
+        academicMode = !academicMode;
+        academicToggle.classList.toggle('active', academicMode);
+      });
+
+      webSearchToggle.addEventListener('click', () => {
+        webSearch = !webSearch;
+        webSearchToggle.classList.toggle('active', webSearch);
+      });
+
+      codexToggle.addEventListener('click', () => {
+        codexMode = !codexMode;
+        codexToggle.classList.toggle('active', codexMode);
+        // Also set model to codex if toggled on
+        if (codexMode) {
+          modelSelect.value = 'gpt-5.1-codex';
+        }
+      });
+
+      // Send message
+      async function sendMessage(overrideText = null) {
+        const text = overrideText !== null ? overrideText : userInput.value.trim();
+        if (!text) return;
+        if (isStreaming) {
+          stopGeneration();
+        }
+
+        // Add user message
+        addMessage('user', text);
+        lastUserMessage = text;
+        userInput.value = '';
+        userInput.style.height = 'auto';
+
+        // Prepare options
+        const options = {
+          model: modelSelect.value,
+          temperature: parseFloat(tempSlider.value),
+          max_tokens: parseInt(maxTokens.value),
+          stream: true,
+        };
+
+        // Add tools if web search enabled
+        if (webSearch) {
+          options.tools = [{ type: 'web_search' }];
+        }
+
+        // If academic mode, prepend system instruction
+        let prompt = text;
+        if (academicMode) {
+          prompt = 'Please respond in academic style: define key terms, use proper notation, and provide structured explanation.\n\n' + text;
+        }
+        if (codexMode) {
+          prompt = 'Generate code with best practices. ' + prompt;
+        }
+
+        // Create assistant message placeholder
+        const assistantMsgId = addMessage('assistant', '▌', true); // temporary ID
+        const assistantMsgDiv = document.getElementById(assistantMsgId);
+        let fullResponse = '';
+
+        // Setup abort controller
+        abortController = new AbortController();
+        isStreaming = true;
+        startLoader();
+
+        try {
+          const response = await puter.ai.chat(prompt, options);
+          // response is an async iterable
+          for await (const part of response) {
+            if (abortController.signal.aborted) break;
+            if (part?.text) {
+              fullResponse += part.text;
+              // Update message with markdown
+              assistantMsgDiv.innerHTML = marked.parse(fullResponse) + '▌';
+              chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+          }
+          if (!abortController.signal.aborted) {
+            // Final message without cursor
+            assistantMsgDiv.innerHTML = marked.parse(fullResponse);
+            // Update conversation
+            conversation[conversation.length-1].content = fullResponse;
+          }
+        } catch (err) {
+          console.error(err);
+          assistantMsgDiv.innerHTML = '⚠️ Error: ' + err.message;
+        } finally {
+          isStreaming = false;
+          abortController = null;
+          stopLoader();
+        }
+      }
+
+      // Stop generation
+      function stopGeneration() {
+        if (abortController) {
+          abortController.abort();
+          abortController = null;
+        }
+        isStreaming = false;
+        stopLoader();
+        // Remove cursor if any
+        const lastMsg = chatContainer.lastElementChild;
+        if (lastMsg && lastMsg.classList.contains('assistant-message') && lastMsg.innerHTML.endsWith('▌')) {
+          lastMsg.innerHTML = lastMsg.innerHTML.slice(0, -1);
+        }
+      }
+
+      // Regenerate last response
+      regenerateBtn.addEventListener('click', () => {
+        if (lastUserMessage) {
+          // Remove last assistant message if exists
+          if (conversation[conversation.length-1]?.role === 'assistant') {
+            conversation.pop();
+            chatContainer.removeChild(chatContainer.lastElementChild);
+          }
+          sendMessage(lastUserMessage);
+        }
+      });
+
+      stopBtn.addEventListener('click', stopGeneration);
+
+      sendBtn.addEventListener('click', () => sendMessage());
+
+      userInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+
+      // Auto-resize textarea
+      userInput.addEventListener('input', () => {
+        userInput.style.height = 'auto';
+        userInput.style.height = (userInput.scrollHeight) + 'px';
+      });
+
+      // Helper: add message to DOM and conversation array
+      function addMessage(role, content, returnId = false) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${role === 'user' ? 'user-message' : 'assistant-message'}`;
+        msgDiv.innerHTML = marked.parse(content);
+        const id = 'msg-' + Date.now() + Math.random();
+        msgDiv.id = id;
+        chatContainer.appendChild(msgDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        conversation.push({ role, content });
+        return returnId ? id : null;
+      }
+
+      // Render all messages (initial)
+      function renderConversation() {
+        chatContainer.innerHTML = '';
+        conversation.forEach(msg => {
+          const msgDiv = document.createElement('div');
+          msgDiv.className = `message ${msg.role === 'user' ? 'user-message' : 'assistant-message'}`;
+          msgDiv.innerHTML = marked.parse(msg.content);
+          chatContainer.appendChild(msgDiv);
+        });
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      // Copy functions
+      function getLastAssistantContent() {
+        for (let i = conversation.length - 1; i >= 0; i--) {
+          if (conversation[i].role === 'assistant') return conversation[i].content;
+        }
+        return '';
+      }
+
+      copyResponse.addEventListener('click', () => {
+        const text = getLastAssistantContent();
+        navigator.clipboard.writeText(text).then(() => alert('Copied!'));
+      });
+
+      copyPlain.addEventListener('click', () => {
+        const text = getLastAssistantContent();
+        // Strip markdown (simple)
+        const plain = text.replace(/#+\s?/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+        navigator.clipboard.writeText(plain).then(() => alert('Plain text copied!'));
+      });
+
+      downloadTxt.addEventListener('click', () => {
+        const text = getLastAssistantContent();
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'bablu-response.txt';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      downloadMd.addEventListener('click', () => {
+        const text = getLastAssistantContent();
+        const blob = new Blob([text], { type: 'text/markdown' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'bablu-response.md';
+        a.click();
+      });
+
+      // Formatting tools: bullet, summary (just modify last assistant message with AI?)
+      bulletBtn.addEventListener('click', async () => {
+        const last = getLastAssistantContent();
+        if (!last) return;
+        // Ask AI to convert to bullet points
+        const prompt = `Convert the following text into bullet points:\n\n${last}`;
+        const res = await puter.ai.chat(prompt, { model: 'gpt-5-nano' });
+        const bulletText = res;
+        // Update last assistant message
+        for (let i = conversation.length - 1; i >= 0; i--) {
+          if (conversation[i].role === 'assistant') {
+            conversation[i].content = bulletText;
+            break;
+          }
+        }
+        renderConversation();
+      });
+
+      summaryBtn.addEventListener('click', async () => {
+        const last = getLastAssistantContent();
+        if (!last) return;
+        const prompt = `Summarize the following text concisely:\n\n${last}`;
+        const res = await puter.ai.chat(prompt, { model: 'gpt-5-nano' });
+        for (let i = conversation.length - 1; i >= 0; i--) {
+          if (conversation[i].role === 'assistant') {
+            conversation[i].content = res;
+            break;
+          }
+        }
+        renderConversation();
+      });
+
+      // Loader simulation
+      function startLoader() {
+        loader.style.width = '0%';
+        loader.style.opacity = '1';
+        let w = 0;
+        const interval = setInterval(() => {
+          if (!isStreaming) {
+            clearInterval(interval);
+            return;
+          }
+          w = Math.min(90, w + Math.random() * 20);
+          loader.style.width = w + '%';
+        }, 300);
+      }
+
+      function stopLoader() {
+        loader.style.width = '100%';
+        setTimeout(() => {
+          loader.style.opacity = '0';
+          loader.style.width = '0%';
+        }, 200);
+      }
+
+      // Handle back/forward cache
+      window.addEventListener('pageshow', () => stopLoader());
+    })();
+  </script>
+</body>
+</html>
