@@ -1,711 +1,821 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Ask Bablu · AI Assistant</title>
-  <!-- Hind Siliguri (weight 700) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@500&display=swap" rel="stylesheet">
-  <!-- Font Awesome 6 -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Markdown parser -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <!-- Puter.js v2 -->
-  <script src="https://js.puter.com/v2/"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Hind Siliguri', sans-serif;
-      font-weight: 700 !important;
-      -webkit-tap-highlight-color: transparent;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bablu · minimal AI</title>
+    <!-- Inter font – clean, modern, professional -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (minimal set) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- marked for markdown rendering (lightweight) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Puter.js (backend proxy – kept only as API bridge) -->
+    <script src="https://js.puter.com/v2/"></script>
+    <style>
+        /* ----- RESET & GLOBAL ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      min-height: 100vh;
-      background: radial-gradient(circle at 30% 20%, #dee8f2, #c9d6e6);
-      padding: 16px 14px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      opacity: 0;
-      animation: fadeIn 0.8s ease forwards;
-    }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f9fafc;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e2a3a;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
 
-    @keyframes fadeIn { to { opacity: 1; } }
+        /* light/dark mode will be toggled via class on body */
+        body.dark-mode {
+            background: #0b1219;
+            color: #e8edf2;
+        }
 
-    .app-shelf {
-      max-width: 1200px;
-      width: 100%;
-      background: rgba(255,255,255,0.8);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-radius: 52px;
-      padding: 24px 20px;
-      border: 1px solid rgba(255,255,255,0.7);
-      box-shadow: 0 30px 45px -20px rgba(0,25,50,0.5), inset 0 1px 4px white;
-      display: flex;
-      flex-direction: column;
-      height: 90vh;
-    }
+        /* main card – flat, clean, no heavy glass */
+        .chat-app {
+            width: 100%;
+            max-width: 1000px;
+            height: 95vh;
+            max-height: 900px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 8px 30px rgba(0, 20, 40, 0.08);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            margin: 16px;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
 
-    /* header */
-    .global-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+        body.dark-mode .chat-app {
+            background: #0f1a24;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        /* ----- TOP BAR (minimal) ----- */
+        .top-bar {
+            padding: 16px 24px;
+            border-bottom: 1px solid #eef2f6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+        }
 
-    .header-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 12px;
-      object-fit: cover;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
+        body.dark-mode .top-bar {
+            border-bottom: 1px solid #253341;
+            background: #0f1a24;
+        }
 
-    .global-header span {
-      font-size: 2rem;
-      background: linear-gradient(145deg, #153448, #1f5a7a);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
+        .app-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .back-home {
-      background: white;
-      border-radius: 40px;
-      padding: 8px 18px;
-      text-decoration: none;
-      color: #153448;
-      font-size: 1.1rem;
-      border: 1px solid rgba(255,255,255,0.9);
-      box-shadow: 0 8px 12px -8px rgba(0,30,50,0.3);
-      transition: 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+        .app-name i {
+            font-size: 1.6rem;
+            color: #2b6c9e;
+        }
 
-    .back-home:hover {
-      transform: translateY(-2px);
-    }
+        .app-name span {
+            font-size: 1.3rem;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+        }
 
-    /* controls row */
-    .control-panel {
-      background: rgba(255,255,255,0.5);
-      backdrop-filter: blur(5px);
-      border-radius: 60px;
-      padding: 12px 18px;
-      margin-bottom: 18px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 15px;
-      border: 1px solid rgba(255,255,255,0.7);
-      box-shadow: 0 8px 16px -10px #0a1e2c;
-    }
+        .top-actions {
+            display: flex;
+            gap: 8px;
+        }
 
-    .control-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: white;
-      padding: 6px 14px;
-      border-radius: 40px;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05), 0 4px 8px -6px #152f40;
-    }
+        .icon-btn {
+            background: transparent;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4f6f8f;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
 
-    .control-item label {
-      font-size: 0.9rem;
-      color: #1a4359;
-    }
+        .icon-btn:hover {
+            background: #eef2f6;
+        }
 
-    .control-item select, .control-item input[type="range"], .control-item input[type="number"] {
-      border: none;
-      background: #eef4f9;
-      padding: 6px 10px;
-      border-radius: 30px;
-      font-weight: 700;
-      color: #0d2d41;
-      outline: none;
-      font-size: 0.9rem;
-    }
+        body.dark-mode .icon-btn {
+            color: #b6c8da;
+        }
 
-    .control-item input[type="range"] {
-      width: 100px;
-      padding: 0;
-    }
+        body.dark-mode .icon-btn:hover {
+            background: #253341;
+        }
 
-    .action-buttons {
-      display: flex;
-      gap: 8px;
-      margin-left: auto;
-      flex-wrap: wrap;
-    }
+        /* ----- MAIN CHAT AREA (scrollable) ----- */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: #fbfdff;
+            scroll-behavior: smooth;
+        }
 
-    .icon-btn {
-      background: white;
-      border: none;
-      border-radius: 40px;
-      padding: 8px 16px;
-      font-size: 0.95rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      box-shadow: 0 6px 10px -6px #0f2c3e, 0 2px 0 0 #e0ecf5;
-      transition: 0.1s ease;
-      color: #153448;
-      font-weight: 700;
-    }
+        body.dark-mode .chat-container {
+            background: #0b141e;
+        }
 
-    .icon-btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 2px 5px -3px #0f2c3e, 0 1px 0 0 #c2d4e2;
-    }
+        /* message wrapper – each bubble with meta */
+        .message-wrapper {
+            display: flex;
+            flex-direction: column;
+            max-width: 85%;
+        }
 
-    .icon-btn i {
-      font-size: 1rem;
-    }
+        .message-wrapper.user {
+            align-self: flex-end;
+        }
 
-    /* chat area */
-    .chat-container {
-      flex: 1;
-      overflow-y: auto;
-      background: rgba(255,255,255,0.3);
-      backdrop-filter: blur(4px);
-      border-radius: 40px;
-      padding: 20px;
-      margin-bottom: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      border: 1px solid rgba(255,255,255,0.6);
-    }
+        .message-wrapper.assistant {
+            align-self: flex-start;
+        }
 
-    .message {
-      max-width: 85%;
-      padding: 14px 20px;
-      border-radius: 32px;
-      line-height: 1.5;
-      font-size: 1.1rem;
-      word-wrap: break-word;
-      box-shadow: 0 8px 14px -10px #102c3c;
-    }
+        .message-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: #7a8faa;
+            margin-bottom: 4px;
+            padding-left: 8px;
+        }
 
-    .user-message {
-      align-self: flex-end;
-      background: #d9e6f2;
-      border-bottom-right-radius: 8px;
-      color: #0b283a;
-    }
+        .message-wrapper.user .message-meta {
+            justify-content: flex-end;
+            padding-right: 8px;
+        }
 
-    .assistant-message {
-      align-self: flex-start;
-      background: white;
-      border-bottom-left-radius: 8px;
-      color: #153448;
-    }
+        .avatar {
+            width: 22px;
+            height: 22px;
+            border-radius: 22px;
+            background: #2b6c9e;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
 
-    .message pre {
-      background: #1e2f3a;
-      color: #f0f6fc;
-      padding: 12px;
-      border-radius: 20px;
-      overflow-x: auto;
-      font-family: monospace;
-      margin: 10px 0;
-    }
+        .assistant .avatar {
+            background: #1e3b4f;
+        }
 
-    .message code {
-      background: #e0e9f0;
-      padding: 2px 6px;
-      border-radius: 10px;
-      font-family: monospace;
-    }
+        .timestamp {
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
 
-    .message p {
-      margin: 8px 0;
-    }
+        /* message bubble */
+        .message-bubble {
+            padding: 14px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            word-break: break-word;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            position: relative;
+        }
 
-    /* input area */
-    .input-area {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      background: white;
-      border-radius: 80px;
-      padding: 8px 8px 8px 22px;
-      border: 1px solid rgba(255,255,255,0.9);
-      box-shadow: 0 8px 16px -12px #102c3c;
-    }
+        .user .message-bubble {
+            background: #e7f0f9;
+            color: #102331;
+            border-bottom-right-radius: 6px;
+        }
 
-    .input-area textarea {
-      flex: 1;
-      border: none;
-      background: transparent;
-      padding: 12px 0;
-      font-size: 1.1rem;
-      outline: none;
-      resize: none;
-      max-height: 120px;
-      color: #153448;
-      font-weight: 700;
-    }
+        .assistant .message-bubble {
+            background: white;
+            border: 1px solid #e2eaf2;
+            border-bottom-left-radius: 6px;
+        }
 
-    .input-area button {
-      background: #1f5a7a;
-      border: none;
-      color: white;
-      width: 54px;
-      height: 54px;
-      border-radius: 40px;
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 8px 12px -6px #0b2a3a;
-      transition: 0.1s;
-    }
+        body.dark-mode .user .message-bubble {
+            background: #1d3649;
+            color: #eef4fa;
+        }
 
-    .input-area button:active {
-      transform: scale(0.95);
-    }
+        body.dark-mode .assistant .message-bubble {
+            background: #13212e;
+            border: 1px solid #2a3f51;
+            color: #e1eaf2;
+        }
 
-    /* formatting tools panel */
-    .format-panel {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
-      background: rgba(255,255,255,0.5);
-      backdrop-filter: blur(4px);
-      border-radius: 50px;
-      padding: 8px 16px;
-    }
+        /* message actions (hover only) */
+        .message-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding: 6px 8px 0 8px;
+            opacity: 0;
+            transition: opacity 0.1s;
+        }
 
-    .badge {
-      background: #e5eff9;
-      border-radius: 30px;
-      padding: 4px 14px;
-      font-size: 0.85rem;
-      color: #153448;
-      cursor: pointer;
-      transition: 0.1s;
-      border: 1px solid white;
-    }
+        .message-wrapper:hover .message-actions {
+            opacity: 1;
+        }
 
-    .badge:hover {
-      background: #d0e2f2;
-    }
+        .message-actions button {
+            background: none;
+            border: none;
+            color: #7a8faa;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-    .badge.active {
-      background: #1f5a7a;
-      color: white;
-    }
+        .message-actions button:hover {
+            color: #2b6c9e;
+            background: #eef2f6;
+        }
 
-    .loader-bar {
-      height: 4px;
-      background: #1877f2;
-      width: 0%;
-      border-radius: 4px;
-      transition: width 0.2s;
-    }
+        body.dark-mode .message-actions button:hover {
+            background: #253341;
+            color: #8cb3d9;
+        }
 
-    .hidden { display: none; }
-  </style>
+        /* typing indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 12px 18px;
+            background: white;
+            border: 1px solid #e2eaf2;
+            border-radius: 20px;
+            border-bottom-left-radius: 6px;
+            width: fit-content;
+        }
+
+        body.dark-mode .typing-indicator {
+            background: #13212e;
+            border-color: #2a3f51;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #7a8faa;
+            border-radius: 8px;
+            display: inline-block;
+            animation: pulse 1.2s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes pulse { 0%,60%,100%{ opacity:0.4; } 30%{ opacity:1; } }
+
+        /* ----- INPUT AREA (clean) ----- */
+        .input-section {
+            padding: 20px 24px;
+            background: white;
+            border-top: 1px solid #eef2f6;
+        }
+
+        body.dark-mode .input-section {
+            background: #0f1a24;
+            border-top: 1px solid #253341;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+            background: #f1f5f9;
+            border-radius: 28px;
+            padding: 8px 8px 8px 20px;
+            transition: background 0.1s;
+        }
+
+        body.dark-mode .input-row {
+            background: #1e2d3c;
+        }
+
+        .input-row textarea {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 12px 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            resize: none;
+            max-height: 150px;
+            outline: none;
+            color: #1e2a3a;
+        }
+
+        body.dark-mode .input-row textarea {
+            color: #eef4fa;
+        }
+
+        .input-row textarea::placeholder {
+            color: #8fa3bc;
+        }
+
+        .action-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .circle-btn {
+            width: 46px;
+            height: 46px;
+            border-radius: 46px;
+            border: none;
+            background: #2b6c9e;
+            color: white;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 4px 8px rgba(0, 60, 110, 0.1);
+        }
+
+        .circle-btn:active { transform: scale(0.96); }
+        .circle-btn:disabled { opacity: 0.5; pointer-events: none; }
+
+        .circle-btn.secondary {
+            background: #e4ecf5;
+            color: #2b6c9e;
+            box-shadow: none;
+        }
+
+        body.dark-mode .circle-btn.secondary {
+            background: #253f55;
+            color: #b3d0ed;
+        }
+
+        .stop-btn {
+            background: #d44e4e;
+        }
+
+        .hidden { display: none !important; }
+
+        /* markdown styling */
+        .message-bubble pre {
+            background: #1e2f3c;
+            color: #e3f0fd;
+            padding: 14px;
+            border-radius: 14px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            margin: 12px 0;
+        }
+
+        .message-bubble code {
+            background: #e2eaf2;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-family: 'SF Mono', monospace;
+            font-size: 0.9em;
+        }
+
+        body.dark-mode .message-bubble code {
+            background: #253f55;
+            color: #d0e2f5;
+        }
+
+        /* settings dropdown (simple) */
+        .settings-dropdown {
+            position: absolute;
+            top: 70px;
+            right: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 16px;
+            width: 240px;
+            border: 1px solid #e2eaf2;
+            display: none;
+            z-index: 100;
+        }
+
+        body.dark-mode .settings-dropdown {
+            background: #13212e;
+            border-color: #2f455b;
+        }
+
+        .settings-dropdown.show { display: block; }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .settings-item select {
+            padding: 6px 10px;
+            border-radius: 30px;
+            border: 1px solid #d0ddee;
+            background: #f1f7fd;
+        }
+    </style>
 </head>
 <body>
-  <div id="facebook-loader" class="loader-bar" style="position: fixed; top:0; left:0; z-index:9999;"></div>
+    <div class="chat-app">
+        <!-- top bar: only name, theme toggle, settings (gear) -->
+        <div class="top-bar">
+            <div class="app-name">
+                <i class="fa-regular fa-comment-dots"></i>
+                <span>Bablu</span>
+            </div>
+            <div class="top-actions">
+                <button class="icon-btn" id="themeToggle" title="Light/dark mode"><i class="fa-regular fa-moon"></i></button>
+                <button class="icon-btn" id="settingsToggle" title="Settings"><i class="fa-regular fa-gear"></i></button>
+            </div>
+        </div>
 
-  <div class="app-shelf">
-    <!-- Header with back button -->
-    <div class="global-header">
-      <div class="header-left">
-        <img src="https://i.pinimg.com/736x/bc/2f/ae/bc2fae0cf185bb3118e843032d1d7641.jpg" alt="logo" class="header-icon">
-        <span>Ask Bablu</span>
-      </div>
-      <a href="index.html" class="back-home"><i class="fas fa-arrow-left"></i> Home</a>
+        <!-- hidden settings panel (simple, no dev clutter) -->
+        <div class="settings-dropdown" id="settingsPanel">
+            <div class="settings-item">
+                <span>Model</span>
+                <select id="modelSelectSimple">
+                    <option value="gpt-5-nano">Bablu fast</option>
+                    <option value="gpt-5">Bablu pro</option>
+                    <option value="gpt-5.2-chat">Bablu chat</option>
+                </select>
+            </div>
+            <div class="settings-item">
+                <span>Temperature</span>
+                <select id="tempSelectSimple">
+                    <option value="0.3">Precise</option>
+                    <option value="0.7" selected>Balanced</option>
+                    <option value="1.2">Creative</option>
+                </select>
+            </div>
+            <p style="font-size:0.75rem; color:#6f89a2; margin-top:8px;">⚙️ Backend controls all</p>
+        </div>
+
+        <!-- main chat container -->
+        <div class="chat-container" id="chatContainer">
+            <!-- messages will be injected here -->
+        </div>
+
+        <!-- bottom input + stop -->
+        <div class="input-section">
+            <div class="input-row">
+                <textarea id="userInput" placeholder="Ask Bablu anything..." rows="1"></textarea>
+                <div class="action-group">
+                    <button class="circle-btn secondary hidden" id="stopBtn"><i class="fa-solid fa-stop"></i></button>
+                    <button class="circle-btn" id="sendBtn"><i class="fa-regular fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Control panel: model, temp, tokens, actions -->
-    <div class="control-panel">
-      <div class="control-item">
-        <label><i class="fas fa-microchip"></i></label>
-        <select id="modelSelect">
-          <option value="gpt-5.2">gpt-5.2</option>
-          <option value="gpt-5.2-chat">gpt-5.2-chat</option>
-          <option value="gpt-5.1">gpt-5.1</option>
-          <option value="gpt-5.1-codex">gpt-5.1-codex</option>
-          <option value="gpt-5">gpt-5</option>
-          <option value="gpt-5-nano" selected>gpt-5-nano</option>
-          <option value="gpt-4.1">gpt-4.1</option>
-          <option value="gpt-4.1-mini">gpt-4.1-mini</option>
-          <option value="gpt-4.5">gpt-4.5</option>
-          <option value="o1">o1</option>
-          <option value="o3-mini">o3-mini</option>
-          <option value="openrouter:openai/gpt-oss-120b">GPT-OSS</option>
-        </select>
-      </div>
-      <div class="control-item">
-        <label><i class="fas fa-thermometer-half"></i></label>
-        <input type="range" id="tempSlider" min="0" max="2" step="0.1" value="0.7">
-        <span id="tempVal">0.7</span>
-      </div>
-      <div class="control-item">
-        <label><i class="fas fa-maximize"></i></label>
-        <input type="number" id="maxTokens" value="500" min="1" max="4000" step="1" style="width:80px;">
-      </div>
-      <div class="action-buttons">
-        <button class="icon-btn" id="regenerateBtn"><i class="fas fa-rotate"></i> Regenerate</button>
-        <button class="icon-btn" id="stopBtn"><i class="fas fa-stop"></i> Stop</button>
-      </div>
-    </div>
+    <script>
+        (function() {
+            // --- DOM refs ---
+            const chatContainer = document.getElementById('chatContainer');
+            const userInput = document.getElementById('userInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            const themeToggle = document.getElementById('themeToggle');
+            const settingsToggle = document.getElementById('settingsToggle');
+            const settingsPanel = document.getElementById('settingsPanel');
+            const modelSelectSimple = document.getElementById('modelSelectSimple');
+            const tempSelectSimple = document.getElementById('tempSelectSimple');
 
-    <!-- Formatting tools & copy row -->
-    <div class="format-panel">
-      <span class="badge" id="copyResponse"><i class="far fa-copy"></i> Copy</span>
-      <span class="badge" id="copyPlain"><i class="fas fa-text-width"></i> Plain text</span>
-      <span class="badge" id="downloadTxt"><i class="fas fa-file-lines"></i> .txt</span>
-      <span class="badge" id="downloadMd"><i class="fas fa-markdown"></i> .md</span>
-      <span class="badge" id="bulletBtn"><i class="fas fa-list"></i> Bullet</span>
-      <span class="badge" id="summaryBtn"><i class="fas fa-compress"></i> Summarize</span>
-      <span class="badge" id="academicToggle"><i class="fas fa-graduation-cap"></i> Academic</span>
-      <span class="badge" id="webSearchToggle"><i class="fas fa-globe"></i> Web search</span>
-      <span class="badge" id="codexToggle"><i class="fas fa-code"></i> Codex mode</span>
-    </div>
+            // --- state ---
+            let messages = [];   // will be populated with { id, role, content, timestamp, status }
+            let isStreaming = false;
+            let abortController = null;
+            let currentAssistantMsgId = null;
 
-    <!-- Chat messages container -->
-    <div class="chat-container" id="chatContainer">
-      <div class="message assistant-message" id="welcomeMsg">
-        👋 Hi! I'm Bablu, your AI assistant. Ask me anything.
-      </div>
-    </div>
-
-    <!-- Input area -->
-    <div class="input-area">
-      <textarea id="userInput" placeholder="Type your message..." rows="1"></textarea>
-      <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
-    </div>
-  </div>
-
-  <script>
-    (function() {
-      // DOM elements
-      const chatContainer = document.getElementById('chatContainer');
-      const userInput = document.getElementById('userInput');
-      const sendBtn = document.getElementById('sendBtn');
-      const modelSelect = document.getElementById('modelSelect');
-      const tempSlider = document.getElementById('tempSlider');
-      const tempVal = document.getElementById('tempVal');
-      const maxTokens = document.getElementById('maxTokens');
-      const regenerateBtn = document.getElementById('regenerateBtn');
-      const stopBtn = document.getElementById('stopBtn');
-      const copyResponse = document.getElementById('copyResponse');
-      const copyPlain = document.getElementById('copyPlain');
-      const downloadTxt = document.getElementById('downloadTxt');
-      const downloadMd = document.getElementById('downloadMd');
-      const bulletBtn = document.getElementById('bulletBtn');
-      const summaryBtn = document.getElementById('summaryBtn');
-      const academicToggle = document.getElementById('academicToggle');
-      const webSearchToggle = document.getElementById('webSearchToggle');
-      const codexToggle = document.getElementById('codexToggle');
-      const loader = document.getElementById('facebook-loader');
-
-      // State
-      let conversation = [
-        { role: 'assistant', content: '👋 Hi! I\'m Bablu, your AI assistant. Ask me anything.' }
-      ];
-      let isStreaming = false;
-      let abortController = null;
-      let lastUserMessage = '';
-      let academicMode = false;
-      let webSearch = false;
-      let codexMode = false;
-
-      // Display welcome message
-      renderConversation();
-
-      // Temperature slider display
-      tempSlider.addEventListener('input', () => {
-        tempVal.textContent = tempSlider.value;
-      });
-
-      // Toggle academic mode
-      academicToggle.addEventListener('click', () => {
-        academicMode = !academicMode;
-        academicToggle.classList.toggle('active', academicMode);
-      });
-
-      webSearchToggle.addEventListener('click', () => {
-        webSearch = !webSearch;
-        webSearchToggle.classList.toggle('active', webSearch);
-      });
-
-      codexToggle.addEventListener('click', () => {
-        codexMode = !codexMode;
-        codexToggle.classList.toggle('active', codexMode);
-        // Also set model to codex if toggled on
-        if (codexMode) {
-          modelSelect.value = 'gpt-5.1-codex';
-        }
-      });
-
-      // Send message
-      async function sendMessage(overrideText = null) {
-        const text = overrideText !== null ? overrideText : userInput.value.trim();
-        if (!text) return;
-        if (isStreaming) {
-          stopGeneration();
-        }
-
-        // Add user message
-        addMessage('user', text);
-        lastUserMessage = text;
-        userInput.value = '';
-        userInput.style.height = 'auto';
-
-        // Prepare options
-        const options = {
-          model: modelSelect.value,
-          temperature: parseFloat(tempSlider.value),
-          max_tokens: parseInt(maxTokens.value),
-          stream: true,
-        };
-
-        // Add tools if web search enabled
-        if (webSearch) {
-          options.tools = [{ type: 'web_search' }];
-        }
-
-        // If academic mode, prepend system instruction
-        let prompt = text;
-        if (academicMode) {
-          prompt = 'Please respond in academic style: define key terms, use proper notation, and provide structured explanation.\n\n' + text;
-        }
-        if (codexMode) {
-          prompt = 'Generate code with best practices. ' + prompt;
-        }
-
-        // Create assistant message placeholder
-        const assistantMsgId = addMessage('assistant', '▌', true); // temporary ID
-        const assistantMsgDiv = document.getElementById(assistantMsgId);
-        let fullResponse = '';
-
-        // Setup abort controller
-        abortController = new AbortController();
-        isStreaming = true;
-        startLoader();
-
-        try {
-          const response = await puter.ai.chat(prompt, options);
-          // response is an async iterable
-          for await (const part of response) {
-            if (abortController.signal.aborted) break;
-            if (part?.text) {
-              fullResponse += part.text;
-              // Update message with markdown
-              assistantMsgDiv.innerHTML = marked.parse(fullResponse) + '▌';
-              chatContainer.scrollTop = chatContainer.scrollHeight;
+            // load from localStorage if any (only theme preference)
+            if (localStorage.getItem('bablu-theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fa-regular fa-sun"></i>';
             }
-          }
-          if (!abortController.signal.aborted) {
-            // Final message without cursor
-            assistantMsgDiv.innerHTML = marked.parse(fullResponse);
-            // Update conversation
-            conversation[conversation.length-1].content = fullResponse;
-          }
-        } catch (err) {
-          console.error(err);
-          assistantMsgDiv.innerHTML = '⚠️ Error: ' + err.message;
-        } finally {
-          isStreaming = false;
-          abortController = null;
-          stopLoader();
-        }
-      }
 
-      // Stop generation
-      function stopGeneration() {
-        if (abortController) {
-          abortController.abort();
-          abortController = null;
-        }
-        isStreaming = false;
-        stopLoader();
-        // Remove cursor if any
-        const lastMsg = chatContainer.lastElementChild;
-        if (lastMsg && lastMsg.classList.contains('assistant-message') && lastMsg.innerHTML.endsWith('▌')) {
-          lastMsg.innerHTML = lastMsg.innerHTML.slice(0, -1);
-        }
-      }
+            // --- helper: generate unique id ---
+            function uid() { return Date.now() + '-' + Math.random().toString(36).substring(2, 9); }
 
-      // Regenerate last response
-      regenerateBtn.addEventListener('click', () => {
-        if (lastUserMessage) {
-          // Remove last assistant message if exists
-          if (conversation[conversation.length-1]?.role === 'assistant') {
-            conversation.pop();
-            chatContainer.removeChild(chatContainer.lastElementChild);
-          }
-          sendMessage(lastUserMessage);
-        }
-      });
+            // --- render all messages (clean) ---
+            function renderMessages() {
+                chatContainer.innerHTML = '';
+                messages.forEach(msg => renderOneMessage(msg, false)); // false = don't scroll yet
+                scrollToBottom();
+            }
 
-      stopBtn.addEventListener('click', stopGeneration);
+            // render single message and append
+            function renderOneMessage(msg, scroll = true) {
+                const wrapper = document.createElement('div');
+                wrapper.className = `message-wrapper ${msg.role}`;
+                wrapper.dataset.messageId = msg.id;
 
-      sendBtn.addEventListener('click', () => sendMessage());
+                // meta row: avatar + timestamp
+                const meta = document.createElement('div');
+                meta.className = 'message-meta';
+                meta.innerHTML = `
+                    <span class="avatar">${msg.role === 'user' ? '👤' : '🤖'}</span>
+                    <span class="timestamp">${formatTime(msg.timestamp)}</span>
+                `;
+                wrapper.appendChild(meta);
 
-      userInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          sendMessage();
-        }
-      });
+                // bubble
+                const bubble = document.createElement('div');
+                bubble.className = 'message-bubble';
+                // if status streaming and not finished, add a cursor (only for assistant)
+                let contentHtml = marked.parse(msg.content);
+                if (msg.role === 'assistant' && msg.status === 'streaming') {
+                    contentHtml += '<span class="cursor">▌</span>';
+                }
+                bubble.innerHTML = contentHtml;
+                wrapper.appendChild(bubble);
 
-      // Auto-resize textarea
-      userInput.addEventListener('input', () => {
-        userInput.style.height = 'auto';
-        userInput.style.height = (userInput.scrollHeight) + 'px';
-      });
+                // actions (copy, regenerate for assistant; copy + edit for user)
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'message-actions';
+                if (msg.role === 'assistant') {
+                    actionsDiv.innerHTML = `
+                        <button class="copy-msg" title="Copy"><i class="fa-regular fa-copy"></i> Copy</button>
+                        <button class="regenerate-msg" title="Regenerate"><i class="fa-regular fa-arrow-rotate-right"></i> Regenerate</button>
+                    `;
+                } else {
+                    actionsDiv.innerHTML = `
+                        <button class="copy-msg" title="Copy"><i class="fa-regular fa-copy"></i> Copy</button>
+                        <button class="edit-msg" title="Edit"><i class="fa-regular fa-pen"></i> Edit</button>
+                    `;
+                }
+                wrapper.appendChild(actionsDiv);
 
-      // Helper: add message to DOM and conversation array
-      function addMessage(role, content, returnId = false) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `message ${role === 'user' ? 'user-message' : 'assistant-message'}`;
-        msgDiv.innerHTML = marked.parse(content);
-        const id = 'msg-' + Date.now() + Math.random();
-        msgDiv.id = id;
-        chatContainer.appendChild(msgDiv);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-        conversation.push({ role, content });
-        return returnId ? id : null;
-      }
+                chatContainer.appendChild(wrapper);
+                if (scroll) scrollToBottom();
+            }
 
-      // Render all messages (initial)
-      function renderConversation() {
-        chatContainer.innerHTML = '';
-        conversation.forEach(msg => {
-          const msgDiv = document.createElement('div');
-          msgDiv.className = `message ${msg.role === 'user' ? 'user-message' : 'assistant-message'}`;
-          msgDiv.innerHTML = marked.parse(msg.content);
-          chatContainer.appendChild(msgDiv);
-        });
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-      }
+            // format timestamp (HH:MM)
+            function formatTime(iso) {
+                if (!iso) return '';
+                const d = new Date(iso);
+                return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+            }
 
-      // Copy functions
-      function getLastAssistantContent() {
-        for (let i = conversation.length - 1; i >= 0; i--) {
-          if (conversation[i].role === 'assistant') return conversation[i].content;
-        }
-        return '';
-      }
+            // scroll to bottom
+            function scrollToBottom() {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
 
-      copyResponse.addEventListener('click', () => {
-        const text = getLastAssistantContent();
-        navigator.clipboard.writeText(text).then(() => alert('Copied!'));
-      });
+            // --- add message (and store) ---
+            function addMessage(role, content, status = 'complete') {
+                const msg = {
+                    id: uid(),
+                    role: role,
+                    content: content,
+                    timestamp: new Date().toISOString(),
+                    status: status
+                };
+                messages.push(msg);
+                renderOneMessage(msg);
+                return msg.id;
+            }
 
-      copyPlain.addEventListener('click', () => {
-        const text = getLastAssistantContent();
-        // Strip markdown (simple)
-        const plain = text.replace(/#+\s?/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
-        navigator.clipboard.writeText(plain).then(() => alert('Plain text copied!'));
-      });
+            // update message content by id
+            function updateMessage(id, newContent, status = 'complete') {
+                const msg = messages.find(m => m.id === id);
+                if (msg) {
+                    msg.content = newContent;
+                    msg.status = status;
+                    // re-render everything (simple, ensures consistency)
+                    renderMessages();
+                }
+            }
 
-      downloadTxt.addEventListener('click', () => {
-        const text = getLastAssistantContent();
-        const blob = new Blob([text], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'bablu-response.txt';
-        a.click();
-        URL.revokeObjectURL(url);
-      });
+            // get last assistant message id
+            function getLastAssistantId() {
+                for (let i = messages.length - 1; i >= 0; i--) {
+                    if (messages[i].role === 'assistant') return messages[i].id;
+                }
+                return null;
+            }
 
-      downloadMd.addEventListener('click', () => {
-        const text = getLastAssistantContent();
-        const blob = new Blob([text], { type: 'text/markdown' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'bablu-response.md';
-        a.click();
-      });
+            // --- send message to backend (puter) with full history ---
+            async function sendMessage(text) {
+                if (!text.trim() || isStreaming) return;
 
-      // Formatting tools: bullet, summary (just modify last assistant message with AI?)
-      bulletBtn.addEventListener('click', async () => {
-        const last = getLastAssistantContent();
-        if (!last) return;
-        // Ask AI to convert to bullet points
-        const prompt = `Convert the following text into bullet points:\n\n${last}`;
-        const res = await puter.ai.chat(prompt, { model: 'gpt-5-nano' });
-        const bulletText = res;
-        // Update last assistant message
-        for (let i = conversation.length - 1; i >= 0; i--) {
-          if (conversation[i].role === 'assistant') {
-            conversation[i].content = bulletText;
-            break;
-          }
-        }
-        renderConversation();
-      });
+                // 1. add user message
+                addMessage('user', text);
 
-      summaryBtn.addEventListener('click', async () => {
-        const last = getLastAssistantContent();
-        if (!last) return;
-        const prompt = `Summarize the following text concisely:\n\n${last}`;
-        const res = await puter.ai.chat(prompt, { model: 'gpt-5-nano' });
-        for (let i = conversation.length - 1; i >= 0; i--) {
-          if (conversation[i].role === 'assistant') {
-            conversation[i].content = res;
-            break;
-          }
-        }
-        renderConversation();
-      });
+                // 2. prepare conversation copy (only role, content) for backend
+                const conversationForBackend = messages.map(m => ({
+                    role: m.role,
+                    content: m.content
+                }));
 
-      // Loader simulation
-      function startLoader() {
-        loader.style.width = '0%';
-        loader.style.opacity = '1';
-        let w = 0;
-        const interval = setInterval(() => {
-          if (!isStreaming) {
-            clearInterval(interval);
-            return;
-          }
-          w = Math.min(90, w + Math.random() * 20);
-          loader.style.width = w + '%';
-        }, 300);
-      }
+                // 3. create assistant placeholder (streaming)
+                const assistantId = addMessage('assistant', '▌', 'streaming');
+                currentAssistantMsgId = assistantId;
+                isStreaming = true;
+                sendBtn.disabled = true;
+                stopBtn.classList.remove('hidden');
 
-      function stopLoader() {
-        loader.style.width = '100%';
-        setTimeout(() => {
-          loader.style.opacity = '0';
-          loader.style.width = '0%';
-        }, 200);
-      }
+                // 4. set up abort
+                abortController = new AbortController();
 
-      // Handle back/forward cache
-      window.addEventListener('pageshow', () => stopLoader());
-    })();
-  </script>
+                // 5. get settings (but backend would override – we just pass as suggestion)
+                const model = modelSelectSimple.value;
+                const temp = parseFloat(tempSelectSimple.value);
+
+                try {
+                    const response = await puter.ai.chat(conversationForBackend, {
+                        model: model,
+                        temperature: temp,
+                        stream: true,
+                        signal: abortController.signal
+                    });
+
+                    let full = '';
+                    for await (const part of response) {
+                        if (abortController.signal.aborted) break;
+                        if (part?.text) {
+                            full += part.text;
+                            // update message with markdown (keep cursor)
+                            const msg = messages.find(m => m.id === assistantId);
+                            if (msg) {
+                                msg.content = full;
+                                renderMessages();  // quick update
+                            }
+                        }
+                    }
+
+                    if (!abortController.signal.aborted) {
+                        // final update
+                        updateMessage(assistantId, full, 'complete');
+                    } else {
+                        // if aborted, keep whatever we have
+                        updateMessage(assistantId, full || '[stopped]', 'complete');
+                    }
+
+                } catch (err) {
+                    console.warn(err);
+                    updateMessage(assistantId, '⚠️ Error: ' + err.message, 'complete');
+                } finally {
+                    isStreaming = false;
+                    sendBtn.disabled = false;
+                    stopBtn.classList.add('hidden');
+                    abortController = null;
+                    currentAssistantMsgId = null;
+                }
+            }
+
+            // --- stop generation ---
+            function stopGeneration() {
+                if (abortController) {
+                    abortController.abort();
+                    abortController = null;
+                }
+                isStreaming = false;
+                sendBtn.disabled = false;
+                stopBtn.classList.add('hidden');
+                // remove streaming cursor
+                if (currentAssistantMsgId) {
+                    const msg = messages.find(m => m.id === currentAssistantMsgId);
+                    if (msg && msg.status === 'streaming') {
+                        msg.status = 'complete';
+                        renderMessages();
+                    }
+                }
+            }
+
+            // --- event listeners ---
+            sendBtn.addEventListener('click', () => {
+                const text = userInput.value.trim();
+                if (text && !isStreaming) {
+                    sendMessage(text);
+                    userInput.value = '';
+                    userInput.style.height = 'auto';
+                }
+            });
+
+            userInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendBtn.click();
+                }
+            });
+
+            userInput.addEventListener('input', () => {
+                userInput.style.height = 'auto';
+                userInput.style.height = (userInput.scrollHeight) + 'px';
+            });
+
+            stopBtn.addEventListener('click', stopGeneration);
+
+            // theme toggle
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDark = document.body.classList.contains('dark-mode');
+                themeToggle.innerHTML = isDark ? '<i class="fa-regular fa-sun"></i>' : '<i class="fa-regular fa-moon"></i>';
+                localStorage.setItem('bablu-theme', isDark ? 'dark' : 'light');
+            });
+
+            // settings dropdown
+            settingsToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                settingsPanel.classList.toggle('show');
+            });
+            document.addEventListener('click', (e) => {
+                if (!settingsPanel.contains(e.target) && !settingsToggle.contains(e.target)) {
+                    settingsPanel.classList.remove('show');
+                }
+            });
+
+            // --- per-message actions (delegation) ---
+            chatContainer.addEventListener('click', async (e) => {
+                const btn = e.target.closest('button');
+                if (!btn) return;
+                const wrapper = btn.closest('.message-wrapper');
+                if (!wrapper) return;
+                const msgId = wrapper.dataset.messageId;
+                const msg = messages.find(m => m.id === msgId);
+                if (!msg) return;
+
+                // copy
+                if (btn.classList.contains('copy-msg')) {
+                    navigator.clipboard.writeText(msg.content);
+                    alert('📋 Copied');  // subtle
+                }
+
+                // regenerate (assistant only)
+                if (btn.classList.contains('regenerate-msg')) {
+                    if (isStreaming) { stopGeneration(); }
+                    // find last user message before this assistant
+                    const idx = messages.findIndex(m => m.id === msgId);
+                    let userMsg = null;
+                    for (let i = idx - 1; i >= 0; i--) {
+                        if (messages[i].role === 'user') {
+                            userMsg = messages[i].content;
+                            break;
+                        }
+                    }
+                    if (userMsg) {
+                        // remove this assistant message and later ones
+                        messages = messages.slice(0, idx);
+                        renderMessages();
+                        await sendMessage(userMsg);
+                    }
+                }
+
+                // edit (user message)
+                if (btn.classList.contains('edit-msg')) {
+                    const newText = prompt('Edit your message:', msg.content);
+                    if (newText !== null && newText.trim() !== '') {
+                        // update this user message and delete all after
+                        const idx = messages.findIndex(m => m.id === msgId);
+                        messages[idx].content = newText;
+                        messages = messages.slice(0, idx + 1);
+                        renderMessages();
+                        // automatically resend?
+                        if (confirm('Resend with this edit?')) {
+                            await sendMessage(newText);
+                        }
+                    }
+                }
+            });
+
+            // --- initial welcome (only if no messages) ---
+            if (messages.length === 0) {
+                addMessage('assistant', '👋 Hi, I’m Bablu. Ask me anything — I’ll keep it minimal and helpful.');
+            }
+
+            // auto-resize
+            userInput.style.height = 'auto';
+        })();
+    </script>
 </body>
 </html>
