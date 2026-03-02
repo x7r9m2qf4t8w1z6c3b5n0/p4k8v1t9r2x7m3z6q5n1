@@ -185,7 +185,7 @@
 { title: "জৈব যৌগ - পর্ব ১০", videoId: "q5Fl28roWTg" },
 { title: "জৈব যৌগ - পর্ব ১১ (অ্যামিন ও ডায়াজোনিয়াম লবণ)", videoId: "mHb7n6rZo0k" },
 { title: "জৈব যৌগ - পর্ব ১২ (জৈব এসিড ও এর জাতক)", videoId: "BliyI7aKgJU" },
-{ title: "ভেক্টর - পর্ব ০১", videoId: "m6k1bBSyySo" },
+{ title: "ভেক্টর   পর্ব ০১", videoId: "m6k1bBSyySo" },
 { title: "ভেক্টর   পর্ব ০২", videoId: "nKrjmqTZUsw" },
 { title: "ভেক্টর   পর্ব ০৩", videoId: "OCzBhkKW1QQ" },
 { title: "ভেক্টর   পর্ব ০৪", videoId: "y06IE4H9LZ0" },
@@ -376,3 +376,4 @@
 { title: "বিদ্রোহী", videoId: "YwRE4xAXUBU" },
 
         ];
+
