@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bablu · secure auth</title>
+    <title>Bablu · Puter native auth</title>
     <!-- Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- marked -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- Puter.js (auth only - we control it) -->
+    <!-- Puter.js v2 -->
     <script src="https://js.puter.com/v2/"></script>
     <style>
         * {
@@ -29,7 +29,6 @@
             align-items: center;
             justify-content: center;
             color: #1e2a3a;
-            transition: background 0.2s;
         }
 
         body.dark-mode {
@@ -37,7 +36,7 @@
             color: #e8edf2;
         }
 
-        /* login screen - full overlay within app */
+        /* login screen */
         .login-screen {
             width: 100%;
             max-width: 400px;
@@ -51,20 +50,17 @@
 
         body.dark-mode .login-screen {
             background: #13212e;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
         .login-screen h2 {
             font-size: 2rem;
             font-weight: 500;
-            letter-spacing: -0.5px;
             margin-bottom: 12px;
         }
 
         .login-screen p {
             color: #5f7d9c;
             margin-bottom: 32px;
-            font-size: 1rem;
         }
 
         .login-btn {
@@ -79,21 +75,16 @@
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            transition: 0.1s;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 8px 16px rgba(0,60,120,0.2);
+            width: 100%;
+            justify-content: center;
         }
 
-        .login-btn:hover {
-            background: #1f5a88;
-            transform: scale(0.98);
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
-        .login-btn i {
-            font-size: 1.2rem;
-        }
-
-        /* main chat app (hidden until authenticated) */
+        /* main chat app */
         .chat-app {
             width: 100%;
             max-width: 1000px;
@@ -110,7 +101,6 @@
 
         body.dark-mode .chat-app {
             background: #0f1a24;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
         }
 
         .hidden {
@@ -289,29 +279,6 @@
             background: #eef2f6;
         }
 
-        /* typing indicator */
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 12px 18px;
-            background: white;
-            border: 1px solid #e2eaf2;
-            border-radius: 20px;
-            border-bottom-left-radius: 6px;
-            width: fit-content;
-        }
-
-        .typing-indicator span {
-            width: 8px;
-            height: 8px;
-            background: #7a8faa;
-            border-radius: 8px;
-            animation: pulse 1.2s infinite;
-        }
-
-        @keyframes pulse { 0%,60%,100%{ opacity:0.4; } 30%{ opacity:1; } }
-
         /* input area */
         .input-section {
             padding: 20px 24px;
@@ -436,17 +403,17 @@
     </style>
 </head>
 <body>
-    <!-- Login Screen (visible when not authenticated) -->
+    <!-- Login Screen -->
     <div id="loginScreen" class="login-screen">
         <h2>🤖 Bablu</h2>
-        <p>Secure AI assistant · Login to continue</p>
+        <p>Free AI assistant powered by Puter</p>
         <button class="login-btn" id="loginBtn">
-            <i class="fa-regular fa-lock-open"></i> Login with Puter
+            <i class="fa-regular fa-lock-open"></i> Start Chatting
         </button>
-        <p style="margin-top: 24px; font-size: 0.8rem; color: #8fa3bc;">No auto-popup · explicit login only</p>
+        <p style="margin-top: 24px; font-size: 0.8rem; color: #8fa3bc;">No API key required · Free to use</p>
     </div>
 
-    <!-- Main Chat App (hidden until authenticated) -->
+    <!-- Main Chat App -->
     <div id="chatApp" class="chat-app hidden">
         <div class="top-bar">
             <div class="app-name">
@@ -459,34 +426,34 @@
             </div>
         </div>
 
-        <!-- settings panel with logout -->
+        <!-- settings panel -->
         <div class="settings-dropdown" id="settingsPanel">
             <div class="settings-item">
                 <span>Model</span>
                 <select id="modelSelect">
-                    <option value="gpt-5-nano">Fast</option>
-                    <option value="gpt-5">Balanced</option>
-                    <option value="gpt-5.2-chat">Creative</option>
-                </select>
-            </div>
-            <div class="settings-item">
-                <span>Temperature</span>
-                <select id="tempSelect">
-                    <option value="0.3">Precise</option>
-                    <option value="0.7" selected>Balanced</option>
-                    <option value="1.2">Creative</option>
+                    <option value="gpt-5-nano">GPT-5 Nano (fast)</option>
+                    <option value="gpt-5">GPT-5 (balanced)</option>
+                    <option value="gpt-5.2">GPT-5.2 (powerful)</option>
                 </select>
             </div>
             <div class="logout-item">
-                <button class="logout-btn" id="logoutBtn"><i class="fa-regular fa-arrow-right-from-bracket"></i> Logout</button>
+                <button class="logout-btn" id="logoutBtn"><i class="fa-regular fa-arrow-right-from-bracket"></i> Sign Out</button>
             </div>
         </div>
 
-        <div class="chat-container" id="chatContainer"></div>
+        <div class="chat-container" id="chatContainer">
+            <div class="message-wrapper assistant">
+                <div class="message-meta">
+                    <span class="avatar">🤖</span>
+                    <span class="timestamp">loading...</span>
+                </div>
+                <div class="message-bubble">Initializing Bablu...</div>
+            </div>
+        </div>
 
         <div class="input-section">
             <div class="input-row">
-                <textarea id="userInput" placeholder="Ask Bablu..." rows="1"></textarea>
+                <textarea id="userInput" placeholder="Type your message..." rows="1" disabled></textarea>
                 <div class="action-group">
                     <button class="circle-btn secondary hidden" id="stopBtn"><i class="fa-solid fa-stop"></i></button>
                     <button class="circle-btn" id="sendBtn" disabled><i class="fa-regular fa-paper-plane"></i></button>
@@ -497,7 +464,7 @@
 
     <script>
         (function() {
-            // --- DOM elements ---
+            // DOM elements
             const loginScreen = document.getElementById('loginScreen');
             const chatApp = document.getElementById('chatApp');
             const loginBtn = document.getElementById('loginBtn');
@@ -510,34 +477,88 @@
             const settingsToggle = document.getElementById('settingsToggle');
             const settingsPanel = document.getElementById('settingsPanel');
             const modelSelect = document.getElementById('modelSelect');
-            const tempSelect = document.getElementById('tempSelect');
 
-            // --- Auth state ---
+            // State
             let isAuthenticated = false;
-            let authCheckComplete = false;
-            let messages = [];
             let isStreaming = false;
             let abortController = null;
-            let currentAssistantMsgId = null;
+            let messages = [];
 
-            // --- Helper: generate ID ---
+            // Helper functions
             function uid() { return Date.now() + '-' + Math.random().toString(36).substring(2); }
-
-            // --- Format timestamp ---
-            function formatTime(iso) {
-                if (!iso) return '';
-                const d = new Date(iso);
+            
+            function formatTime() {
+                const d = new Date();
                 return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
             }
 
-            // --- Render all messages ---
-            function renderMessages() {
-                chatContainer.innerHTML = '';
-                messages.forEach(msg => renderOneMessage(msg));
-                scrollToBottom();
+            // Check if Puter is ready
+            function isPuterReady() {
+                return typeof puter !== 'undefined' && puter.ai && puter.auth;
             }
 
-            function renderOneMessage(msg) {
+            // Initialize - check if already authenticated
+            async function initialize() {
+                if (!isPuterReady()) {
+                    console.log('Waiting for Puter to load...');
+                    setTimeout(initialize, 100);
+                    return;
+                }
+
+                try {
+                    // Puter handles auth automatically - just try a simple call
+                    const test = await puter.ai.chat('test', { model: 'gpt-5-nano' }).catch(() => null);
+                    
+                    if (test) {
+                        // Already authenticated
+                        isAuthenticated = true;
+                        showChatApp();
+                    } else {
+                        showLoginScreen();
+                    }
+                } catch (err) {
+                    console.log('Not authenticated yet');
+                    showLoginScreen();
+                }
+            }
+
+            function showChatApp() {
+                loginScreen.classList.add('hidden');
+                chatApp.classList.remove('hidden');
+                userInput.disabled = false;
+                sendBtn.disabled = false;
+                
+                // Clear loading message
+                chatContainer.innerHTML = '';
+                
+                // Add welcome message
+                addMessage('assistant', '👋 Hi! I\'m Bablu. Ask me anything - I\'m free to use!');
+            }
+
+            function showLoginScreen() {
+                loginScreen.classList.remove('hidden');
+                chatApp.classList.add('hidden');
+                isAuthenticated = false;
+                userInput.disabled = true;
+                sendBtn.disabled = true;
+            }
+
+            // Message handling
+            function addMessage(role, content, status = 'complete') {
+                const msg = {
+                    id: uid(),
+                    role: role,
+                    content: content,
+                    timestamp: new Date().toISOString(),
+                    status: status
+                };
+                messages.push(msg);
+                renderMessage(msg);
+                scrollToBottom();
+                return msg.id;
+            }
+
+            function renderMessage(msg) {
                 const wrapper = document.createElement('div');
                 wrapper.className = `message-wrapper ${msg.role}`;
                 wrapper.dataset.messageId = msg.id;
@@ -546,7 +567,7 @@
                 meta.className = 'message-meta';
                 meta.innerHTML = `
                     <span class="avatar">${msg.role === 'user' ? '👤' : '🤖'}</span>
-                    <span class="timestamp">${formatTime(msg.timestamp)}</span>
+                    <span class="timestamp">${formatTime()}</span>
                 `;
                 wrapper.appendChild(meta);
 
@@ -554,7 +575,7 @@
                 bubble.className = 'message-bubble';
                 let contentHtml = marked.parse(msg.content);
                 if (msg.role === 'assistant' && msg.status === 'streaming') {
-                    contentHtml += '<span class="cursor">▌</span>';
+                    contentHtml += '<span class="cursor" style="opacity:0.7;">▌</span>';
                 }
                 bubble.innerHTML = contentHtml;
                 wrapper.appendChild(bubble);
@@ -569,7 +590,6 @@
                 } else {
                     actionsDiv.innerHTML = `
                         <button class="copy-msg"><i class="fa-regular fa-copy"></i> Copy</button>
-                        <button class="edit-msg"><i class="fa-regular fa-pen"></i> Edit</button>
                     `;
                 }
                 wrapper.appendChild(actionsDiv);
@@ -577,139 +597,40 @@
                 chatContainer.appendChild(wrapper);
             }
 
-            function scrollToBottom() {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-
-            // --- Add message to state and UI ---
-            function addMessage(role, content, status = 'complete') {
-                const msg = {
-                    id: uid(),
-                    role: role,
-                    content: content,
-                    timestamp: new Date().toISOString(),
-                    status: status
-                };
-                messages.push(msg);
-                renderOneMessage(msg);
-                scrollToBottom();
-                return msg.id;
-            }
-
             function updateMessage(id, newContent, status = 'complete') {
                 const msg = messages.find(m => m.id === id);
                 if (msg) {
                     msg.content = newContent;
                     msg.status = status;
-                    renderMessages();
+                    refreshMessages();
                 }
             }
 
-            // --- Check auth status on load ---
-            async function checkAuthStatus() {
-                try {
-                    const user = await puter.auth.getUser();
-                    if (user) {
-                        isAuthenticated = true;
-                        showChatApp();
-                    } else {
-                        isAuthenticated = false;
-                        showLoginScreen();
-                    }
-                } catch (err) {
-                    console.warn('Auth check failed', err);
-                    isAuthenticated = false;
-                    showLoginScreen();
-                } finally {
-                    authCheckComplete = true;
-                }
+            function refreshMessages() {
+                chatContainer.innerHTML = '';
+                messages.forEach(msg => renderMessage(msg));
+                scrollToBottom();
             }
 
-            function showChatApp() {
-                loginScreen.classList.add('hidden');
-                chatApp.classList.remove('hidden');
-                sendBtn.disabled = false;
-                // Add welcome if no messages
-                if (messages.length === 0) {
-                    addMessage('assistant', '🔐 You\'re logged in. Ask me anything.');
-                }
+            function scrollToBottom() {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
             }
 
-            function showLoginScreen() {
-                loginScreen.classList.remove('hidden');
-                chatApp.classList.add('hidden');
-                isAuthenticated = false;
-                sendBtn.disabled = true;
-                if (abortController) {
-                    abortController.abort();
-                    abortController = null;
-                }
-                isStreaming = false;
-            }
-
-            // --- Login flow ---
-            loginBtn.addEventListener('click', async () => {
-                try {
-                    loginBtn.disabled = true;
-                    loginBtn.innerHTML = '<i class="fa-regular fa-spinner fa-spin"></i> Logging in...';
-                    
-                    // Explicit sign in - no auto popup
-                    const result = await puter.auth.signIn();
-                    
-                    // Verify session is ready
-                    const user = await puter.auth.getUser();
-                    
-                    if (user) {
-                        isAuthenticated = true;
-                        showChatApp();
-                    } else {
-                        throw new Error('No user after login');
-                    }
-                } catch (err) {
-                    console.error('Login failed', err);
-                    alert('Login failed. Please try again.');
-                    showLoginScreen();
-                } finally {
-                    loginBtn.disabled = false;
-                    loginBtn.innerHTML = '<i class="fa-regular fa-lock-open"></i> Login with Puter';
-                }
-            });
-
-            // --- Logout ---
-            logoutBtn.addEventListener('click', async () => {
-                try {
-                    await puter.auth.signOut();
-                    isAuthenticated = false;
-                    messages = [];
-                    showLoginScreen();
-                    settingsPanel.classList.remove('show');
-                } catch (err) {
-                    console.error('Logout error', err);
-                }
-            });
-
-            // --- Send message with auth guard ---
+            // Send message
             async function sendMessage(text) {
-                // AUTH GUARD: double-check before sending
-                if (!isAuthenticated) {
-                    showLoginScreen();
-                    return;
-                }
-
-                if (!text.trim() || isStreaming) return;
+                if (!text.trim() || isStreaming || !isAuthenticated) return;
 
                 // Add user message
                 addMessage('user', text);
 
-                // Prepare conversation for backend
+                // Prepare conversation
                 const conversationForBackend = messages.map(m => ({
                     role: m.role,
                     content: m.content
                 }));
 
                 // Create assistant placeholder
-                const assistantId = addMessage('assistant', '▌', 'streaming');
-                currentAssistantMsgId = assistantId;
+                const assistantId = addMessage('assistant', '...', 'streaming');
                 isStreaming = true;
                 sendBtn.disabled = true;
                 stopBtn.classList.remove('hidden');
@@ -717,67 +638,89 @@
                 abortController = new AbortController();
 
                 try {
-                    const response = await puter.ai.chat(conversationForBackend, {
-                        model: modelSelect.value,
-                        temperature: parseFloat(tempSelect.value),
-                        stream: true,
-                        signal: abortController.signal
-                    });
+                    // Simple call as per Puter docs
+                    const response = await puter.ai.chat(
+                        conversationForBackend,
+                        {
+                            model: modelSelect.value || 'gpt-5-nano',
+                            stream: true,
+                            signal: abortController.signal
+                        }
+                    );
 
-                    let full = '';
+                    let fullResponse = '';
+                    
                     for await (const part of response) {
                         if (abortController.signal.aborted) break;
                         if (part?.text) {
-                            full += part.text;
-                            updateMessage(assistantId, full, 'streaming');
+                            fullResponse += part.text;
+                            updateMessage(assistantId, fullResponse, 'streaming');
                         }
                     }
 
                     if (!abortController.signal.aborted) {
-                        updateMessage(assistantId, full, 'complete');
-                    } else {
-                        updateMessage(assistantId, full || '[stopped]', 'complete');
+                        updateMessage(assistantId, fullResponse, 'complete');
                     }
 
                 } catch (err) {
-                    // Check for auth errors
-                    if (err.code === 'not_authenticated' || err.message?.includes('authentic')) {
+                    console.error('Chat error:', err);
+                    
+                    // Handle auth errors
+                    if (err.message?.includes('authenticate') || err.code === 'not_authenticated') {
                         isAuthenticated = false;
                         showLoginScreen();
                     } else {
-                        updateMessage(assistantId, '⚠️ Error: ' + err.message, 'complete');
+                        updateMessage(assistantId, '⚠️ Error: ' + (err.message || 'Unknown error'), 'complete');
                     }
                 } finally {
                     isStreaming = false;
-                    sendBtn.disabled = !isAuthenticated;
+                    sendBtn.disabled = false;
                     stopBtn.classList.add('hidden');
                     abortController = null;
-                    currentAssistantMsgId = null;
                 }
             }
 
-            // --- Stop generation ---
-            function stopGeneration() {
-                if (abortController) {
-                    abortController.abort();
-                    abortController = null;
-                }
-                isStreaming = false;
-                sendBtn.disabled = !isAuthenticated;
-                stopBtn.classList.add('hidden');
-                if (currentAssistantMsgId) {
-                    const msg = messages.find(m => m.id === currentAssistantMsgId);
-                    if (msg && msg.status === 'streaming') {
-                        msg.status = 'complete';
-                        renderMessages();
+            // Event Listeners
+            loginBtn.addEventListener('click', async () => {
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<i class="fa-regular fa-spinner fa-spin"></i> Initializing...';
+                
+                // Puter handles auth automatically - just try a call
+                try {
+                    // Simple test call - this will trigger auth if needed
+                    const response = await puter.ai.chat('Hello', { 
+                        model: 'gpt-5-nano',
+                        stream: false 
+                    });
+                    
+                    if (response) {
+                        isAuthenticated = true;
+                        showChatApp();
                     }
+                } catch (err) {
+                    console.log('Auth error:', err);
+                    alert('Could not initialize. Please try again.');
+                } finally {
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<i class="fa-regular fa-lock-open"></i> Start Chatting';
                 }
-            }
+            });
 
-            // --- Event listeners ---
+            logoutBtn.addEventListener('click', async () => {
+                try {
+                    await puter.auth.signOut();
+                } catch (err) {
+                    console.log('Sign out error:', err);
+                }
+                isAuthenticated = false;
+                messages = [];
+                showLoginScreen();
+                settingsPanel.classList.remove('show');
+            });
+
             sendBtn.addEventListener('click', () => {
                 const text = userInput.value.trim();
-                if (text && !isStreaming && isAuthenticated) {
+                if (text) {
                     sendMessage(text);
                     userInput.value = '';
                     userInput.style.height = 'auto';
@@ -796,7 +739,15 @@
                 userInput.style.height = userInput.scrollHeight + 'px';
             });
 
-            stopBtn.addEventListener('click', stopGeneration);
+            stopBtn.addEventListener('click', () => {
+                if (abortController) {
+                    abortController.abort();
+                    abortController = null;
+                }
+                isStreaming = false;
+                sendBtn.disabled = false;
+                stopBtn.classList.add('hidden');
+            });
 
             // Theme toggle
             themeToggle.addEventListener('click', () => {
@@ -824,7 +775,7 @@
                 themeToggle.innerHTML = '<i class="fa-regular fa-sun"></i>';
             }
 
-            // --- Per-message actions (delegation) ---
+            // Message actions
             chatContainer.addEventListener('click', async (e) => {
                 const btn = e.target.closest('button');
                 if (!btn) return;
@@ -834,19 +785,12 @@
                 const msg = messages.find(m => m.id === msgId);
                 if (!msg) return;
 
-                // Copy
                 if (btn.classList.contains('copy-msg')) {
                     navigator.clipboard.writeText(msg.content);
-                    return;
                 }
 
-                // Regenerate (assistant only)
                 if (btn.classList.contains('regenerate-msg')) {
-                    if (!isAuthenticated) {
-                        showLoginScreen();
-                        return;
-                    }
-                    if (isStreaming) stopGeneration();
+                    if (!isAuthenticated) return;
                     const idx = messages.findIndex(m => m.id === msgId);
                     let userMsg = null;
                     for (let i = idx - 1; i >= 0; i--) {
@@ -857,28 +801,14 @@
                     }
                     if (userMsg) {
                         messages = messages.slice(0, idx);
-                        renderMessages();
+                        refreshMessages();
                         await sendMessage(userMsg);
-                    }
-                }
-
-                // Edit (user)
-                if (btn.classList.contains('edit-msg')) {
-                    const newText = prompt('Edit message:', msg.content);
-                    if (newText && newText.trim() !== '') {
-                        const idx = messages.findIndex(m => m.id === msgId);
-                        messages[idx].content = newText;
-                        messages = messages.slice(0, idx + 1);
-                        renderMessages();
-                        if (confirm('Send edited message?')) {
-                            await sendMessage(newText);
-                        }
                     }
                 }
             });
 
-            // --- Initial auth check ---
-            checkAuthStatus();
+            // Start
+            initialize();
         })();
     </script>
 </body>
