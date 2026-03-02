@@ -185,7 +185,7 @@ window.pdfData = [
 { title: "জৈব যৌগ - পর্ব ১১ (অ্যামিন ও ডায়াজোনিয়াম লবণ)", url: "https://pdf.bondipathshala.education/1762096425094.pdf" },
 { title: "জৈব যৌগ - পর্ব ১২ (জৈব এসিড ও এর জাতক)", url: "https://pdf.bondipathshala.education/1762096383659.pdf" },
 { title: "জৈব যৌগ - পর্ব ১০", url: "https://pdf.bondipathshala.education/1762096536482.pdf" },
-{ title: "ভেক্টর - পর্ব ০১", url: "https://pdf.bondipathshala.education/1763216497806.pdf" },
+{ title: "ভেক্টর পর্ব ০১", url: "https://pdf.bondipathshala.education/1763216497806.pdf" },
 { title: "ভেক্টর পর্ব ০২", url: "https://pdf.bondipathshala.education/1763216552606.pdf" },
 { title: "ভেক্টর পর্ব ০৩", url: "https://pdf.bondipathshala.education/1763216599018.pdf" },
 { title: "ভেক্টর পর্ব ০৪", url: "https://pdf.bondipathshala.education/1763216636027.pdf" },
@@ -361,4 +361,5 @@ window.pdfData = [
 { title: "লালসালু -পর্ব ০২", url: "https://pdf.bondipathshala.education/1758720150419.pdf" },
 { title: "সিরাজ উদ দৌলা", url: "https://pdf.bondipathshala.education/1758720305548.pdf" },
 { title: "বিদ্রোহী", url: "https://pdf.bondipathshala.education/1758720349637.pdf" },
+
 ];
