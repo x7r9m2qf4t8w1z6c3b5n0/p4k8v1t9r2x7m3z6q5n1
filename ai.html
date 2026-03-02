@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Metropolis:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <!-- marked -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- Puter.js v2 -->
@@ -285,8 +288,16 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
+        /* MathJax styling */
+        .message-bubble .MathJax {
+            font-size: 1.1em;
+        }
+        .message-bubble mjx-container {
+            margin: 4px 0;
+        }
+
         .message-actions {
-            display: flex; gap: 12px; justify-content: flex-end; padding: 8px 8px 0;
+            display: flex; gap: 8px; justify-content: flex-end; padding: 8px 8px 0;
             opacity: 0; transition: opacity 0.15s;
         }
         .message-wrapper:hover .message-actions { opacity: 1; }
@@ -423,7 +434,7 @@
                     <span class="avatar"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M20 9V7c0-1.1-.9-2-2-2h-4c0-1.66-1.34-3-3-3S8 3.34 8 5H4c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h4c0 1.66 1.34 3 3 3s3-1.34 3-3h4c1.1 0 2-.9 2-2z'/%3E%3C/svg%3E"></span>
                     <span class="timestamp">now</span>
                 </div>
-                <div class="message-bubble">Hello! I'm Bablu. How can I help you today?</div>
+                <div class="message-bubble">Hello! I'm Bablu. I can help you with math too! Try asking: \( \frac{d}{dx}[ax^n] = nax^{n-1} \)</div>
             </div>
         </div>
 
@@ -487,6 +498,13 @@
             };
             const isPuterReady = () => typeof puter !== 'undefined' && puter.ai && puter.auth;
 
+            // Function to trigger MathJax rendering
+            function renderMath() {
+                if (window.MathJax) {
+                    MathJax.typesetPromise?.().catch(err => console.log('MathJax error:', err));
+                }
+            }
+
             async function initialize() {
                 if (!isPuterReady()) { setTimeout(initialize, 80); return; }
                 try {
@@ -502,7 +520,7 @@
                 sendBtn.disabled = false;
                 if (messages.length === 0) {
                     chatContainer.innerHTML = '';
-                    addMessage('assistant', 'Hello! I\'m Bablu. How can I help you today?');
+                    addMessage('assistant', 'Hello! I\'m Bablu. I can help you with math too! Try asking: \\( \\frac{d}{dx}[ax^n] = nax^{n-1} \\)');
                 } else refreshMessages();
             }
             function showLoginScreen() {
@@ -516,6 +534,7 @@
                 messages.push(msg);
                 renderMessage(msg);
                 scrollToBottom();
+                renderMath(); // Render math after adding message
                 return msg.id;
             }
 
@@ -542,7 +561,15 @@
 
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'message-actions';
+                
+                // Add Copy button for all messages
                 actionsDiv.innerHTML = `<button class="copy-msg"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364748b'%3E%3Cpath d='M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z'/%3E%3C/svg%3E> Copy</button>`;
+                
+                // Add Regenerate button for assistant messages
+                if (msg.role === 'assistant') {
+                    actionsDiv.innerHTML += `<button class="regenerate-msg"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364748b'%3E%3Cpath d='M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z'/%3E%3C/svg%3E> Regenerate</button>`;
+                }
+                
                 wrapper.appendChild(actionsDiv);
                 chatContainer.appendChild(wrapper);
             }
@@ -551,6 +578,7 @@
                 chatContainer.innerHTML = '';
                 messages.forEach(m => renderMessage(m));
                 scrollToBottom();
+                renderMath(); // Render math after refreshing
             }
             function scrollToBottom() { chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }); }
 
@@ -576,7 +604,7 @@
                 wrapper.appendChild(bubble);
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'message-actions';
-                actionsDiv.innerHTML = `<button class="copy-msg"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364748b'%3E%3Cpath d='M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z'/%3E%3C/svg%3E> Copy</button>`;
+                actionsDiv.innerHTML = `<button class="copy-msg"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364748b'%3E%3Cpath d='M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z'/%3E%3C/svg%3E> Copy</button><button class="regenerate-msg"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364748b'%3E%3Cpath d='M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z'/%3E%3C/svg%3E> Regenerate</button>`;
                 wrapper.appendChild(actionsDiv);
                 chatContainer.appendChild(wrapper);
                 scrollToBottom();
@@ -616,10 +644,12 @@
                         bubble.innerHTML = marked.parse(fullText);
                         assistantMsg.content = fullText;
                         assistantMsg.status = 'complete';
+                        renderMath(); // Render math after final message
                     } else {
                         bubble.innerHTML = marked.parse(fullText + ' ⏸️');
                         assistantMsg.content = fullText + ' ⏸️';
                         assistantMsg.status = 'complete';
+                        renderMath();
                     }
                 } catch (err) {
                     if (err.message?.includes('authenticate')) { isAuthenticated = false; showLoginScreen(); } 
@@ -679,6 +709,23 @@
                     const orig = btn.innerHTML;
                     btn.innerHTML = '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%2322c55e\'%3E%3Cpath d=\'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\'/%3E%3C/svg%3E> Copied';
                     setTimeout(() => btn.innerHTML = orig, 1200);
+                }
+
+                if (btn.classList.contains('regenerate-msg') && msg.role === 'assistant') {
+                    const idx = messages.findIndex(m => m.id === msgId);
+                    let userMsg = null, userImage = null;
+                    for (let i = idx - 1; i >= 0; i--) {
+                        if (messages[i].role === 'user') { 
+                            userMsg = messages[i].content; 
+                            userImage = messages[i].image || null; 
+                            break; 
+                        }
+                    }
+                    if (userMsg !== null) {
+                        messages = messages.slice(0, idx);
+                        refreshMessages();
+                        await sendMessage(userMsg, userImage);
+                    }
                 }
             });
 
