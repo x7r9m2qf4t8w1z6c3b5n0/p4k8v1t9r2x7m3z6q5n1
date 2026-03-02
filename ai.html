@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bablu · minimal AI</title>
-    <!-- Inter font – clean, modern, professional -->
+    <title>Bablu · secure auth</title>
+    <!-- Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 (minimal set) -->
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- marked for markdown rendering (lightweight) -->
+    <!-- marked -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- Puter.js (backend proxy – kept only as API bridge) -->
+    <!-- Puter.js (auth only - we control it) -->
     <script src="https://js.puter.com/v2/"></script>
     <style>
-        /* ----- RESET & GLOBAL ----- */
         * {
             margin: 0;
             padding: 0;
@@ -23,24 +22,78 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f9fafc;
+            font-family: 'Inter', sans-serif;
+            background: #f5f8fc;
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #1e2a3a;
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
+            transition: background 0.2s;
         }
 
-        /* light/dark mode will be toggled via class on body */
         body.dark-mode {
             background: #0b1219;
             color: #e8edf2;
         }
 
-        /* main card – flat, clean, no heavy glass */
+        /* login screen - full overlay within app */
+        .login-screen {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 32px;
+            padding: 40px 32px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,20,40,0.08);
+            margin: 20px;
+        }
+
+        body.dark-mode .login-screen {
+            background: #13212e;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .login-screen h2 {
+            font-size: 2rem;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+        }
+
+        .login-screen p {
+            color: #5f7d9c;
+            margin-bottom: 32px;
+            font-size: 1rem;
+        }
+
+        .login-btn {
+            background: #2b6c9e;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 14px 32px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.1s;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 16px rgba(0,60,120,0.2);
+        }
+
+        .login-btn:hover {
+            background: #1f5a88;
+            transform: scale(0.98);
+        }
+
+        .login-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* main chat app (hidden until authenticated) */
         .chat-app {
             width: 100%;
             max-width: 1000px;
@@ -53,7 +106,6 @@
             flex-direction: column;
             overflow: hidden;
             margin: 16px;
-            transition: background 0.2s, box-shadow 0.2s;
         }
 
         body.dark-mode .chat-app {
@@ -61,7 +113,11 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
         }
 
-        /* ----- TOP BAR (minimal) ----- */
+        .hidden {
+            display: none !important;
+        }
+
+        /* top bar */
         .top-bar {
             padding: 16px 24px;
             border-bottom: 1px solid #eef2f6;
@@ -90,7 +146,6 @@
         .app-name span {
             font-size: 1.3rem;
             font-weight: 500;
-            letter-spacing: -0.3px;
         }
 
         .top-actions {
@@ -110,22 +165,13 @@
             color: #4f6f8f;
             font-size: 1.2rem;
             cursor: pointer;
-            transition: background 0.15s;
         }
 
         .icon-btn:hover {
             background: #eef2f6;
         }
 
-        body.dark-mode .icon-btn {
-            color: #b6c8da;
-        }
-
-        body.dark-mode .icon-btn:hover {
-            background: #253341;
-        }
-
-        /* ----- MAIN CHAT AREA (scrollable) ----- */
+        /* chat container */
         .chat-container {
             flex: 1;
             overflow-y: auto;
@@ -134,14 +180,13 @@
             flex-direction: column;
             gap: 20px;
             background: #fbfdff;
-            scroll-behavior: smooth;
         }
 
         body.dark-mode .chat-container {
             background: #0b141e;
         }
 
-        /* message wrapper – each bubble with meta */
+        /* message wrapper */
         .message-wrapper {
             display: flex;
             flex-direction: column;
@@ -163,12 +208,10 @@
             font-size: 0.75rem;
             color: #7a8faa;
             margin-bottom: 4px;
-            padding-left: 8px;
         }
 
-        .message-wrapper.user .message-meta {
+        .user .message-meta {
             justify-content: flex-end;
-            padding-right: 8px;
         }
 
         .avatar {
@@ -181,27 +224,18 @@
             align-items: center;
             justify-content: center;
             font-size: 0.7rem;
-            font-weight: 600;
         }
 
         .assistant .avatar {
             background: #1e3b4f;
         }
 
-        .timestamp {
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        /* message bubble */
         .message-bubble {
             padding: 14px 18px;
             border-radius: 20px;
             font-size: 0.95rem;
             line-height: 1.6;
             word-break: break-word;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            position: relative;
         }
 
         .user .message-bubble {
@@ -223,11 +257,10 @@
 
         body.dark-mode .assistant .message-bubble {
             background: #13212e;
-            border: 1px solid #2a3f51;
+            border-color: #2a3f51;
             color: #e1eaf2;
         }
 
-        /* message actions (hover only) */
         .message-actions {
             display: flex;
             gap: 12px;
@@ -249,19 +282,11 @@
             cursor: pointer;
             padding: 4px;
             border-radius: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
         }
 
         .message-actions button:hover {
             color: #2b6c9e;
             background: #eef2f6;
-        }
-
-        body.dark-mode .message-actions button:hover {
-            background: #253341;
-            color: #8cb3d9;
         }
 
         /* typing indicator */
@@ -277,26 +302,17 @@
             width: fit-content;
         }
 
-        body.dark-mode .typing-indicator {
-            background: #13212e;
-            border-color: #2a3f51;
-        }
-
         .typing-indicator span {
             width: 8px;
             height: 8px;
             background: #7a8faa;
             border-radius: 8px;
-            display: inline-block;
             animation: pulse 1.2s infinite;
         }
 
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-
         @keyframes pulse { 0%,60%,100%{ opacity:0.4; } 30%{ opacity:1; } }
 
-        /* ----- INPUT AREA (clean) ----- */
+        /* input area */
         .input-section {
             padding: 20px 24px;
             background: white;
@@ -315,7 +331,6 @@
             background: #f1f5f9;
             border-radius: 28px;
             padding: 8px 8px 8px 20px;
-            transition: background 0.1s;
         }
 
         body.dark-mode .input-row {
@@ -339,16 +354,6 @@
             color: #eef4fa;
         }
 
-        .input-row textarea::placeholder {
-            color: #8fa3bc;
-        }
-
-        .action-group {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
         .circle-btn {
             width: 46px;
             height: 46px;
@@ -357,62 +362,30 @@
             background: #2b6c9e;
             color: white;
             font-size: 1.2rem;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: 0.1s;
-            box-shadow: 0 4px 8px rgba(0, 60, 110, 0.1);
         }
 
-        .circle-btn:active { transform: scale(0.96); }
-        .circle-btn:disabled { opacity: 0.5; pointer-events: none; }
+        .circle-btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
 
         .circle-btn.secondary {
             background: #e4ecf5;
             color: #2b6c9e;
-            box-shadow: none;
-        }
-
-        body.dark-mode .circle-btn.secondary {
-            background: #253f55;
-            color: #b3d0ed;
         }
 
         .stop-btn {
             background: #d44e4e;
         }
 
-        .hidden { display: none !important; }
-
-        /* markdown styling */
-        .message-bubble pre {
-            background: #1e2f3c;
-            color: #e3f0fd;
-            padding: 14px;
-            border-radius: 14px;
-            overflow-x: auto;
-            font-size: 0.85rem;
-            margin: 12px 0;
-        }
-
-        .message-bubble code {
-            background: #e2eaf2;
-            padding: 2px 6px;
-            border-radius: 8px;
-            font-family: 'SF Mono', monospace;
-            font-size: 0.9em;
-        }
-
-        body.dark-mode .message-bubble code {
-            background: #253f55;
-            color: #d0e2f5;
-        }
-
-        /* settings dropdown (simple) */
+        /* settings dropdown */
         .settings-dropdown {
             position: absolute;
-            top: 70px;
+            top: 80px;
             right: 30px;
             background: white;
             border-radius: 20px;
@@ -424,12 +397,14 @@
             z-index: 100;
         }
 
+        .settings-dropdown.show {
+            display: block;
+        }
+
         body.dark-mode .settings-dropdown {
             background: #13212e;
             border-color: #2f455b;
         }
-
-        .settings-dropdown.show { display: block; }
 
         .settings-item {
             display: flex;
@@ -438,61 +413,83 @@
             margin-bottom: 16px;
         }
 
-        .settings-item select {
-            padding: 6px 10px;
+        .logout-item {
+            border-top: 1px solid #e2eaf2;
+            padding-top: 16px;
+            margin-top: 8px;
+        }
+
+        .logout-btn {
+            background: #f0f4fa;
+            border: none;
+            padding: 8px 16px;
             border-radius: 30px;
-            border: 1px solid #d0ddee;
-            background: #f1f7fd;
+            color: #d44e4e;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
     </style>
 </head>
 <body>
-    <div class="chat-app">
-        <!-- top bar: only name, theme toggle, settings (gear) -->
+    <!-- Login Screen (visible when not authenticated) -->
+    <div id="loginScreen" class="login-screen">
+        <h2>🤖 Bablu</h2>
+        <p>Secure AI assistant · Login to continue</p>
+        <button class="login-btn" id="loginBtn">
+            <i class="fa-regular fa-lock-open"></i> Login with Puter
+        </button>
+        <p style="margin-top: 24px; font-size: 0.8rem; color: #8fa3bc;">No auto-popup · explicit login only</p>
+    </div>
+
+    <!-- Main Chat App (hidden until authenticated) -->
+    <div id="chatApp" class="chat-app hidden">
         <div class="top-bar">
             <div class="app-name">
                 <i class="fa-regular fa-comment-dots"></i>
                 <span>Bablu</span>
             </div>
             <div class="top-actions">
-                <button class="icon-btn" id="themeToggle" title="Light/dark mode"><i class="fa-regular fa-moon"></i></button>
+                <button class="icon-btn" id="themeToggle" title="Theme"><i class="fa-regular fa-moon"></i></button>
                 <button class="icon-btn" id="settingsToggle" title="Settings"><i class="fa-regular fa-gear"></i></button>
             </div>
         </div>
 
-        <!-- hidden settings panel (simple, no dev clutter) -->
+        <!-- settings panel with logout -->
         <div class="settings-dropdown" id="settingsPanel">
             <div class="settings-item">
                 <span>Model</span>
-                <select id="modelSelectSimple">
-                    <option value="gpt-5-nano">Bablu fast</option>
-                    <option value="gpt-5">Bablu pro</option>
-                    <option value="gpt-5.2-chat">Bablu chat</option>
+                <select id="modelSelect">
+                    <option value="gpt-5-nano">Fast</option>
+                    <option value="gpt-5">Balanced</option>
+                    <option value="gpt-5.2-chat">Creative</option>
                 </select>
             </div>
             <div class="settings-item">
                 <span>Temperature</span>
-                <select id="tempSelectSimple">
+                <select id="tempSelect">
                     <option value="0.3">Precise</option>
                     <option value="0.7" selected>Balanced</option>
                     <option value="1.2">Creative</option>
                 </select>
             </div>
-            <p style="font-size:0.75rem; color:#6f89a2; margin-top:8px;">⚙️ Backend controls all</p>
+            <div class="logout-item">
+                <button class="logout-btn" id="logoutBtn"><i class="fa-regular fa-arrow-right-from-bracket"></i> Logout</button>
+            </div>
         </div>
 
-        <!-- main chat container -->
-        <div class="chat-container" id="chatContainer">
-            <!-- messages will be injected here -->
-        </div>
+        <div class="chat-container" id="chatContainer"></div>
 
-        <!-- bottom input + stop -->
         <div class="input-section">
             <div class="input-row">
-                <textarea id="userInput" placeholder="Ask Bablu anything..." rows="1"></textarea>
+                <textarea id="userInput" placeholder="Ask Bablu..." rows="1"></textarea>
                 <div class="action-group">
                     <button class="circle-btn secondary hidden" id="stopBtn"><i class="fa-solid fa-stop"></i></button>
-                    <button class="circle-btn" id="sendBtn"><i class="fa-regular fa-paper-plane"></i></button>
+                    <button class="circle-btn" id="sendBtn" disabled><i class="fa-regular fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>
@@ -500,7 +497,11 @@
 
     <script>
         (function() {
-            // --- DOM refs ---
+            // --- DOM elements ---
+            const loginScreen = document.getElementById('loginScreen');
+            const chatApp = document.getElementById('chatApp');
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
             const chatContainer = document.getElementById('chatContainer');
             const userInput = document.getElementById('userInput');
             const sendBtn = document.getElementById('sendBtn');
@@ -508,38 +509,39 @@
             const themeToggle = document.getElementById('themeToggle');
             const settingsToggle = document.getElementById('settingsToggle');
             const settingsPanel = document.getElementById('settingsPanel');
-            const modelSelectSimple = document.getElementById('modelSelectSimple');
-            const tempSelectSimple = document.getElementById('tempSelectSimple');
+            const modelSelect = document.getElementById('modelSelect');
+            const tempSelect = document.getElementById('tempSelect');
 
-            // --- state ---
-            let messages = [];   // will be populated with { id, role, content, timestamp, status }
+            // --- Auth state ---
+            let isAuthenticated = false;
+            let authCheckComplete = false;
+            let messages = [];
             let isStreaming = false;
             let abortController = null;
             let currentAssistantMsgId = null;
 
-            // load from localStorage if any (only theme preference)
-            if (localStorage.getItem('bablu-theme') === 'dark') {
-                document.body.classList.add('dark-mode');
-                themeToggle.innerHTML = '<i class="fa-regular fa-sun"></i>';
+            // --- Helper: generate ID ---
+            function uid() { return Date.now() + '-' + Math.random().toString(36).substring(2); }
+
+            // --- Format timestamp ---
+            function formatTime(iso) {
+                if (!iso) return '';
+                const d = new Date(iso);
+                return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
             }
 
-            // --- helper: generate unique id ---
-            function uid() { return Date.now() + '-' + Math.random().toString(36).substring(2, 9); }
-
-            // --- render all messages (clean) ---
+            // --- Render all messages ---
             function renderMessages() {
                 chatContainer.innerHTML = '';
-                messages.forEach(msg => renderOneMessage(msg, false)); // false = don't scroll yet
+                messages.forEach(msg => renderOneMessage(msg));
                 scrollToBottom();
             }
 
-            // render single message and append
-            function renderOneMessage(msg, scroll = true) {
+            function renderOneMessage(msg) {
                 const wrapper = document.createElement('div');
                 wrapper.className = `message-wrapper ${msg.role}`;
                 wrapper.dataset.messageId = msg.id;
 
-                // meta row: avatar + timestamp
                 const meta = document.createElement('div');
                 meta.className = 'message-meta';
                 meta.innerHTML = `
@@ -548,10 +550,8 @@
                 `;
                 wrapper.appendChild(meta);
 
-                // bubble
                 const bubble = document.createElement('div');
                 bubble.className = 'message-bubble';
-                // if status streaming and not finished, add a cursor (only for assistant)
                 let contentHtml = marked.parse(msg.content);
                 if (msg.role === 'assistant' && msg.status === 'streaming') {
                     contentHtml += '<span class="cursor">▌</span>';
@@ -559,39 +559,29 @@
                 bubble.innerHTML = contentHtml;
                 wrapper.appendChild(bubble);
 
-                // actions (copy, regenerate for assistant; copy + edit for user)
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'message-actions';
                 if (msg.role === 'assistant') {
                     actionsDiv.innerHTML = `
-                        <button class="copy-msg" title="Copy"><i class="fa-regular fa-copy"></i> Copy</button>
-                        <button class="regenerate-msg" title="Regenerate"><i class="fa-regular fa-arrow-rotate-right"></i> Regenerate</button>
+                        <button class="copy-msg"><i class="fa-regular fa-copy"></i> Copy</button>
+                        <button class="regenerate-msg"><i class="fa-regular fa-arrow-rotate-right"></i> Regenerate</button>
                     `;
                 } else {
                     actionsDiv.innerHTML = `
-                        <button class="copy-msg" title="Copy"><i class="fa-regular fa-copy"></i> Copy</button>
-                        <button class="edit-msg" title="Edit"><i class="fa-regular fa-pen"></i> Edit</button>
+                        <button class="copy-msg"><i class="fa-regular fa-copy"></i> Copy</button>
+                        <button class="edit-msg"><i class="fa-regular fa-pen"></i> Edit</button>
                     `;
                 }
                 wrapper.appendChild(actionsDiv);
 
                 chatContainer.appendChild(wrapper);
-                if (scroll) scrollToBottom();
             }
 
-            // format timestamp (HH:MM)
-            function formatTime(iso) {
-                if (!iso) return '';
-                const d = new Date(iso);
-                return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
-            }
-
-            // scroll to bottom
             function scrollToBottom() {
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }
 
-            // --- add message (and store) ---
+            // --- Add message to state and UI ---
             function addMessage(role, content, status = 'complete') {
                 const msg = {
                     id: uid(),
@@ -602,59 +592,134 @@
                 };
                 messages.push(msg);
                 renderOneMessage(msg);
+                scrollToBottom();
                 return msg.id;
             }
 
-            // update message content by id
             function updateMessage(id, newContent, status = 'complete') {
                 const msg = messages.find(m => m.id === id);
                 if (msg) {
                     msg.content = newContent;
                     msg.status = status;
-                    // re-render everything (simple, ensures consistency)
                     renderMessages();
                 }
             }
 
-            // get last assistant message id
-            function getLastAssistantId() {
-                for (let i = messages.length - 1; i >= 0; i--) {
-                    if (messages[i].role === 'assistant') return messages[i].id;
+            // --- Check auth status on load ---
+            async function checkAuthStatus() {
+                try {
+                    const user = await puter.auth.getUser();
+                    if (user) {
+                        isAuthenticated = true;
+                        showChatApp();
+                    } else {
+                        isAuthenticated = false;
+                        showLoginScreen();
+                    }
+                } catch (err) {
+                    console.warn('Auth check failed', err);
+                    isAuthenticated = false;
+                    showLoginScreen();
+                } finally {
+                    authCheckComplete = true;
                 }
-                return null;
             }
 
-            // --- send message to backend (puter) with full history ---
+            function showChatApp() {
+                loginScreen.classList.add('hidden');
+                chatApp.classList.remove('hidden');
+                sendBtn.disabled = false;
+                // Add welcome if no messages
+                if (messages.length === 0) {
+                    addMessage('assistant', '🔐 You\'re logged in. Ask me anything.');
+                }
+            }
+
+            function showLoginScreen() {
+                loginScreen.classList.remove('hidden');
+                chatApp.classList.add('hidden');
+                isAuthenticated = false;
+                sendBtn.disabled = true;
+                if (abortController) {
+                    abortController.abort();
+                    abortController = null;
+                }
+                isStreaming = false;
+            }
+
+            // --- Login flow ---
+            loginBtn.addEventListener('click', async () => {
+                try {
+                    loginBtn.disabled = true;
+                    loginBtn.innerHTML = '<i class="fa-regular fa-spinner fa-spin"></i> Logging in...';
+                    
+                    // Explicit sign in - no auto popup
+                    const result = await puter.auth.signIn();
+                    
+                    // Verify session is ready
+                    const user = await puter.auth.getUser();
+                    
+                    if (user) {
+                        isAuthenticated = true;
+                        showChatApp();
+                    } else {
+                        throw new Error('No user after login');
+                    }
+                } catch (err) {
+                    console.error('Login failed', err);
+                    alert('Login failed. Please try again.');
+                    showLoginScreen();
+                } finally {
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<i class="fa-regular fa-lock-open"></i> Login with Puter';
+                }
+            });
+
+            // --- Logout ---
+            logoutBtn.addEventListener('click', async () => {
+                try {
+                    await puter.auth.signOut();
+                    isAuthenticated = false;
+                    messages = [];
+                    showLoginScreen();
+                    settingsPanel.classList.remove('show');
+                } catch (err) {
+                    console.error('Logout error', err);
+                }
+            });
+
+            // --- Send message with auth guard ---
             async function sendMessage(text) {
+                // AUTH GUARD: double-check before sending
+                if (!isAuthenticated) {
+                    showLoginScreen();
+                    return;
+                }
+
                 if (!text.trim() || isStreaming) return;
 
-                // 1. add user message
+                // Add user message
                 addMessage('user', text);
 
-                // 2. prepare conversation copy (only role, content) for backend
+                // Prepare conversation for backend
                 const conversationForBackend = messages.map(m => ({
                     role: m.role,
                     content: m.content
                 }));
 
-                // 3. create assistant placeholder (streaming)
+                // Create assistant placeholder
                 const assistantId = addMessage('assistant', '▌', 'streaming');
                 currentAssistantMsgId = assistantId;
                 isStreaming = true;
                 sendBtn.disabled = true;
                 stopBtn.classList.remove('hidden');
 
-                // 4. set up abort
                 abortController = new AbortController();
-
-                // 5. get settings (but backend would override – we just pass as suggestion)
-                const model = modelSelectSimple.value;
-                const temp = parseFloat(tempSelectSimple.value);
 
                 try {
                     const response = await puter.ai.chat(conversationForBackend, {
-                        model: model,
-                        temperature: temp,
+                        model: modelSelect.value,
+                        temperature: parseFloat(tempSelect.value),
                         stream: true,
                         signal: abortController.signal
                     });
@@ -664,45 +729,42 @@
                         if (abortController.signal.aborted) break;
                         if (part?.text) {
                             full += part.text;
-                            // update message with markdown (keep cursor)
-                            const msg = messages.find(m => m.id === assistantId);
-                            if (msg) {
-                                msg.content = full;
-                                renderMessages();  // quick update
-                            }
+                            updateMessage(assistantId, full, 'streaming');
                         }
                     }
 
                     if (!abortController.signal.aborted) {
-                        // final update
                         updateMessage(assistantId, full, 'complete');
                     } else {
-                        // if aborted, keep whatever we have
                         updateMessage(assistantId, full || '[stopped]', 'complete');
                     }
 
                 } catch (err) {
-                    console.warn(err);
-                    updateMessage(assistantId, '⚠️ Error: ' + err.message, 'complete');
+                    // Check for auth errors
+                    if (err.code === 'not_authenticated' || err.message?.includes('authentic')) {
+                        isAuthenticated = false;
+                        showLoginScreen();
+                    } else {
+                        updateMessage(assistantId, '⚠️ Error: ' + err.message, 'complete');
+                    }
                 } finally {
                     isStreaming = false;
-                    sendBtn.disabled = false;
+                    sendBtn.disabled = !isAuthenticated;
                     stopBtn.classList.add('hidden');
                     abortController = null;
                     currentAssistantMsgId = null;
                 }
             }
 
-            // --- stop generation ---
+            // --- Stop generation ---
             function stopGeneration() {
                 if (abortController) {
                     abortController.abort();
                     abortController = null;
                 }
                 isStreaming = false;
-                sendBtn.disabled = false;
+                sendBtn.disabled = !isAuthenticated;
                 stopBtn.classList.add('hidden');
-                // remove streaming cursor
                 if (currentAssistantMsgId) {
                     const msg = messages.find(m => m.id === currentAssistantMsgId);
                     if (msg && msg.status === 'streaming') {
@@ -712,10 +774,10 @@
                 }
             }
 
-            // --- event listeners ---
+            // --- Event listeners ---
             sendBtn.addEventListener('click', () => {
                 const text = userInput.value.trim();
-                if (text && !isStreaming) {
+                if (text && !isStreaming && isAuthenticated) {
                     sendMessage(text);
                     userInput.value = '';
                     userInput.style.height = 'auto';
@@ -731,12 +793,12 @@
 
             userInput.addEventListener('input', () => {
                 userInput.style.height = 'auto';
-                userInput.style.height = (userInput.scrollHeight) + 'px';
+                userInput.style.height = userInput.scrollHeight + 'px';
             });
 
             stopBtn.addEventListener('click', stopGeneration);
 
-            // theme toggle
+            // Theme toggle
             themeToggle.addEventListener('click', () => {
                 document.body.classList.toggle('dark-mode');
                 const isDark = document.body.classList.contains('dark-mode');
@@ -744,18 +806,25 @@
                 localStorage.setItem('bablu-theme', isDark ? 'dark' : 'light');
             });
 
-            // settings dropdown
+            // Settings dropdown
             settingsToggle.addEventListener('click', (e) => {
                 e.stopPropagation();
                 settingsPanel.classList.toggle('show');
             });
+
             document.addEventListener('click', (e) => {
                 if (!settingsPanel.contains(e.target) && !settingsToggle.contains(e.target)) {
                     settingsPanel.classList.remove('show');
                 }
             });
 
-            // --- per-message actions (delegation) ---
+            // Load theme
+            if (localStorage.getItem('bablu-theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fa-regular fa-sun"></i>';
+            }
+
+            // --- Per-message actions (delegation) ---
             chatContainer.addEventListener('click', async (e) => {
                 const btn = e.target.closest('button');
                 if (!btn) return;
@@ -765,16 +834,19 @@
                 const msg = messages.find(m => m.id === msgId);
                 if (!msg) return;
 
-                // copy
+                // Copy
                 if (btn.classList.contains('copy-msg')) {
                     navigator.clipboard.writeText(msg.content);
-                    alert('📋 Copied');  // subtle
+                    return;
                 }
 
-                // regenerate (assistant only)
+                // Regenerate (assistant only)
                 if (btn.classList.contains('regenerate-msg')) {
-                    if (isStreaming) { stopGeneration(); }
-                    // find last user message before this assistant
+                    if (!isAuthenticated) {
+                        showLoginScreen();
+                        return;
+                    }
+                    if (isStreaming) stopGeneration();
                     const idx = messages.findIndex(m => m.id === msgId);
                     let userMsg = null;
                     for (let i = idx - 1; i >= 0; i--) {
@@ -784,37 +856,29 @@
                         }
                     }
                     if (userMsg) {
-                        // remove this assistant message and later ones
                         messages = messages.slice(0, idx);
                         renderMessages();
                         await sendMessage(userMsg);
                     }
                 }
 
-                // edit (user message)
+                // Edit (user)
                 if (btn.classList.contains('edit-msg')) {
-                    const newText = prompt('Edit your message:', msg.content);
-                    if (newText !== null && newText.trim() !== '') {
-                        // update this user message and delete all after
+                    const newText = prompt('Edit message:', msg.content);
+                    if (newText && newText.trim() !== '') {
                         const idx = messages.findIndex(m => m.id === msgId);
                         messages[idx].content = newText;
                         messages = messages.slice(0, idx + 1);
                         renderMessages();
-                        // automatically resend?
-                        if (confirm('Resend with this edit?')) {
+                        if (confirm('Send edited message?')) {
                             await sendMessage(newText);
                         }
                     }
                 }
             });
 
-            // --- initial welcome (only if no messages) ---
-            if (messages.length === 0) {
-                addMessage('assistant', '👋 Hi, I’m Bablu. Ask me anything — I’ll keep it minimal and helpful.');
-            }
-
-            // auto-resize
-            userInput.style.height = 'auto';
+            // --- Initial auth check ---
+            checkAuthStatus();
         })();
     </script>
 </body>
